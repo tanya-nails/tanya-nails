@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Таня · Майстер манікюру · Миронівка</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --c:#F4EDE0;--p:#EAE0CC;--b:#CFC0A6;
+  --t:#2A1C0E;--t2:#5C4633;--t3:#8A7260;
+  --g:#8A6840;--g2:#B08A5A;
+  --rose:#B5887A;--sage:#6E8A72;
+  --serif:'Cormorant Garamond',serif;--sans:'Jost',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+body{background:var(--c);color:var(--t);font-family:var(--sans);font-size:16px;line-height:1.75;font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--c);border-bottom:1px solid var(--b);padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.nav-logo{font-family:var(--serif);font-size:19px;font-weight:500;color:var(--t);letter-spacing:1.5px;text-decoration:none;flex-shrink:0}
+.nav-logo em{font-style:italic;color:var(--g2)}
+.nav-links{display:none}
+.nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.nav-user-btn{background:none;border:1px solid var(--b);padding:8px 14px;font-family:var(--sans);font-size:11px;color:var(--t2);cursor:pointer;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;transition:all .2s;line-height:1}
+.nav-user-btn:hover{border-color:var(--g);color:var(--t)}
+.nav-user-btn.admin{background:var(--t);color:var(--c);border-color:var(--t)}
+.nav-burger{background:none;border:none;cursor:pointer;padding:8px 4px;display:flex;flex-direction:column;gap:5px;flex-shrink:0}
+.nav-burger span{display:block;width:22px;height:1.5px;background:var(--t);transition:all .3s}
+.mob-menu{display:none;position:fixed;top:60px;left:0;right:0;background:var(--c);border-bottom:1px solid var(--b);z-index:190;padding:8px 20px 16px;flex-direction:column}
+.mob-menu.open{display:flex}
+.mob-menu a{padding:13px 0;font-size:14px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;color:var(--t2);border-bottom:1px solid var(--b)}
+.mob-menu a:last-child{border-bottom:none}
+@media(min-width:768px){
+  .nav{padding:0 48px;height:68px}
+  .nav-links{display:flex;gap:28px}
+  .nav-links a{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;text-decoration:none;color:var(--t2);transition:color .2s}
+  .nav-links a:hover{color:var(--g)}
+  .nav-burger{display:none}
+  .mob-menu{top:68px}
+}
+
+/* LAYOUT */
+.pt-nav{padding-top:60px}
+@media(min-width:768px){.pt-nav{padding-top:68px}}
+.sec{padding:64px 20px;max-width:1100px;margin:0 auto}
+@media(min-width:768px){.sec{padding:96px 48px}}
+.sec-bg{background:var(--p);border-top:1px solid var(--b)}
+.sec-border{border-top:1px solid var(--b)}
+.sec-inner{max-width:1100px;margin:0 auto;padding:64px 20px}
+@media(min-width:768px){.sec-inner{padding:96px 48px}}
+.tag{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--g);margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.tag::before{content:'';width:24px;height:1px;background:var(--b)}
+.stitle{font-family:var(--serif);font-size:clamp(34px,7vw,56px);font-weight:400;color:var(--t);margin-bottom:40px;line-height:1.1}
+.stitle em{font-style:italic;color:var(--g2)}
+
+/* HERO */
+.hero{min-height:calc(100svh - 60px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 24px 64px}
+@media(min-width:768px){.hero{min-height:calc(100svh - 68px)}}
+.hero-tag{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--g);margin-bottom:24px}
+.hero h1{font-family:var(--serif);font-size:clamp(56px,14vw,112px);font-weight:400;line-height:1.0;color:var(--t);margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--g2)}
+.hero-sub{font-size:16px;color:var(--t2);margin-bottom:12px}
+.hero-hours{font-size:13px;color:var(--t3);border:1px solid var(--b);display:inline-block;padding:7px 20px;margin-bottom:40px;letter-spacing:.5px}
+.btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn{display:inline-block;padding:14px 36px;font-family:var(--sans);font-size:12px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .25s;text-decoration:none;border:1px solid;font-weight:400;line-height:1}
+.btn-dark{background:var(--t);color:var(--c);border-color:var(--t)}
+.btn-dark:hover{background:var(--g);border-color:var(--g)}
+.btn-light{background:transparent;color:var(--g);border-color:var(--b)}
+.btn-light:hover{border-color:var(--g);color:var(--t)}
+
+/* SERVICES */
+.svc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--b);border:1px solid var(--b)}
+@media(min-width:600px){.svc-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:900px){.svc-grid{grid-template-columns:repeat(4,1fr)}}
+.svc{background:var(--c);padding:22px 18px;transition:background .2s}
+.svc:hover{background:var(--p)}
+.svc-name{font-family:var(--serif);font-size:19px;font-weight:500;color:var(--t);margin-bottom:4px;line-height:1.2}
+.svc-dur{font-size:13px;color:var(--t3);margin-bottom:14px}
+.svc-price{font-family:var(--serif);font-size:26px;color:var(--g);font-weight:500}
+.svc-price sup{font-size:14px}
+
+/* BOOKING */
+.book-cols{display:flex;flex-direction:column;gap:32px}
+@media(min-width:768px){.book-cols{display:grid;grid-template-columns:1fr 1.3fr;gap:56px;align-items:start}}
+
+/* CALENDAR */
+.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.cal-title{font-family:var(--serif);font-size:22px;font-weight:500;color:var(--t)}
+.cal-btn{background:none;border:1px solid var(--b);color:var(--t2);width:40px;height:40px;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.cal-btn:hover{border-color:var(--g);color:var(--t)}
+.cal-wdays{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-bottom:4px}
+.cal-wdays span{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);padding:6px 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cday{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;border:1px solid transparent;cursor:pointer;transition:all .15s;min-height:36px;position:relative}
+.cday .dn{line-height:1}
+.cday .dd{width:4px;height:4px;border-radius:50%;background:var(--sage);margin-top:3px}
+.cday.empty,.cday.past,.cday.nowork,.cday.blocked,.cday.full{pointer-events:none}
+.cday.past .dn,.cday.nowork .dn,.cday.empty .dn{color:var(--b)}
+.cday.blocked .dn{color:var(--rose);text-decoration:line-through}
+.cday.full .dn{color:var(--t3)}
+.cday.avail{border-color:var(--b)}
+.cday.avail:hover{background:var(--p);border-color:var(--g)}
+.cday.sel{background:var(--t);border-color:var(--t)}
+.cday.sel .dn{color:var(--c)}
+.cal-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--t3)}
+.cal-legend span{display:flex;align-items:center;gap:6px}
+.cal-legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+/* SLOTS */
+.slots-wrap{margin-top:24px}
+.slots-lbl{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-bottom:12px}
+.slots-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(min-width:400px){.slots-grid{grid-template-columns:repeat(4,1fr)}}
+.slt{background:var(--c);border:1px solid var(--b);padding:13px 4px;font-size:14px;color:var(--t2);cursor:pointer;transition:all .2s;text-align:center;font-family:var(--sans);font-weight:300}
+.slt:hover:not(:disabled){border-color:var(--g);color:var(--t)}
+.slt.sel{background:var(--t);color:var(--c);border-color:var(--t)}
+.slt:disabled{opacity:.3;cursor:not-allowed;text-decoration:line-through}
+
+/* FORMS */
+.field{margin-bottom:0}
+.field label{display:block;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--t3);margin-bottom:7px}
+.field input,.field select,.field textarea{width:100%;background:var(--c);border:1px solid var(--b);padding:13px 15px;font-family:var(--sans);font-size:15px;color:var(--t);outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--g)}
+.field textarea{height:80px;resize:none}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.msg{padding:13px 16px;font-size:14px;display:none;border:1px solid;margin-bottom:0}
+.msg.ok{background:#eef3ee;border-color:var(--sage);color:#3a5e3c}
+.msg.err{background:#f6ecea;border-color:var(--rose);color:#7a3028}
+.fnote{font-size:12px;color:var(--t3)}
+.login-prompt{background:var(--p);border:1px solid var(--b);padding:28px 24px;text-align:center;margin-top:20px}
+.login-prompt p{font-size:15px;color:var(--t2);margin-bottom:20px}
+
+/* GALLERY */
+.gal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(min-width:600px){.gal-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:900px){.gal-grid{grid-template-columns:repeat(4,1fr)}}
+.gal-item{aspect-ratio:1;overflow:hidden;background:var(--p);border:1px solid var(--b)}
+.gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.gal-item:hover img{transform:scale(1.04)}
+.gal-empty{grid-column:1/-1;text-align:center;padding:48px;color:var(--t3);font-size:15px;border:1px dashed var(--b)}
+
+/* ABOUT */
+.about-lay{display:flex;flex-direction:column;gap:36px}
+@media(min-width:768px){.about-lay{display:grid;grid-template-columns:260px 1fr;gap:64px;align-items:center}}
+.about-img-box{width:100%;max-width:260px;aspect-ratio:3/4;background:var(--p);border:1px solid var(--b);overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:64px;color:var(--b)}
+.about-img-box img{width:100%;height:100%;object-fit:cover}
+.about-p{font-size:16px;color:var(--t2);margin-bottom:16px;line-height:1.85}
+.stats{display:flex;gap:28px;flex-wrap:wrap;margin-top:32px;padding-top:24px;border-top:1px solid var(--b)}
+.stat-n{font-family:var(--serif);font-size:38px;color:var(--t);line-height:1}
+.stat-l{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);margin-top:2px}
+
+/* FOOTER */
+footer{border-top:1px solid var(--b);background:var(--t);padding:44px 20px;display:flex;flex-direction:column;gap:20px}
+@media(min-width:768px){footer{padding:52px 48px;flex-direction:row;justify-content:space-between;align-items:center}}
+.flogo{font-family:var(--serif);font-size:22px;color:var(--c);letter-spacing:2px}
+.flogo em{font-style:italic;color:var(--g2)}
+.finfo{font-size:14px;color:var(--t3);line-height:2}
+.finfo a{color:var(--g2);text-decoration:none}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(42,28,14,.5);z-index:500;align-items:flex-end;justify-content:center;padding:0}
+.modal-bg.open{display:flex}
+@media(min-width:540px){.modal-bg{align-items:center;padding:20px}}
+.modal{background:var(--c);border-top:1px solid var(--b);width:100%;max-width:440px;padding:36px 28px 40px;position:relative;max-height:92svh;overflow-y:auto}
+@media(min-width:540px){.modal{border:1px solid var(--b)}}
+.modal-x{position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;color:var(--t3);cursor:pointer;padding:4px;line-height:1}
+.modal h3{font-family:var(--serif);font-size:26px;font-weight:400;color:var(--t);margin-bottom:6px}
+.modal .msub{font-size:14px;color:var(--t3);margin-bottom:28px}
+.or-div{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--t3);font-size:13px}
+.or-div::before,.or-div::after{content:'';flex:1;height:1px;background:var(--b)}
+.google-btn{width:100%;background:white;border:1px solid var(--b);padding:12px;font-family:var(--sans);font-size:14px;color:var(--t);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:border-color .2s}
+.google-btn:hover{border-color:var(--g)}
+.auth-sw{font-size:13px;color:var(--t3);text-align:center;margin-top:16px}
+.auth-sw a{color:var(--g);cursor:pointer;text-decoration:underline}
+
+/* ADMIN */
+.admin-panel{display:none;position:fixed;inset:0;background:var(--c);z-index:400;overflow-y:auto}
+.admin-panel.open{display:block}
+.atop{background:var(--t);padding:0 20px;height:56px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+@media(min-width:768px){.atop{padding:0 36px}}
+.atop-logo{font-family:var(--serif);font-size:18px;color:var(--c);letter-spacing:1.5px}
+.atop-logo em{font-style:italic;color:var(--g2)}
+.atop-links{display:flex;gap:16px;align-items:center}
+.atop-links button,.atop-links a{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);text-decoration:none;cursor:pointer;background:none;border:none;font-family:var(--sans);padding:0}
+.atop-links button:hover,.atop-links a:hover{color:var(--g2)}
+.atabs{display:flex;overflow-x:auto;border-bottom:1px solid var(--b);background:var(--p);padding:0 20px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.atabs::-webkit-scrollbar{display:none}
+@media(min-width:768px){.atabs{padding:0 36px}}
+.atab{padding:14px 18px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--sans);transition:all .2s;flex-shrink:0}
+.atab.on{color:var(--t);border-bottom-color:var(--t)}
+.abody{padding:24px 20px;max-width:920px;margin:0 auto}
+@media(min-width:768px){.abody{padding:36px}}
+.asec{display:none}
+.asec.on{display:block}
+.ah2{font-family:var(--serif);font-size:24px;font-weight:400;color:var(--t);margin-bottom:20px}
+.acard{background:var(--p);border:1px solid var(--b);padding:22px;margin-bottom:18px}
+.acard h3{font-family:var(--serif);font-size:19px;font-weight:400;color:var(--t);margin-bottom:16px}
+.aform{display:flex;flex-direction:column;gap:12px}
+.arow{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.arow .field{flex:1;min-width:130px}
+.abtn{background:var(--t);color:var(--c);border:none;padding:11px 22px;font-family:var(--sans);font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:background .2s;line-height:1}
+.abtn:hover{background:var(--g)}
+.abtn.red{background:var(--rose)}
+.abtn.red:hover{background:#9a5f54}
+.abtn.sm{padding:7px 14px;font-size:10px}
+.abtn.out{background:transparent;color:var(--t2);border:1px solid var(--b)}
+.abtn.out:hover{border-color:var(--g);color:var(--t)}
+.stats-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px}
+@media(min-width:560px){.stats-row{grid-template-columns:repeat(4,1fr)}}
+.sbox{background:var(--p);border:1px solid var(--b);padding:16px 18px}
+.sbox .n{font-family:var(--serif);font-size:32px;color:var(--g);line-height:1}
+.sbox .l{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);margin-top:4px}
+.atable-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:600px}
+th{background:var(--t);color:var(--c);font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:400;padding:11px 12px;text-align:left;white-space:nowrap}
+td{padding:11px 12px;border-bottom:1px solid var(--p);color:var(--t);vertical-align:top}
+tr:hover td{background:var(--p)}
+.s-new{color:var(--sage);font-size:13px}
+.s-cancelled{color:var(--rose);font-size:13px}
+.svc-item{background:var(--c);border:1px solid var(--b);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.svc-item-name{font-family:var(--serif);font-size:18px;color:var(--t)}
+.svc-item-price{font-family:var(--serif);font-size:20px;color:var(--g)}
+.svc-item-btns{display:flex;gap:8px;flex-shrink:0}
+.chip-list{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.chip{background:#f6ecea;border:1px solid var(--rose);padding:7px 12px;font-size:13px;color:var(--t2);display:flex;align-items:center;gap:8px}
+.chip button{background:none;border:none;color:var(--rose);cursor:pointer;font-size:16px;line-height:1;padding:0}
+.gal-a-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+@media(min-width:560px){.gal-a-grid{grid-template-columns:repeat(5,1fr)}}
+.gal-a-item{aspect-ratio:1;background:var(--p);border:1px solid var(--b);position:relative;overflow:hidden}
+.gal-a-item img{width:100%;height:100%;object-fit:cover}
+.gal-a-item button{position:absolute;top:3px;right:3px;background:rgba(42,28,14,.7);color:white;border:none;width:26px;height:26px;font-size:13px;cursor:pointer}
+
+/* SETUP */
+.setup-ov{display:none;position:fixed;inset:0;background:var(--c);z-index:700;align-items:center;justify-content:center;padding:20px}
+.setup-ov.open{display:flex}
+.setup-box{width:100%;max-width:440px;border:1px solid var(--b);padding:40px 28px}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--t);color:var(--c);padding:13px 24px;font-size:14px;z-index:999;transition:transform .3s;white-space:nowrap;max-width:calc(100vw - 40px);text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.ok{background:#3a5e3c}
+.toast.err{background:#7a3028}
+
+/* SPINNER */
+.spin{display:inline-block;width:18px;height:18px;border:2px solid var(--b);border-top-color:var(--g);border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:8px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.loading{text-align:center;padding:40px;color:var(--t3)}
+</style>
+</head>
+<body class="pt-nav">
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#" class="nav-logo" onclick="closeAdmin();return false">Тетяна <em>·</em> nail art</a>
+  <div class="nav-links">
+    <a href="#services">Послуги</a>
+    <a href="#booking">Запис</a>
+    <a href="#gallery">Роботи</a>
+    <a href="#about">Про мене</a>
+  </div>
+  <div class="nav-right">
+    <button class="nav-user-btn" id="navBtn" onclick="navBtnClick()">Увійти</button>
+    <button class="nav-burger" onclick="toggleMenu()" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mob-menu" id="mobMenu">
+  <a href="#services" onclick="closeMob()">Послуги</a>
+  <a href="#booking" onclick="closeMob()">Запис</a>
+  <a href="#gallery" onclick="closeMob()">Роботи</a>
+  <a href="#about" onclick="closeMob()">Про мене</a>
+</div>
+
+<!-- MAIN SITE -->
+<div id="site">
+
+  <section class="hero">
+    <p class="hero-tag">Майстер манікюру · Миронівка, Київська обл.</p>
+    <h1>Краса<br><em>у деталях</em></h1>
+    <p class="hero-sub">Доглянуті руки — це стиль, а не розкіш</p>
+    <p class="hero-hours">Вт – Нд &nbsp;|&nbsp; 08:00 – 17:00</p>
+    <div class="btns">
+      <a href="#booking" class="btn btn-dark">Записатись</a>
+      <a href="#services" class="btn btn-light">Послуги</a>
+    </div>
+  </section>
+
+  <div class="sec-border" id="services">
+  <div class="sec">
+    <p class="tag">прайс-лист</p>
+    <h2 class="stitle">Послуги<br><em>та ціни</em></h2>
+    <div class="svc-grid" id="svcGrid"><div class="loading"><span class="spin"></span>Завантаження...</div></div>
+    <p style="margin-top:16px;font-size:13px;color:var(--t3)">* Зняття матеріалу від іншого майстра — від 100 ₴ · Ціни орієнтовні</p>
+  </div>
+  </div>
+
+  <div class="sec-bg" id="booking">
+  <div class="sec-inner">
+    <p class="tag">онлайн-запис</p>
+    <h2 class="stitle">Оберіть<br><em>зручний час</em></h2>
+    <div class="book-cols">
+      <div>
+        <p style="font-size:16px;color:var(--t2);margin-bottom:16px">Оберіть день — вільний час з'явиться одразу. Запис можливий за 1 день наперед.</p>
+        <p style="font-size:14px;color:var(--t3);line-height:2">📍 Миронівка, Київська область<br>🗓 Вт – Нд, 08:00 – 17:00<br>⛔ Понеділок — вихідний</p>
+      </div>
+      <div>
+        <div class="cal-head">
+          <button class="cal-btn" onclick="calPrev()">‹</button>
+          <div class="cal-title" id="calTitle"></div>
+          <button class="cal-btn" onclick="calNext()">›</button>
+        </div>
+        <div class="cal-wdays"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Нд</span></div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-legend">
+          <span><i style="background:var(--sage)"></i> Є місця</span>
+          <span><i style="background:var(--rose)"></i> Закрито</span>
+          <span><i style="background:var(--b)"></i> Вихідний</span>
+        </div>
+        <div id="slotsWrap" style="display:none;margin-top:24px">
+          <p class="slots-lbl" id="slotsLbl"></p>
+          <div class="slots-grid" id="slotsGrid"></div>
+        </div>
+        <div id="bookArea"></div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="sec-border" id="gallery">
+  <div class="sec">
+    <p class="tag">портфоліо</p>
+    <h2 class="stitle">Роботи<br><em>Тетяни</em></h2>
+    <div class="gal-grid" id="galGrid"><div class="loading"><span class="spin"></span>Завантаження...</div></div>
+  </div>
+  </div>
+
+  <div class="sec-bg" id="about">
+  <div class="sec-inner">
+    <p class="tag">майстер</p>
+    <h2 class="stitle">Таня —<br><em>майстер із душею</em></h2>
+    <div class="about-lay">
+      <div class="about-img-box" id="aboutImg">✦</div>
+      <div>
+        <p class="about-p" id="aboutP1">Я — Тетяна, майстер нігтьового сервісу з Миронівки. Захоплююсь своєю справою вже кілька років і вкладаю в кожну роботу увагу та турботу.</p>
+        <p class="about-p" id="aboutP2">Працюю лише з перевіреними матеріалами, дотримуюсь стерильності та слідкую за тенденціями. Кожна клієнтка — особлива.</p>
+        <div class="stats">
+          <div><div class="stat-n" id="statC">200+</div><div class="stat-l">клієнток</div></div>
+          <div><div class="stat-n" id="statY">5+</div><div class="stat-l">років досвіду</div></div>
+          <div><div class="stat-n" id="statQ">100%</div><div class="stat-l">якість</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <footer>
+    <div class="flogo">Тетяна <em>·</em> nail art</div>
+    <div class="finfo" id="footerInfo">Миронівка, Київська область</div>
+  </footer>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin-panel" id="adminPanel">
+  <div class="atop">
+    <div class="atop-logo">Тетяна <em>·</em> панель майстра</div>
+    <div class="atop-links">
+      <a href="#" onclick="closeAdmin();return false">↗ Сайт</a>
+      <button onclick="doSignOut()">Вийти</button>
+    </div>
+  </div>
+  <div class="atabs" id="atabs">
+    <button class="atab on" onclick="switchTab('bookings',this)">📋 Записи</button>
+    <button class="atab" onclick="switchTab('schedule',this)">📅 Розклад</button>
+    <button class="atab" onclick="switchTab('services',this)">💅 Послуги</button>
+    <button class="atab" onclick="switchTab('gallery',this)">🖼 Галерея</button>
+    <button class="atab" onclick="switchTab('about',this)">👤 Про мене</button>
+    <button class="atab" onclick="switchTab('settings',this)">⚙️ Налаш.</button>
+  </div>
+  <div class="abody">
+
+    <div class="asec on" id="tab-bookings">
+      <div class="stats-row" id="bkStats">
+        <div class="sbox"><div class="n" id="bk0">—</div><div class="l">Всього</div></div>
+        <div class="sbox"><div class="n" id="bk1">—</div><div class="l">Активних</div></div>
+        <div class="sbox"><div class="n" id="bk2">—</div><div class="l">Сьогодні</div></div>
+        <div class="sbox"><div class="n" id="bk3">—</div><div class="l">Скасовано</div></div>
+      </div>
+      <h2 class="ah2">Всі записи</h2>
+      <div id="bkTable"><div class="loading"><span class="spin"></span></div></div>
+    </div>
+
+    <div class="asec" id="tab-schedule">
+      <h2 class="ah2">Закрити день</h2>
+      <div class="acard">
+        <div class="arow">
+          <div class="field" style="flex:0 0 160px"><label>Дата</label><input type="date" id="bdDate"></div>
+          <div class="field" style="flex:1"><label>Причина</label><input type="text" id="bdReason" placeholder="Вихідний / Хвороба / Відпустка"></div>
+          <button class="abtn" onclick="addBlock()">Закрити день</button>
+        </div>
+      </div>
+      <div class="chip-list" id="bdList"></div>
+    </div>
+
+    <div class="asec" id="tab-services">
+      <h2 class="ah2">Послуги</h2>
+      <div id="svcAdminList"></div>
+      <div class="acard">
+        <h3>Додати / редагувати послугу</h3>
+        <div class="aform">
+          <div class="arow">
+            <div class="field" style="flex:3"><label>Назва</label><input type="text" id="svName" placeholder="Манікюр + Гель-лак"></div>
+            <div class="field" style="flex:1"><label>Ціна (₴)</label><input type="number" id="svPrice" placeholder="600" min="0"></div>
+            <div class="field" style="flex:1"><label>Хв</label><input type="number" id="svDur" placeholder="90" min="0"></div>
+          </div>
+          <input type="hidden" id="svEditId">
+          <button class="abtn" id="svSaveBtn" onclick="saveService()" style="align-self:start">Додати послугу</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="asec" id="tab-gallery">
+      <h2 class="ah2">Галерея робіт</h2>
+      <div class="gal-a-grid" id="galAdmin"></div>
+      <div class="acard">
+        <h3>Додати фото</h3>
+        <p style="font-size:13px;color:var(--t3);margin-bottom:14px">Вставте пряме посилання на фото (Google Drive → «Загальний доступ» → скопіюйте посилання, або будь-який прямий URL зображення)</p>
+        <div class="aform">
+          <div class="field"><label>URL фото</label><input type="url" id="galUrl" placeholder="https://drive.google.com/..."></div>
+          <div class="field"><label>Підпис (необов'язково)</label><input type="text" id="galCap" placeholder="Манікюр у стилі French"></div>
+          <button class="abtn" onclick="addGallery()" style="align-self:start">Додати фото</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="asec" id="tab-about">
+      <h2 class="ah2">Про мене</h2>
+      <div class="acard">
+        <div class="aform">
+          <div class="field"><label>URL мого фото (вертикальне 3:4)</label><input type="url" id="aPhotoUrl" placeholder="https://..."></div>
+          <div class="field"><label>Перший абзац</label><textarea id="aTxt1" style="height:90px"></textarea></div>
+          <div class="field"><label>Другий абзац</label><textarea id="aTxt2" style="height:90px"></textarea></div>
+          <div class="arow">
+            <div class="field"><label>Клієнток</label><input type="text" id="aSC" placeholder="200+"></div>
+            <div class="field"><label>Роки досвіду</label><input type="text" id="aSY" placeholder="5+"></div>
+            <div class="field"><label>Якість</label><input type="text" id="aSQ" placeholder="100%"></div>
+          </div>
+          <button class="abtn" onclick="saveAbout()" style="align-self:start">Зберегти</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="asec" id="tab-settings">
+      <h2 class="ah2">Налаштування</h2>
+      <div class="acard">
+        <h3>Контакти на сайті</h3>
+        <div class="aform">
+          <div class="frow">
+            <div class="field"><label>Телефон</label><input type="tel" id="setPhone" placeholder="+38 (063) 000-0000"></div>
+            <div class="field"><label>Instagram</label><input type="text" id="setInsta" placeholder="@tanya.nails"></div>
+          </div>
+          <div class="frow">
+            <div class="field"><label>Viber / WhatsApp</label><input type="text" id="setViber" placeholder="+38 063 000 0000"></div>
+            <div class="field"><label>Telegram</label><input type="text" id="setTg" placeholder="@tanya_nails"></div>
+          </div>
+          <button class="abtn" onclick="saveSettings()" style="align-self:start">Зберегти контакти</button>
+        </div>
+      </div>
+      <div class="acard">
+        <h3>Email адміністратора</h3>
+        <p style="font-size:14px;color:var(--t3);margin-bottom:14px">Поточний: <strong id="curAdmin" style="color:var(--t)"></strong></p>
+        <div class="aform">
+          <div class="field"><label>Новий admin email</label><input type="email" id="newAdminEmail" placeholder="tanya@gmail.com"></div>
+          <div class="field"><label>Код підтвердження</label><input type="password" id="newAdminCode"></div>
+          <button class="abtn" onclick="changeAdmin()">Змінити</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-bg" id="loginModal">
+  <div class="modal">
+    <button class="modal-x" onclick="closeMod()">✕</button>
+    <h3 id="mTitle">Вхід</h3>
+    <p class="msub" id="mSub">Увійдіть щоб записатись</p>
+
+    <div id="formSI">
+      <div class="aform" style="gap:12px">
+        <div class="field"><label>Email</label><input type="email" id="siE" placeholder="example@gmail.com" autocomplete="email"></div>
+        <div class="field"><label>Пароль</label><input type="password" id="siP" placeholder="Ваш пароль" autocomplete="current-password"></div>
+        <div class="msg" id="siMsg"></div>
+        <button class="abtn" onclick="doSignIn()">Увійти</button>
+      </div>
+      <div class="or-div">або</div>
+      <button class="google-btn" onclick="doGoogle()">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>
+        Увійти через Google
+      </button>
+      <p class="auth-sw">Немає акаунту? <a onclick="showSU()">Зареєструватись</a></p>
+    </div>
+
+    <div id="formSU" style="display:none">
+      <div class="aform" style="gap:12px">
+        <div class="frow">
+          <div class="field"><label>Ім'я *</label><input type="text" id="suN" placeholder="Ольга" autocomplete="given-name"></div>
+          <div class="field"><label>Телефон</label><input type="tel" id="suPh" placeholder="+380XX..." autocomplete="tel"></div>
+        </div>
+        <div class="field"><label>Email *</label><input type="email" id="suE" placeholder="example@gmail.com" autocomplete="email"></div>
+        <div class="field"><label>Пароль *</label><input type="password" id="suP" placeholder="Мінімум 6 символів" autocomplete="new-password"></div>
+        <div class="msg" id="suMsg"></div>
+        <button class="abtn" onclick="doSignUp()">Зареєструватись</button>
+      </div>
+      <div class="or-div">або</div>
+      <button class="google-btn" onclick="doGoogle()">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>
+        Через Google
+      </button>
+      <p class="auth-sw">Вже є акаунт? <a onclick="showSI()">Увійти</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- FIRST-RUN SETUP -->
+<div class="setup-ov" id="setupOv">
+  <div class="setup-box">
+    <p class="tag" style="margin-bottom:12px">перше налаштування</p>
+    <h3 style="font-family:var(--serif);font-size:28px;font-weight:400;color:var(--t);margin-bottom:8px">Вітаємо!</h3>
+    <p style="font-size:15px;color:var(--t2);margin-bottom:28px;line-height:1.7">Введіть email Тані та код підтвердження щоб активувати панель майстра.</p>
+    <div class="aform" style="gap:14px">
+      <div class="field"><label>Email Тані</label><input type="email" id="setupE" placeholder="tanya@gmail.com"></div>
+      <div class="field"><label>Код підтвердження</label><input type="password" id="setupC" placeholder="Код від розробника"></div>
+      <div class="msg" id="setupMsg"></div>
+      <button class="abtn" onclick="doSetup()">Активувати</button>
+    </div>
+    <p style="font-size:12px;color:var(--t3);margin-top:16px;line-height:1.6">Секретний код: <strong style="color:var(--t)">TANYA2024</strong><br>Після активації змініть код у налаштуваннях</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<script>
+// ═══════════════════════════════════════════
+//  FIREBASE CONFIG
+// ═══════════════════════════════════════════
+firebase.initializeApp({
+  apiKey: "AIzaSyB5ekvubs_I8RqugwZpF5r626rYP60lE_o",
+  authDomain: "tanya-nails.firebaseapp.com",
+  projectId: "tanya-nails",
+  storageBucket: "tanya-nails.firebasestorage.app",
+  messagingSenderId: "581439101385",
+  appId: "1:581439101385:web:0ac65efbb40c0ee7e9b018"
+});
+const auth = firebase.auth();
+const db   = firebase.firestore();
+
+const SETUP_CODE  = 'TANYA2024';
+const MONTHS_UK   = ['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];
+const WORK_HOURS  = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00'];
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+let CU      = null;  // current user
+let ADMIN   = null;  // admin email
+let IS_ADM  = false;
+let SETS    = {};    // settings
+let SVCS    = [];    // services
+let CAL_Y   = new Date().getFullYear();
+let CAL_M   = new Date().getMonth() + 1;
+let SEL_D   = null;  // selected date string
+let SEL_T   = null;  // selected time string
+let PEND    = false; // pending booking after login
+
+// ═══════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════
+auth.onAuthStateChanged(async u => {
+  CU = u;
+  await loadSettings();
+  updateNav();
+  if (u && PEND) { PEND = false; renderBookArea(); }
+});
+
+async function loadSettings() {
+  try {
+    const snap = await db.collection('settings').doc('main').get();
+    if (!snap.exists) {
+      document.getElementById('setupOv').classList.add('open');
+      return;
+    }
+    SETS  = snap.data();
+    ADMIN = SETS.adminEmail || null;
+    IS_ADM = !!(CU && ADMIN && CU.email === ADMIN);
+    applySettings();
+  } catch(e) { console.error('loadSettings', e); }
+}
+
+function applySettings() {
+  // Footer
+  let fi = 'Миронівка, Київська область';
+  if (SETS.phone)     fi += `<br><a href="tel:${SETS.phone}">${SETS.phone}</a>`;
+  if (SETS.instagram) fi += `<br><a href="https://instagram.com/${SETS.instagram.replace('@','')}" target="_blank">Instagram: ${SETS.instagram}</a>`;
+  if (SETS.viber)     fi += `<br>Viber: ${SETS.viber}`;
+  if (SETS.telegram)  fi += `<br>Telegram: ${SETS.telegram}`;
+  document.getElementById('footerInfo').innerHTML = fi;
+  // About
+  if (SETS.aboutPhotoUrl) { document.getElementById('aboutImg').innerHTML = `<img src="${SETS.aboutPhotoUrl}" alt="Тетяна" onerror="this.parentElement.innerHTML='✦'">`; }
+  if (SETS.aboutText1) document.getElementById('aboutP1').textContent = SETS.aboutText1;
+  if (SETS.aboutText2) document.getElementById('aboutP2').textContent = SETS.aboutText2;
+  if (SETS.statC) document.getElementById('statC').textContent = SETS.statC;
+  if (SETS.statY) document.getElementById('statY').textContent = SETS.statY;
+  if (SETS.statQ) document.getElementById('statQ').textContent = SETS.statQ;
+}
+
+// ═══════════════════════════════════════════
+//  AUTH
+// ═══════════════════════════════════════════
+function updateNav() {
+  const btn = document.getElementById('navBtn');
+  if (!CU) { btn.textContent = 'Увійти'; btn.className = 'nav-user-btn'; return; }
+  if (IS_ADM) { btn.textContent = 'Панель майстра'; btn.className = 'nav-user-btn admin'; return; }
+  const name = CU.displayName ? CU.displayName.split(' ')[0] : CU.email.split('@')[0];
+  btn.textContent = name; btn.className = 'nav-user-btn';
+}
+
+function navBtnClick() {
+  if (!CU) { openMod(); return; }
+  if (IS_ADM) { openAdmin(); return; }
+  if (confirm(`Вийти з акаунту ${CU.email}?`)) doSignOut();
+}
+
+function doSignIn() {
+  const e = v('siE'), p = v('siP'), msg = document.getElementById('siMsg');
+  if (!e||!p) { showMsg(msg,'err','Заповніть всі поля'); return; }
+  auth.signInWithEmailAndPassword(e, p)
+    .then(() => { closeMod(); toast('Ласкаво просимо! 👋','ok'); })
+    .catch(err => showMsg(msg,'err', fbErr(err)));
+}
+
+function doSignUp() {
+  const name = v('suN'), phone = v('suPh'), email = v('suE'), pass = v('suP');
+  const msg = document.getElementById('suMsg');
+  if (!name||!email||!pass) { showMsg(msg,'err','Заповніть обов\'язкові поля'); return; }
+  if (pass.length < 6) { showMsg(msg,'err','Пароль — мінімум 6 символів'); return; }
+  auth.createUserWithEmailAndPassword(email, pass)
+    .then(async c => {
+      await c.user.updateProfile({ displayName: name });
+      if (phone) await db.collection('users').doc(c.user.uid).set({ name, phone, email });
+      closeMod(); toast('Реєстрація успішна! 🎉','ok');
+    })
+    .catch(err => showMsg(msg,'err', fbErr(err)));
+}
+
+function doGoogle() {
+  auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
+    .then(() => { closeMod(); toast('Ласкаво просимо! 👋','ok'); })
+    .catch(e => console.error(e));
+}
+
+async function doSignOut() {
+  await auth.signOut(); closeAdmin(); toast('Ви вийшли з акаунту');
+  renderBookArea();
+}
+
+function fbErr(e) {
+  return {'auth/user-not-found':'Email не знайдено','auth/wrong-password':'Невірний пароль','auth/email-already-in-use':'Email вже зареєстровано','auth/weak-password':'Пароль занадто короткий','auth/invalid-email':'Невірний формат email','auth/too-many-requests':'Забагато спроб. Спробуйте пізніше','auth/invalid-credential':'Невірний email або пароль'}[e.code] || e.message;
+}
+
+// ═══════════════════════════════════════════
+//  FIRST-RUN SETUP
+// ═══════════════════════════════════════════
+async function doSetup() {
+  const email = v('setupE'), code = v('setupC');
+  const msg = document.getElementById('setupMsg');
+  if (!email) { showMsg(msg,'err','Введіть email'); return; }
+  if (code !== SETUP_CODE) { showMsg(msg,'err','Невірний код підтвердження'); return; }
+  try {
+    await db.collection('settings').doc('main').set({
+      adminEmail: email, initialized: true,
+      phone:'', instagram:'', viber:'', telegram:'',
+      aboutText1:'Я — Тетяна, майстер нігтьового сервісу з Миронівки. Захоплююсь своєю справою вже кілька років і вкладаю в кожну роботу увагу та турботу.',
+      aboutText2:'Працюю лише з перевіреними матеріалами, дотримуюсь стерильності та слідкую за тенденціями. Кожна клієнтка — особлива.',
+      statC:'200+', statY:'5+', statQ:'100%', aboutPhotoUrl:''
+    });
+    const batch = db.batch();
+    [{name:'Класичний манікюр',price:350,duration:60,ord:1},{name:'Манікюр + Гель-лак',price:600,duration:90,ord:2},{name:'Педикюр',price:500,duration:75,ord:3},{name:'Педикюр + Гель-лак',price:700,duration:90,ord:4},{name:'Манікюр + Педикюр',price:950,duration:150,ord:5},{name:'Нарощування нігтів',price:900,duration:120,ord:6},{name:'Корекція нарощених',price:600,duration:90,ord:7},{name:'Дизайн (за нігтик)',price:50,duration:0,ord:8}]
+      .forEach(s => batch.set(db.collection('services').doc(), s));
+    await batch.commit();
+    document.getElementById('setupOv').classList.remove('open');
+    toast('Сайт активовано! 🎉','ok');
+    await loadSettings(); loadSvcs(); loadGal();
+  } catch(e) { showMsg(document.getElementById('setupMsg'),'err','Помилка: '+e.message); }
+}
+
+// ═══════════════════════════════════════════
+//  SERVICES
+// ═══════════════════════════════════════════
+async function loadSvcs() {
+  const snap = await db.collection('services').orderBy('ord').get();
+  SVCS = snap.docs.map(d=>({id:d.id,...d.data()}));
+  const g = document.getElementById('svcGrid');
+  g.innerHTML = SVCS.length ? SVCS.map(s=>`<div class="svc"><div class="svc-name">${s.name}</div><div class="svc-dur">${s.duration?s.duration+' хв':'за нігтик'}</div><div class="svc-price">${s.price}<sup> ₴</sup></div></div>`).join('') : '<div class="loading">Послуги ще не додані</div>';
+}
+
+// ═══════════════════════════════════════════
+//  GALLERY
+// ═══════════════════════════════════════════
+async function loadGal() {
+  const snap = await db.collection('gallery').orderBy('ord','asc').get();
+  const items = snap.docs.map(d=>({id:d.id,...d.data()}));
+  const g = document.getElementById('galGrid');
+  g.innerHTML = items.length ? items.map(i=>`<div class="gal-item"><img src="${i.url}" alt="${i.cap||''}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`).join('') : '<div class="gal-empty">Фотографії будуть додані незабаром ✦</div>';
+}
+
+// ═══════════════════════════════════════════
+//  CALENDAR
+// ═══════════════════════════════════════════
+async function renderCal() {
+  document.getElementById('calTitle').textContent = `${MONTHS_UK[CAL_M-1]} ${CAL_Y}`;
+  const g = document.getElementById('calGrid');
+  g.innerHTML = `<div style="grid-column:1/-1" class="loading"><span class="spin"></span></div>`;
+  const [bdSnap, bkSnap] = await Promise.all([
+    db.collection('blocked_days').get(),
+    db.collection('bookings').where('status','==','new').get()
+  ]);
+  const blocked = new Set(bdSnap.docs.map(d=>d.id));
+  const booked = {};
+  bkSnap.forEach(d=>{ const dt=d.data().date; booked[dt]=(booked[dt]||0)+1; });
+  const today = new Date(); today.setHours(0,0,0,0);
+  const dim = new Date(CAL_Y, CAL_M, 0).getDate();
+  let fw = new Date(CAL_Y, CAL_M-1, 1).getDay(); // 0=Sun
+  const offset = fw === 0 ? 6 : fw - 1; // convert to Mon-first
+  g.innerHTML = '';
+  for (let i=0;i<offset;i++) { const e=document.createElement('div'); e.className='cday empty'; g.appendChild(e); }
+  for (let day=1;day<=dim;day++) {
+    const d  = new Date(CAL_Y, CAL_M-1, day);
+    const ds = `${CAL_Y}-${String(CAL_M).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const isWork = d.getDay() !== 1; // Mon=1 is off
+    const isPast = d < today;
+    const isBlk  = blocked.has(ds);
+    const isFull = (booked[ds]||0) >= WORK_HOURS.length;
+    const isAvail = !isPast && isWork && !isBlk && !isFull;
+    const el = document.createElement('div'); el.className='cday';
+    let cls = isPast?'past':!isWork?'nowork':isBlk?'blocked':isFull?'full':'avail';
+    el.classList.add(cls);
+    el.innerHTML = `<span class="dn">${day}</span>${isAvail?'<span class="dd"></span>':''}`;
+    if (ds===SEL_D) el.classList.add('sel');
+    if (isAvail) el.onclick = () => pickDate(ds, el);
+    g.appendChild(el);
+  }
+}
+
+function calPrev() { CAL_M--; if(CAL_M<1){CAL_M=12;CAL_Y--;} SEL_D=null; SEL_T=null; renderCal(); hideSlots(); renderBookArea(); }
+function calNext() { CAL_M++; if(CAL_M>12){CAL_M=1;CAL_Y++;} SEL_D=null; SEL_T=null; renderCal(); hideSlots(); renderBookArea(); }
+function hideSlots() { document.getElementById('slotsWrap').style.display='none'; }
+
+async function pickDate(ds, el) {
+  if (!CU) { PEND=true; openMod(); return; }
+  document.querySelectorAll('.cday').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel'); SEL_D=ds; SEL_T=null;
+  await loadSlots(ds);
+  renderBookArea();
+}
+
+async function loadSlots(ds) {
+  const wrap = document.getElementById('slotsWrap');
+  const [,m,d] = ds.split('-');
+  document.getElementById('slotsLbl').textContent = `Час на ${parseInt(d)} ${MONTHS_UK[parseInt(m)-1].toLowerCase()}:`;
+  wrap.style.display='block';
+  const g = document.getElementById('slotsGrid'); g.innerHTML='<span class="spin"></span>';
+  const snap = await db.collection('bookings').where('date','==',ds).where('status','==','new').get();
+  const taken = new Set(snap.docs.map(d=>d.data().time));
+  g.innerHTML='';
+  WORK_HOURS.forEach(t=>{
+    const b=document.createElement('button'); b.className='slt'; b.textContent=t; b.disabled=taken.has(t);
+    if(t===SEL_T) b.classList.add('sel');
+    b.onclick=()=>{ document.querySelectorAll('.slt').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); SEL_T=t; renderBookArea(); };
+    g.appendChild(b);
+  });
+  if(window.innerWidth<768) setTimeout(()=>wrap.scrollIntoView({behavior:'smooth',block:'nearest'}),150);
+}
+
+// ═══════════════════════════════════════════
+//  BOOKING AREA
+// ═══════════════════════════════════════════
+function renderBookArea() {
+  const area = document.getElementById('bookArea');
+  if (!CU) {
+    area.innerHTML=`<div class="login-prompt"><p>Щоб записатись, увійдіть або зареєструйтесь — це займає 1 хвилину</p><button class="btn btn-dark" onclick="openMod()">Увійти / Зареєструватись</button></div>`;
+    return;
+  }
+  if (!SEL_D || !SEL_T) {
+    area.innerHTML=`<p style="margin-top:20px;font-size:14px;color:var(--t3)">← Оберіть дату та час щоб записатись</p>`;
+    return;
+  }
+  const opts = SVCS.map(s=>`<option value="${s.name}">${s.name} — ${s.price} ₴</option>`).join('');
+  const name = CU.displayName || '';
+  area.innerHTML=`
+    <div style="margin-top:24px;display:flex;flex-direction:column;gap:14px">
+      <div style="background:var(--p);border:1px solid var(--b);padding:12px 16px;font-size:14px;color:var(--t2)">
+        📅 <strong>${SEL_D}</strong> о <strong>${SEL_T}</strong>
+      </div>
+      <div class="frow">
+        <div class="field"><label>Ім'я *</label><input type="text" id="bN" value="${name}" placeholder="Ольга"></div>
+        <div class="field"><label>Телефон *</label><input type="tel" id="bPh" placeholder="+38 0XX..."></div>
+      </div>
+      <div class="field"><label>Послуга *</label><select id="bSv"><option value="">— оберіть —</option>${opts}</select></div>
+      <div class="field"><label>Коментар</label><textarea id="bCom" placeholder="Побажання: колір, форма нігтів, дизайн..."></textarea></div>
+      <div class="msg" id="bMsg"></div>
+      <button class="btn btn-dark" onclick="submitBook()" style="align-self:start">Підтвердити запис</button>
+      <p class="fnote">Після запису Таня зателефонує для підтвердження</p>
+    </div>`;
+  if(window.innerWidth<768) setTimeout(()=>area.scrollIntoView({behavior:'smooth',block:'nearest'}),150);
+}
+
+async function submitBook() {
+  const name=v('bN'), phone=v('bPh'), svc=document.getElementById('bSv').value, com=v('bCom');
+  const msg=document.getElementById('bMsg');
+  if(!name||!phone||!svc){showMsg(msg,'err','Заповніть всі обов\'язкові поля');return;}
+  // Double-check slot
+  const chk=await db.collection('bookings').where('date','==',SEL_D).where('time','==',SEL_T).where('status','==','new').get();
+  if(!chk.empty){showMsg(msg,'err','Цей час щойно зайняли. Оберіть інший.');return;}
+  try {
+    await db.collection('bookings').add({clientName:name,clientPhone:phone,clientEmail:CU.email,clientUid:CU.uid,service:svc,date:SEL_D,time:SEL_T,comment:com,status:'new',createdAt:new Date().toISOString()});
+    showMsg(msg,'ok','✓ Запис підтверджено! Таня зателефонує для підтвердження.');
+    SEL_T=null; document.querySelectorAll('.slt').forEach(b=>b.classList.remove('sel'));
+    renderCal();
+  } catch(e){showMsg(msg,'err','Помилка: '+e.message);}
+}
+
+// ═══════════════════════════════════════════
+//  ADMIN PANEL
+// ═══════════════════════════════════════════
+function openAdmin() {
+  document.getElementById('adminPanel').classList.add('open');
+  document.body.style.overflow='hidden';
+  loadAdmBk(); loadAdmBlk(); loadAdmSvcs(); loadAdmGal(); fillAdmSettings();
+}
+function closeAdmin() {
+  document.getElementById('adminPanel').classList.remove('open');
+  document.body.style.overflow='';
+}
+function switchTab(tab, btn) {
+  document.querySelectorAll('.asec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.atab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-'+tab).classList.add('on');
+  btn.classList.add('on');
+}
+
+// Bookings
+async function loadAdmBk() {
+  const snap = await db.collection('bookings').orderBy('date','desc').get();
+  const all = snap.docs.map(d=>({id:d.id,...d.data()}));
+  const today = new Date().toISOString().split('T')[0];
+  const act = all.filter(b=>b.status==='new');
+  document.getElementById('bk0').textContent = all.length;
+  document.getElementById('bk1').textContent = act.length;
+  document.getElementById('bk2').textContent = act.filter(b=>b.date===today).length;
+  document.getElementById('bk3').textContent = all.filter(b=>b.status==='cancelled').length;
+  const wrap = document.getElementById('bkTable');
+  if(!all.length){wrap.innerHTML='<p class="loading">Записів ще немає ☕</p>';return;}
+  wrap.innerHTML=`<div class="atable-wrap"><table><thead><tr><th>Ім'я</th><th>Телефон</th><th>Послуга</th><th>Дата</th><th>Час</th><th>Коментар</th><th>Статус</th><th></th></tr></thead><tbody>${all.map(b=>`<tr><td><strong>${b.clientName}</strong></td><td>${b.clientPhone}</td><td>${b.service}</td><td>${b.date}</td><td>${b.time}</td><td>${b.comment||'—'}</td><td class="s-${b.status}">${b.status==='new'?'активний':'скасовано'}</td><td>${b.status==='new'?`<button class="abtn sm red" onclick="cancelBk('${b.id}')">Скасувати</button>`:''}</td></tr>`).join('')}</tbody></table></div>`;
+}
+async function cancelBk(id) {
+  if(!confirm('Скасувати запис?'))return;
+  await db.collection('bookings').doc(id).update({status:'cancelled'});
+  toast('Запис скасовано'); loadAdmBk();
+}
+
+// Blocked days
+async function loadAdmBlk() {
+  const snap = await db.collection('blocked_days').get();
+  const list = document.getElementById('bdList');
+  if(snap.empty){list.innerHTML='<p style="font-size:14px;color:var(--t3)">Закритих днів немає</p>';return;}
+  list.innerHTML=snap.docs.map(d=>`<div class="chip"><span>${d.id} — ${d.data().reason||'Вихідний'}</span><button onclick="delBlock('${d.id}')">✕</button></div>`).join('');
+}
+async function addBlock() {
+  const date=v('bdDate'), reason=v('bdReason')||'Вихідний';
+  if(!date){toast('Оберіть дату','err');return;}
+  await db.collection('blocked_days').doc(date).set({reason});
+  toast(`День ${date} закрито`,'ok');
+  document.getElementById('bdDate').value=''; document.getElementById('bdReason').value='';
+  loadAdmBlk(); renderCal();
+}
+async function delBlock(date) {
+  await db.collection('blocked_days').doc(date).delete();
+  toast('День відкрито'); loadAdmBlk(); renderCal();
+}
+
+// Services admin
+async function loadAdmSvcs() {
+  const snap = await db.collection('services').orderBy('ord').get();
+  const svcs = snap.docs.map(d=>({id:d.id,...d.data()}));
+  document.getElementById('svcAdminList').innerHTML = svcs.map(s=>`
+    <div class="svc-item">
+      <div><div class="svc-item-name">${s.name}</div><div style="font-size:13px;color:var(--t3)">${s.duration?s.duration+' хв':'за нігтик'}</div></div>
+      <div class="svc-item-price">${s.price} ₴</div>
+      <div class="svc-item-btns">
+        <button class="abtn sm out" onclick="editSvc('${s.id}','${s.name}',${s.price},${s.duration||0},${s.ord||0})">Редагувати</button>
+        <button class="abtn sm red" onclick="delSvc('${s.id}')">✕</button>
+      </div>
+    </div>`).join('');
+}
+function editSvc(id, name, price, dur, ord) {
+  document.getElementById('svName').value=name;
+  document.getElementById('svPrice').value=price;
+  document.getElementById('svDur').value=dur;
+  document.getElementById('svEditId').value=id;
+  const btn=document.getElementById('svSaveBtn');
+  btn.textContent='Зберегти зміни';
+  btn.onclick=()=>updateSvc(id, ord, btn);
+  btn.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+async function updateSvc(id, ord, btn) {
+  const name=v('svName'), price=parseInt(v('svPrice'))||0, dur=parseInt(v('svDur'))||0;
+  if(!name||!price){toast('Введіть назву та ціну','err');return;}
+  await db.collection('services').doc(id).update({name,price,duration:dur,ord});
+  clearSvcForm(btn); toast('Послугу оновлено!','ok'); loadAdmSvcs(); loadSvcs();
+}
+async function saveService() {
+  const name=v('svName'), price=parseInt(v('svPrice'))||0, dur=parseInt(v('svDur'))||0;
+  if(!name||!price){toast('Введіть назву та ціну','err');return;}
+  const snap=await db.collection('services').orderBy('ord','desc').limit(1).get();
+  const ord=(snap.empty?0:(snap.docs[0].data().ord||0))+1;
+  await db.collection('services').add({name,price,duration:dur,ord});
+  clearSvcForm(document.getElementById('svSaveBtn')); toast('Послугу додано!','ok'); loadAdmSvcs(); loadSvcs();
+}
+function clearSvcForm(btn) {
+  ['svName','svPrice','svDur','svEditId'].forEach(id=>document.getElementById(id).value='');
+  btn.textContent='Додати послугу'; btn.onclick=saveService;
+}
+async function delSvc(id) {
+  if(!confirm('Видалити послугу?'))return;
+  await db.collection('services').doc(id).delete();
+  toast('Видалено'); loadAdmSvcs(); loadSvcs();
+}
+
+// Gallery admin
+async function loadAdmGal() {
+  const snap=await db.collection('gallery').orderBy('ord','asc').get();
+  const g=document.getElementById('galAdmin');
+  g.innerHTML=snap.empty?'<p style="font-size:14px;color:var(--t3);grid-column:1/-1">Фото ще немає</p>':snap.docs.map(d=>`<div class="gal-a-item"><img src="${d.data().url}" alt="" onerror="this.src=''"><button onclick="delGal('${d.id}')">✕</button></div>`).join('');
+}
+async function addGallery() {
+  const url=v('galUrl'), cap=v('galCap');
+  if(!url){toast('Введіть URL фото','err');return;}
+  const snap=await db.collection('gallery').orderBy('ord','desc').limit(1).get();
+  const ord=(snap.empty?0:(snap.docs[0].data().ord||0))+1;
+  await db.collection('gallery').add({url,cap,ord,createdAt:new Date().toISOString()});
+  document.getElementById('galUrl').value=''; document.getElementById('galCap').value='';
+  toast('Фото додано!','ok'); loadAdmGal(); loadGal();
+}
+async function delGal(id) {
+  await db.collection('gallery').doc(id).delete();
+  toast('Фото видалено'); loadAdmGal(); loadGal();
+}
+
+// About admin
+async function saveAbout() {
+  const u={aboutPhotoUrl:v('aPhotoUrl'),aboutText1:v('aTxt1'),aboutText2:v('aTxt2'),statC:v('aSC'),statY:v('aSY'),statQ:v('aSQ')};
+  await db.collection('settings').doc('main').update(u);
+  Object.assign(SETS,u); applySettings(); toast('Збережено!','ok');
+}
+
+// Settings
+function fillAdmSettings() {
+  document.getElementById('setPhone').value=SETS.phone||'';
+  document.getElementById('setInsta').value=SETS.instagram||'';
+  document.getElementById('setViber').value=SETS.viber||'';
+  document.getElementById('setTg').value=SETS.telegram||'';
+  document.getElementById('curAdmin').textContent=SETS.adminEmail||'—';
+  document.getElementById('aPhotoUrl').value=SETS.aboutPhotoUrl||'';
+  document.getElementById('aTxt1').value=SETS.aboutText1||'';
+  document.getElementById('aTxt2').value=SETS.aboutText2||'';
+  document.getElementById('aSC').value=SETS.statC||'';
+  document.getElementById('aSY').value=SETS.statY||'';
+  document.getElementById('aSQ').value=SETS.statQ||'';
+}
+async function saveSettings() {
+  const u={phone:v('setPhone'),instagram:v('setInsta'),viber:v('setViber'),telegram:v('setTg')};
+  await db.collection('settings').doc('main').update(u);
+  Object.assign(SETS,u); applySettings(); toast('Контакти збережено!','ok');
+}
+async function changeAdmin() {
+  const email=v('newAdminEmail'), code=v('newAdminCode');
+  if(!email){toast('Введіть email','err');return;}
+  if(code!==SETUP_CODE){toast('Невірний код','err');return;}
+  await db.collection('settings').doc('main').update({adminEmail:email});
+  SETS.adminEmail=ADMIN=email; document.getElementById('curAdmin').textContent=email;
+  toast('Email адміна оновлено!','ok');
+}
+
+// ═══════════════════════════════════════════
+//  LOGIN MODAL
+// ═══════════════════════════════════════════
+function openMod()  { document.getElementById('loginModal').classList.add('open'); showSI(); }
+function closeMod() { document.getElementById('loginModal').classList.remove('open'); }
+function showSI()   { document.getElementById('formSI').style.display='block'; document.getElementById('formSU').style.display='none'; document.getElementById('mTitle').textContent='Вхід'; document.getElementById('mSub').textContent='Увійдіть щоб записатись'; }
+function showSU()   { document.getElementById('formSI').style.display='none'; document.getElementById('formSU').style.display='block'; document.getElementById('mTitle').textContent='Реєстрація'; document.getElementById('mSub').textContent='Швидка реєстрація — 1 хвилина'; }
+document.getElementById('loginModal').addEventListener('click',e=>{ if(e.target.id==='loginModal') closeMod(); });
+
+// ═══════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════
+function v(id)  { return (document.getElementById(id)?.value||'').trim(); }
+function toast(msg,type='') {
+  const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show '+(type||'');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),3200);
+}
+function showMsg(el,type,text) { el.style.display='block'; el.className='msg '+type; el.textContent=text; }
+function toggleMenu() { document.getElementById('mobMenu').classList.toggle('open'); }
+function closeMob()   { document.getElementById('mobMenu').classList.remove('open'); }
+
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+renderCal();
+renderBookArea();
+loadSvcs();
+loadGal();
+</script>
+</body>
+</html>
