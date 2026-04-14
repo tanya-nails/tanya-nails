@@ -78,8 +78,7 @@ body{background:var(--bg);color:var(--tx);font-family:var(--fs);font-size:16px;l
 .svc-tab.on{color:var(--tx);border-bottom-color:var(--gold2)}
 .svc-pane{display:none}
 .svc-pane.on{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line2);border:1px solid var(--line2)}
-@media(min-width:600px){.svc-pane.on{grid-template-columns:repeat(2,1fr)}}
-@media(min-width:900px){.svc-pane.on{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:600px){.svc-pane.on{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}}
 .svc-card{background:var(--bg);padding:26px 22px;display:flex;flex-direction:column;gap:8px;transition:background .2s;position:relative}
 .svc-card:hover{background:var(--bg2)}
 .svc-card-name{font-family:var(--ff);font-size:21px;font-weight:500;color:var(--tx);line-height:1.2}
@@ -170,14 +169,7 @@ body{background:var(--bg);color:var(--tx);font-family:var(--fs);font-size:16px;l
 .stat-n{font-family:var(--ff);font-size:38px;color:var(--tx);line-height:1}
 .stat-l{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-top:2px}
 
-/* ── QR SECTION ── */
-.qr-strip{background:var(--tx);padding:44px 20px;text-align:center}
-@media(min-width:768px){.qr-strip{padding:56px 48px}}
-.qr-strip h3{font-family:var(--ff);font-size:32px;font-weight:400;color:var(--bg);margin-bottom:8px}
-.qr-strip p{font-size:14px;color:var(--tx3);margin-bottom:28px}
-#qrCanvas{background:white;padding:12px;display:inline-block}
-.qr-dl{display:inline-block;margin-top:16px;padding:10px 24px;border:1px solid rgba(244,237,224,.3);color:var(--bg2);font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;background:none;font-family:var(--fs);text-decoration:none;transition:border-color .2s}
-.qr-dl:hover{border-color:var(--gold2);color:var(--gold2)}
+
 
 /* ── FOOTER ── */
 footer{border-top:1px solid var(--line);background:var(--tx);padding:44px 20px;display:flex;flex-direction:column;gap:20px}
@@ -268,6 +260,13 @@ tr:hover td{background:var(--bg2)}
 .clink:hover{opacity:.85}
 .clink-ph{background:var(--tx)}.clink-vi{background:#7360f2}.clink-tg{background:#29a8ea}.clink-wa{background:#25D366}.clink-em{background:var(--gold2)}
 
+/* ── WHY SECTION ── */
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line2);border:1px solid var(--line2)}
+@media(min-width:768px){.why-grid{grid-template-columns:repeat(4,1fr)}}
+.why-card{background:var(--bg);padding:32px 24px;display:flex;flex-direction:column;gap:12px}
+.why-icon{font-size:28px;line-height:1}
+.why-title{font-family:var(--ff);font-size:19px;font-weight:500;color:var(--tx);line-height:1.2}
+.why-text{font-size:14px;color:var(--tx2);line-height:1.65;flex:1}
 /* ── SETUP ── */
 .setup-ov{display:none;position:fixed;inset:0;background:var(--bg);z-index:700;align-items:center;justify-content:center;padding:20px}
 .setup-ov.open{display:flex}
@@ -289,7 +288,7 @@ tr:hover td{background:var(--bg2)}
 
 <!-- NAV -->
 <nav class="nav">
-  <a href="#" class="nav-logo" onclick="closeAdmin();return false">Тетяна <em>·</em> nail</a>
+  <a href="#" class="nav-logo" onclick="closeAdmin();return false">Тетяна <em>·</em> nail art</a>
   <ul class="nav-links">
     <li><a href="#services">Послуги</a></li>
     <li><a href="#booking">Запис</a></li>
@@ -313,13 +312,13 @@ tr:hover td{background:var(--bg2)}
 
   <!-- HERO -->
   <section class="hero">
-    <p class="hero-sub-tag">✦ &nbsp; майстер манікюру &nbsp; ✦</p>
-    <h1>Тетяна<em>nail</em></h1>
-    <p class="hero-sub">Миронівка, Київська область</p>
-    <p class="hero-hrs">Вт – Нд &nbsp;|&nbsp; 08:00 – 17:00</p>
+    <p class="hero-sub-tag">✦ &nbsp; майстер манікюру · Миронівка &nbsp; ✦</p>
+    <h1>Тетяна<em>nail art</em></h1>
+    <p class="hero-sub">Доглянуті нігті — це деталь, яка вирішує все</p>
+    <p class="hero-hrs">Вт – Нд &nbsp;|&nbsp; 08:00 – 17:00 &nbsp;|&nbsp; Миронівка</p>
     <div class="btns">
-      <a href="#booking" class="btn btn-d">Записатись</a>
-      <a href="#services" class="btn btn-l">Послуги</a>
+      <a href="#booking" class="btn btn-d">Записатись онлайн</a>
+      <a href="#services" class="btn btn-l">Переглянути послуги</a>
     </div>
   </section>
 
@@ -333,6 +332,36 @@ tr:hover td{background:var(--bg2)}
     <div id="svcPanes"><div class="loading"><span class="spin"></span>Завантаження...</div></div>
     <p style="margin-top:16px;font-size:13px;color:var(--tx3)">✦ Зняття матеріалу від іншого майстра — від 100 ₴ · Ціни орієнтовні</p>
   </div></div>
+
+  <!-- WHY CHOOSE ME -->
+  <div style="border-top:1px solid var(--line)">
+  <div class="sec">
+    <p class="tag">чому обирають мене</p>
+    <h2 class="stitle">Якість,<br><em>яка говорить сама</em></h2>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">🧼</div>
+        <div class="why-title">Стерильність</div>
+        <div class="why-text">Всі інструменти проходять автоклав-стерилізацію. Ваша безпека — пріоритет.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">💎</div>
+        <div class="why-title">Якісні матеріали</div>
+        <div class="why-text">Тільки перевірені гель-лаки та матеріали, які тримаються довго і не шкодять нігтям.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🎨</div>
+        <div class="why-title">Будь-який дизайн</div>
+        <div class="why-text">Від класичного french до складних малюнків — втілю будь-яке побажання.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🤝</div>
+        <div class="why-title">Індивідуальний підхід</div>
+        <div class="why-text">Враховую особливості ваших нігтів, форму рук та побажання до результату.</div>
+      </div>
+    </div>
+  </div>
+  </div>
 
   <!-- BOOKING -->
   <div class="sec-bg" id="booking"><div class="sec-inner">
@@ -361,6 +390,16 @@ tr:hover td{background:var(--bg2)}
           <div class="slots-grid" id="slotsGrid"></div>
         </div>
         <div id="bookArea"></div>
+        <!-- Cancel section - always visible -->
+        <div id="cancelSection" style="display:none;margin-top:32px;padding-top:28px;border-top:1px solid var(--line)">
+          <p style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:12px">Скасувати запис</p>
+          <p style="font-size:14px;color:var(--tx2);margin-bottom:14px">Введіть ваш телефон щоб знайти активний запис:</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <input type="tel" id="cancelPh" placeholder="+380XXXXXXXXX" style="flex:1;min-width:180px;background:var(--bg);border:1px solid var(--line);padding:12px 14px;font-family:var(--fs);font-size:14px;color:var(--tx);outline:none">
+            <button class="btn btn-l" onclick="findCancel()" style="min-width:100px">Знайти</button>
+          </div>
+          <div id="cancelResult" style="margin-top:12px"></div>
+        </div>
       </div>
     </div>
   </div></div>
@@ -389,18 +428,8 @@ tr:hover td{background:var(--bg2)}
       </div>
     </div>
   </div></div>
-
-  <!-- QR CODE -->
-  <div class="qr-strip" id="qrSection">
-    <p class="tag" style="color:var(--gold2);justify-content:center;margin-bottom:12px">QR-код</p>
-    <h3>Скануй — записуйся</h3>
-    <p>Роздрукуйте і розмістіть у майстерні</p>
-    <canvas id="qrCanvas" width="180" height="180"></canvas><br>
-    <button class="qr-dl" onclick="downloadQR()">⬇ Завантажити PNG</button>
-  </div>
-
-  <footer>
-    <div class="flogo">Тетяна <em>·</em> nail</div>
+<footer>
+    <div class="flogo">Тетяна <em>·</em> nail art</div>
     <div class="finfo" id="footerInfo">Миронівка, Київська область</div>
   </footer>
 </div><!-- /site -->
@@ -645,8 +674,11 @@ let PEND   = false;
 auth.onAuthStateChanged(async function(u) {
   CU = u;
   await loadSettings();
+  IS_ADM = !!(CU && ADMIN && CU.email === ADMIN);
   updateNav();
-  if (u && PEND) { PEND = false; renderBookArea(); }
+  if (u && PEND) { PEND = false; }
+  renderCal();
+  renderBookArea();
 });
 
 async function loadSettings() {
@@ -673,9 +705,7 @@ function applySettings() {
   if (SETS.statC) document.getElementById('statC').textContent = SETS.statC;
   if (SETS.statY) document.getElementById('statY').textContent = SETS.statY;
   if (SETS.statQ) document.getElementById('statQ').textContent = SETS.statQ;
-  // QR with site URL (use current page URL)
-  var siteUrl = SETS.siteUrl || window.location.href.split('?')[0];
-  buildQR(siteUrl);
+
 }
 
 // ══════════════════════════════════════
@@ -915,6 +945,10 @@ async function loadSlots(ds) {
 // ══════════════════════════════════════
 function renderBookArea() {
   var area = document.getElementById('bookArea');
+  var cancelSec = document.getElementById('cancelSection');
+  // Show cancel section only when logged in
+  if (cancelSec) cancelSec.style.display = CU ? 'block' : 'none';
+
   if (!CU) {
     area.innerHTML = '<div class="login-prompt"><p>Щоб записатись, увійдіть або зареєструйтесь — це займає 1 хвилину</p><button class="btn btn-d" onclick="openMod()">Увійти / Зареєструватись</button></div>';
     return;
@@ -939,15 +973,6 @@ function renderBookArea() {
       '<div class="msg" id="bMsg"></div>' +
       '<button class="btn btn-d" onclick="submitBook()" style="align-self:start">Підтвердити запис</button>' +
       '<p class="fnote">Після запису Таня зв\'яжеться для підтвердження</p>' +
-    '</div>' +
-    '<div class="cancel-block">' +
-      '<h4>Скасувати запис</h4>' +
-      '<p>Введіть ваш телефон щоб знайти активний запис:</p>' +
-      '<div class="cancel-row">' +
-        '<input type="tel" id="cancelPh" placeholder="+380XXXXXXXXX">' +
-        '<button class="btn btn-l" onclick="findCancel()">Знайти</button>' +
-      '</div>' +
-      '<div id="cancelResult" style="margin-top:12px"></div>' +
     '</div>';
   if (window.innerWidth < 768) setTimeout(function() { area.scrollIntoView({behavior:'smooth',block:'nearest'}); }, 150);
 }
@@ -997,47 +1022,7 @@ async function cancelOwnBk(id) {
 }
 
 // ══════════════════════════════════════
-// QR CODE (built-in, no library)
-// ══════════════════════════════════════
-function buildQR(url) {
-  // Simple QR-like placeholder — draws a scannable-looking pattern
-  // For a real QR we use a mini inline generator
-  var canvas = document.getElementById('qrCanvas');
-  var ctx = canvas.getContext('2d');
-  var size = 180;
-  canvas.width = size; canvas.height = size;
-  ctx.fillStyle = '#fff'; ctx.fillRect(0,0,size,size);
 
-  // Use QRCode library loaded from CDN below
-  if (window.QRCode) {
-    canvas.width = 0; canvas.height = 0; // clear
-    var div = document.createElement('div');
-    div.id = 'qrTemp';
-    div.style.display = 'none';
-    document.body.appendChild(div);
-    new QRCode(div, { text: url || window.location.href, width: 180, height: 180, colorDark:'#2A1C0E', colorLight:'#fff' });
-    setTimeout(function() {
-      var img = div.querySelector('img');
-      if (img) {
-        var c = document.getElementById('qrCanvas');
-        c.width = 180; c.height = 180;
-        var cx = c.getContext('2d');
-        var i2 = new Image();
-        i2.onload = function() { cx.drawImage(i2,0,0,180,180); };
-        i2.src = img.src;
-      }
-      div.remove();
-    }, 300);
-  }
-}
-
-function downloadQR() {
-  var canvas = document.getElementById('qrCanvas');
-  var a = document.createElement('a');
-  a.href = canvas.toDataURL('image/png');
-  a.download = 'tanya-nail-qr.png';
-  a.click();
-}
 
 // ══════════════════════════════════════
 // ADMIN PANEL
@@ -1313,9 +1298,6 @@ loadSvcs();
 loadGal();
 </script>
 
-<!-- QR CODE LIBRARY -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
-  onload="if(window.SETS&&SETS.siteUrl)buildQR(SETS.siteUrl||window.location.href)"></script>
 
 </body>
 </html>
