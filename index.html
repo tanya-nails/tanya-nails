@@ -235,12 +235,29 @@ footer{border-top:1px solid var(--line);background:var(--tx);padding:44px 20px;d
 .sbox .n{font-family:var(--ff);font-size:32px;color:var(--gold);line-height:1}
 .sbox .l{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-top:4px}
 .atable-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table{width:100%;border-collapse:collapse;font-size:14px;min-width:620px}
-th{background:var(--tx);color:var(--bg);font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:400;padding:11px 12px;text-align:left;white-space:nowrap}
-td{padding:11px 12px;border-bottom:1px solid var(--bg2);color:var(--tx);vertical-align:top}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:560px}
+th{background:var(--tx);color:var(--bg);font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:400;padding:10px 10px;text-align:left;white-space:nowrap}
+td{padding:10px 10px;border-bottom:1px solid var(--bg2);color:var(--tx);vertical-align:middle}
 tr:hover td{background:var(--bg2)}
-.s-new{color:var(--sage);font-size:13px}
-.s-cancelled{color:var(--rose);font-size:13px}
+.s-new{color:var(--sage);font-size:12px}
+.s-cancelled{color:var(--rose);font-size:12px}
+/* Admin mobile card view */
+.bk-card{background:var(--bg2);border:1px solid var(--line);padding:14px;margin-bottom:10px;font-size:14px}
+.bk-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px}
+.bk-card-name{font-family:var(--ff);font-size:18px;color:var(--tx)}
+.bk-card-status{font-size:11px;letter-spacing:1px;text-transform:uppercase}
+.bk-card-body{color:var(--tx2);line-height:1.9;font-size:13px;margin-bottom:10px}
+.bk-card-actions{display:flex;flex-wrap:wrap;gap:7px}
+@media(max-width:600px){.atable-wrap{display:none}.bk-cards{display:block}}
+@media(min-width:601px){.atable-wrap{display:block}.bk-cards{display:none}}
+/* Admin tabs scroll on mobile */
+.atabs{-webkit-overflow-scrolling:touch;scrollbar-width:none}
+/* Block time section */
+.time-block-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(75px,1fr));gap:6px;margin-top:12px}
+.tslot{background:var(--bg);border:1px solid var(--line);padding:9px 6px;font-size:13px;text-align:center;cursor:pointer;transition:all .18s;font-family:var(--fs)}
+.tslot:hover{border-color:var(--gold)}
+.tslot.tbk{background:#f6ecea;border-color:var(--rose);color:var(--rose);cursor:default}
+.tslot.sel{background:var(--tx);color:var(--bg);border-color:var(--tx)}
 .svc-item{background:var(--bg);border:1px solid var(--line);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
 .svc-item-name{font-family:var(--ff);font-size:18px;color:var(--tx)}
 .svc-item-meta{font-size:12px;color:var(--tx3);margin-top:2px}
@@ -282,17 +299,100 @@ tr:hover td{background:var(--bg2)}
 .spin{display:inline-block;width:18px;height:18px;border:2px solid var(--line);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:8px}
 @keyframes sp{to{transform:rotate(360deg)}}
 .loading{text-align:center;padding:40px;color:var(--tx3)}
+
+/* ── SCROLL FADE-IN ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1)}
+.reveal.visible{opacity:1;transform:none}
+.reveal-d1{transition-delay:.08s}.reveal-d2{transition-delay:.16s}.reveal-d3{transition-delay:.24s}.reveal-d4{transition-delay:.32s}
+
+/* ── HERO ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:.7}50%{opacity:1}}
+.hero .hero-sub-tag{animation:fadeIn .8s ease .1s both}
+.hero h1{animation:fadeUp .9s cubic-bezier(.4,0,.2,1) .2s both}
+.hero .hero-sub{animation:fadeUp .7s ease .45s both}
+.hero .hero-hrs{animation:fadeUp .7s ease .55s both}
+.hero .btns{animation:fadeUp .7s ease .65s both}
+.hero::after{content:'';position:absolute;bottom:28px;left:50%;transform:translateX(-50%);width:1px;height:40px;background:linear-gradient(to bottom,var(--line2),transparent);animation:pulse 2s ease 1.5s infinite}
+
+/* ── SECTION TRANSITIONS ── */
+.sec-border,.sec-bg{transition:background .3s}
+
+/* ── WHY CARDS HOVER ── */
+.why-card{transition:transform .3s cubic-bezier(.4,0,.2,1),box-shadow .3s,background .2s}
+.why-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(42,28,14,.08)}
+
+/* ── GALLERY ANIMATE ── */
+@keyframes galIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+.gal-item{animation:galIn .5s ease both}
+.gal-item:nth-child(1){animation-delay:.05s}.gal-item:nth-child(2){animation-delay:.1s}
+.gal-item:nth-child(3){animation-delay:.15s}.gal-item:nth-child(4){animation-delay:.2s}
+.gal-item:nth-child(5){animation-delay:.25s}.gal-item:nth-child(6){animation-delay:.3s}
+
+/* ── SERVICES ANIMATED ── */
+.svc-pane .svc-card{opacity:0;transform:translateY(18px);transition:opacity .4s ease,transform .4s ease,background .2s}
+.svc-pane.on .svc-card.in{opacity:1;transform:none}
+
+/* ── GALLERY PREMIUM ── */
+.gal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:600px){.gal-grid{grid-template-columns:repeat(3,1fr)}}
+.gal-item{aspect-ratio:1;overflow:hidden;background:var(--bg2);border:1px solid var(--line);position:relative;cursor:pointer}
+.gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .5s cubic-bezier(.25,.46,.45,.94)}
+.gal-item::after{content:'';position:absolute;inset:0;background:rgba(42,28,14,0);transition:background .4s}
+.gal-item:hover img{transform:scale(1.06)}
+.gal-item:hover::after{background:rgba(42,28,14,.22)}
+.gal-empty{grid-column:1/-1;text-align:center;padding:64px 20px;color:var(--tx3);font-size:16px;border:1px dashed var(--line);font-family:var(--ff);font-style:italic}
+
+/* ── STAR PICKER ── */
+.star-btn{background:none;border:none;font-size:30px;cursor:pointer;color:var(--line2);transition:color .15s;padding:0 3px;line-height:1}
+.star-btn.lit{color:var(--gold2)}
+.star-btn:hover{color:var(--gold2)}
+
+/* ── STAR PICKER ── */
+.star-btn{background:none;border:none;font-size:30px;cursor:pointer;color:var(--line2);transition:color .15s;padding:0 3px;line-height:1}
+.star-btn.lit{color:var(--gold2)}
+
+/* ── REVIEWS ── */
+.reviews-grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:600px){.reviews-grid{grid-template-columns:repeat(3,1fr)}}
+.review-card{background:var(--bg);border:1px solid var(--line);padding:28px 24px;display:flex;flex-direction:column;gap:14px;transition:transform .3s,border-color .3s}
+.review-card:hover{transform:translateY(-3px);border-color:var(--line2)}
+.review-stars{color:var(--gold2);font-size:15px;letter-spacing:2px}
+.review-text{font-size:15px;color:var(--tx2);line-height:1.75;flex:1;font-style:italic}
+.review-text::before{content:'"';font-family:var(--ff);font-size:32px;color:var(--line2);display:block;line-height:.8;margin-bottom:8px}
+.review-name{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--tx3)}
+.review-date{font-size:12px;color:var(--line2)}
+
+/* ── LOCATION ── */
+.loc-wrap{display:flex;flex-direction:column;gap:32px}
+@media(min-width:768px){.loc-wrap{display:grid;grid-template-columns:1fr 1.4fr;gap:48px;align-items:start}}
+.loc-info p{font-size:16px;color:var(--tx2);line-height:1.85;margin-bottom:14px}
+.loc-detail{font-size:13px;color:var(--tx3);line-height:2.2;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+.map-frame{width:100%;height:320px;border:1px solid var(--line);display:block;filter:grayscale(20%)}
+@media(min-width:768px){.map-frame{height:380px}}
+
+/* ── FOOTER IMPROVED ── */
+footer{border-top:1px solid var(--line);background:var(--tx);padding:44px 20px 36px;display:flex;flex-direction:column;gap:24px}
+@media(min-width:768px){footer{padding:52px 48px;flex-direction:row;justify-content:space-between;align-items:center}}
+.flogo{font-family:var(--ff);font-size:22px;color:var(--bg);letter-spacing:2px}
+.flogo em{font-style:italic;color:var(--gold2)}
+.finfo{font-size:13px;color:var(--tx3);line-height:2}
+.finfo a{color:var(--gold2);text-decoration:none}
+.f-copy{font-size:11px;color:var(--tx3);letter-spacing:1px;opacity:.6}
 </style>
 </head>
 <body class="pt-nav">
 
 <!-- NAV -->
 <nav class="nav">
-  <a href="#" class="nav-logo" onclick="closeAdmin();return false">Тетяна <em>·</em> nail art</a>
+  <a href="#" class="nav-logo" onclick="closeAdmin();return false">Тетяна <em>·</em> nail</a>
   <ul class="nav-links">
     <li><a href="#services">Послуги</a></li>
     <li><a href="#booking">Запис</a></li>
     <li><a href="#gallery">Роботи</a></li>
+    <li><a href="#reviews">Відгуки</a></li>
+    <li><a href="#location">Де я</a></li>
     <li><a href="#about">Про мене</a></li>
   </ul>
   <div class="nav-right">
@@ -304,6 +404,7 @@ tr:hover td{background:var(--bg2)}
   <a href="#services" onclick="closeMob()">Послуги</a>
   <a href="#booking" onclick="closeMob()">Запис</a>
   <a href="#gallery" onclick="closeMob()">Роботи</a>
+  <a href="#reviews" onclick="closeMob()">Відгуки</a>
   <a href="#about" onclick="closeMob()">Про мене</a>
 </div>
 
@@ -313,7 +414,7 @@ tr:hover td{background:var(--bg2)}
   <!-- HERO -->
   <section class="hero">
     <p class="hero-sub-tag">✦ &nbsp; майстер манікюру · Миронівка &nbsp; ✦</p>
-    <h1>Тетяна<em>nail art</em></h1>
+    <h1>Тетяна<em>nail</em></h1>
     <p class="hero-sub">Доглянуті нігті — це деталь, яка вирішує все</p>
     <p class="hero-hrs">Вт – Нд &nbsp;|&nbsp; 08:00 – 17:00 &nbsp;|&nbsp; Миронівка</p>
     <div class="btns">
@@ -333,28 +434,28 @@ tr:hover td{background:var(--bg2)}
     <p style="margin-top:16px;font-size:13px;color:var(--tx3)">✦ Зняття матеріалу від іншого майстра — від 100 ₴ · Ціни орієнтовні</p>
   </div></div>
 
-  <!-- WHY CHOOSE ME -->
+  <!-- WHY CHOOSE ME --> <!-- revealed by JS -->
   <div style="border-top:1px solid var(--line)">
   <div class="sec">
     <p class="tag">чому обирають мене</p>
     <h2 class="stitle">Якість,<br><em>яка говорить сама</em></h2>
     <div class="why-grid">
-      <div class="why-card">
+      <div class="why-card reveal reveal-d1">
         <div class="why-icon">🧼</div>
         <div class="why-title">Стерильність</div>
         <div class="why-text">Всі інструменти проходять автоклав-стерилізацію. Ваша безпека — пріоритет.</div>
       </div>
-      <div class="why-card">
+      <div class="why-card reveal reveal-d2">
         <div class="why-icon">💎</div>
         <div class="why-title">Якісні матеріали</div>
         <div class="why-text">Тільки перевірені гель-лаки та матеріали, які тримаються довго і не шкодять нігтям.</div>
       </div>
-      <div class="why-card">
+      <div class="why-card reveal reveal-d3">
         <div class="why-icon">🎨</div>
         <div class="why-title">Будь-який дизайн</div>
         <div class="why-text">Від класичного french до складних малюнків — втілю будь-яке побажання.</div>
       </div>
-      <div class="why-card">
+      <div class="why-card reveal reveal-d4">
         <div class="why-icon">🤝</div>
         <div class="why-title">Індивідуальний підхід</div>
         <div class="why-text">Враховую особливості ваших нігтів, форму рук та побажання до результату.</div>
@@ -405,11 +506,69 @@ tr:hover td{background:var(--bg2)}
   </div></div>
 
   <!-- GALLERY -->
-  <div class="sec-border" id="gallery"><div class="sec">
+  <div class="sec-border reveal" id="gallery"><div class="sec">
     <p class="tag">портфоліо</p>
     <h2 class="stitle">Роботи<br><em>Тетяни</em></h2>
     <div class="gal-grid" id="galGrid"><div class="loading"><span class="spin"></span>Завантаження...</div></div>
   </div></div>
+
+  <!-- REVIEWS -->
+  <div class="sec-bg" id="reviews" style="border-top:1px solid var(--line)">
+  <div class="sec-inner">
+    <p class="tag">відгуки</p>
+    <h2 class="stitle reveal">Клієнтки<br><em>довіряють</em></h2>
+    <div class="reviews-grid" id="reviewsGrid">
+      <div class="loading"><span class="spin"></span>Завантаження відгуків...</div>
+    </div>
+    <!-- Leave review form - only for logged-in users -->
+    <div id="reviewFormWrap" style="margin-top:40px;display:none">
+      <h3 style="font-family:var(--ff);font-size:24px;font-weight:400;color:var(--tx);margin-bottom:20px">Залишити відгук</h3>
+      <div style="display:flex;gap:8px;margin-bottom:16px" id="starPicker">
+        <button class="star-btn" data-v="1" onclick="pickStar(1)">★</button>
+        <button class="star-btn" data-v="2" onclick="pickStar(2)">★</button>
+        <button class="star-btn" data-v="3" onclick="pickStar(3)">★</button>
+        <button class="star-btn" data-v="4" onclick="pickStar(4)">★</button>
+        <button class="star-btn" data-v="5" onclick="pickStar(5)">★</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;max-width:560px">
+        <div class="field"><label>Ваш відгук *</label><textarea id="revText" placeholder="Поділіться враженнями..." style="height:90px;resize:none"></textarea></div>
+        <div class="msg" id="revMsg"></div>
+        <button class="btn btn-d" onclick="submitReview()" style="align-self:start">Опублікувати відгук</button>
+      </div>
+    </div>
+    <div id="reviewLoginHint" style="margin-top:28px;padding:20px;background:var(--bg);border:1px solid var(--line);font-size:14px;color:var(--tx3);display:none">
+      <a onclick="openMod()" style="color:var(--gold);cursor:pointer">Увійдіть</a>, щоб залишити відгук після відвідування ✦
+    </div>
+  </div>
+  </div>
+
+  <!-- LOCATION -->
+  <div class="sec-border" id="location">
+  <div class="sec-inner">
+    <p class="tag">як нас знайти</p>
+    <h2 class="stitle reveal">Де я<br><em>знаходжусь</em></h2>
+    <div class="loc-wrap">
+      <div class="reveal reveal-d1">
+        <p>Приймаю клієнток за адресою: вулиця Перемоги, 8, Миронівка. Зручне розташування в центрі міста.</p>
+        <div class="loc-detail">
+          📍 вул. Перемоги, 8, Миронівка<br>
+          🏙 Київська область, 08800<br>
+          🗓 Вт – Нд, 08:00 – 17:00<br>
+          ⛔ Понеділок — вихідний
+        </div>
+        <a href="https://maps.google.com/?q=вулиця+Перемоги+8+Миронівка+Київська+область" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:18px;font-size:12px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;color:var(--gold);border-bottom:1px solid var(--line);padding-bottom:3px">📍 Відкрити на Google Maps →</a>
+      </div>
+      <div class="reveal reveal-d2">
+        <iframe
+          class="map-frame"
+          src="https://maps.google.com/maps?q=49.6631,30.9816&z=17&output=embed&hl=uk"
+          allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          title="Миронівка на карті">
+        </iframe>
+      </div>
+    </div>
+  </div>
+  </div>
 
   <!-- ABOUT -->
   <div class="sec-bg" id="about"><div class="sec-inner">
@@ -429,7 +588,10 @@ tr:hover td{background:var(--bg2)}
     </div>
   </div></div>
 <footer>
-    <div class="flogo">Тетяна <em>·</em> nail art</div>
+    <div>
+      <div class="flogo">Тетяна <em>·</em> nail</div>
+      <p class="f-copy" style="margin-top:8px">© 2025 · Миронівка, Київська область</p>
+    </div>
     <div class="finfo" id="footerInfo">Миронівка, Київська область</div>
   </footer>
 </div><!-- /site -->
@@ -463,19 +625,38 @@ tr:hover td{background:var(--bg2)}
       </div>
       <h2 class="ah2">Всі записи</h2>
       <div id="bkTable"><div class="loading"><span class="spin"></span></div></div>
+      <div class="bk-cards" id="bkCards"></div>
     </div>
 
     <!-- SCHEDULE -->
     <div class="asec" id="tab-schedule">
-      <h2 class="ah2">Закрити день</h2>
+      <h2 class="ah2">Вихідні та блокування</h2>
+
       <div class="acard">
+        <h3>🚫 Закрити день</h3>
+        <p style="font-size:13px;color:var(--tx3);margin-bottom:14px">Увесь день стане недоступним у календарі</p>
         <div class="arow">
           <div class="field" style="flex:0 0 160px"><label>Дата</label><input type="date" id="bdDate"></div>
           <div class="field" style="flex:1"><label>Причина</label><input type="text" id="bdReason" placeholder="Вихідний / Хвороба / Відпустка"></div>
           <button class="abtn" onclick="addBlock()">Закрити день</button>
         </div>
       </div>
-      <div class="chip-list" id="bdList"></div>
+      <div class="chip-list" id="bdList" style="margin-bottom:24px"></div>
+
+      <div class="acard">
+        <h3>⏰ Заблокувати конкретний час</h3>
+        <p style="font-size:13px;color:var(--tx3);margin-bottom:14px">Оберіть дату і позначте слоти які треба закрити (наприклад, якщо хтось записався не через сайт)</p>
+        <div class="arow" style="margin-bottom:12px">
+          <div class="field" style="flex:0 0 160px"><label>Дата</label><input type="date" id="btDate" onchange="loadBlockedTimes()"></div>
+          <div class="field" style="flex:1"><label>Причина (необов'язково)</label><input type="text" id="btReason" placeholder="Особистий запис / Перерва"></div>
+        </div>
+        <div class="time-block-grid" id="timeBlockGrid"></div>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="abtn" onclick="saveBlockedTimes()">Зберегти</button>
+          <button class="abtn out" onclick="clearAllTimeSel()">Скасувати вибір</button>
+        </div>
+        <p style="font-size:12px;color:var(--tx3);margin-top:8px" id="btSaveMsg"></p>
+      </div>
     </div>
 
     <!-- SERVICES -->
@@ -501,7 +682,10 @@ tr:hover td{background:var(--bg2)}
           </div>
           <div class="field"><label>Короткий опис (необов'язково)</label><input type="text" id="svDesc" placeholder="Класичне покриття, будь-який колір"></div>
           <input type="hidden" id="svEditId">
-          <button class="abtn" id="svSaveBtn" onclick="saveService()" style="align-self:start">Додати послугу</button>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="abtn" id="svSaveBtn" onclick="saveService()" style="align-self:start">Додати послугу</button>
+            <button class="abtn out" id="svCancelBtn" onclick="cancelEditSvc()" style="display:none;align-self:start">Скасувати</button>
+          </div>
         </div>
       </div>
     </div>
@@ -679,6 +863,7 @@ auth.onAuthStateChanged(async function(u) {
   if (u && PEND) { PEND = false; }
   renderCal();
   renderBookArea();
+  loadSvcs();
 });
 
 async function loadSettings() {
@@ -818,7 +1003,10 @@ function renderSvcTabs() {
     cats[c].push(s);
   });
   var catNames = Object.keys(cats);
-  if (!catNames.length) { document.getElementById('svcPanes').innerHTML = '<p style="color:var(--tx3)">Послуги ще не додані</p>'; return; }
+  if (!catNames.length) { document.getElementById('svcPanes').innerHTML = '<p style="color:var(--tx3);padding:20px">Послуги ще не додані</p>'; document.getElementById('svcTabs').innerHTML=''; return; }
+  // If only one category, hide tabs
+  if (catNames.length === 1) { document.getElementById('svcTabs').style.display = 'none'; }
+  else { document.getElementById('svcTabs').style.display = 'flex'; }
 
   var tabsHtml = catNames.map(function(c, i) {
     return '<button class="svc-tab' + (i===0?' on':'') + '" onclick="showSvcTab(\'' + c + '\',this)">' + c + '</button>';
@@ -835,13 +1023,23 @@ function renderSvcTabs() {
         desc +
         '<div class="svc-card-foot">' +
           '<div class="svc-card-price">' + s.price + '<span style="font-size:15px"> ₴</span></div>' +
-          '<span class="svc-card-badge">' + c + '</span>' +
+          (s.duration ? '<span class="svc-card-badge">' + s.duration + ' хв</span>' : '') +
         '</div>' +
       '</div>';
     }).join('');
     return '<div class="svc-pane' + (i===0?' on':'') + '" id="svc-pane-' + c + '">' + cards + '</div>';
   }).join('');
   document.getElementById('svcPanes').innerHTML = panesHtml;
+
+  // animate first pane cards
+  setTimeout(function() {
+    var firstPane = document.querySelector('.svc-pane.on');
+    if (firstPane) {
+      firstPane.querySelectorAll('.svc-card').forEach(function(c, i) {
+        setTimeout(function() { c.classList.add('in'); }, i * 70);
+      });
+    }
+  }, 50);
 
   // update booking select
   var sel = document.getElementById('bSv');
@@ -857,7 +1055,17 @@ function showSvcTab(cat, btn) {
   document.querySelectorAll('.svc-pane').forEach(function(p) { p.classList.remove('on'); });
   btn.classList.add('on');
   var pane = document.getElementById('svc-pane-' + cat);
-  if (pane) pane.classList.add('on');
+  if (pane) {
+    pane.classList.add('on');
+    // animate cards in
+    var cards = pane.querySelectorAll('.svc-card');
+    cards.forEach(function(c, i) { c.classList.remove('in'); });
+    setTimeout(function() {
+      cards.forEach(function(c, i) {
+        setTimeout(function() { c.classList.add('in'); }, i * 60);
+      });
+    }, 20);
+  }
 }
 
 // ══════════════════════════════════════
@@ -925,8 +1133,13 @@ async function loadSlots(ds) {
   document.getElementById('slotsLbl').textContent = 'Час на ' + parseInt(parts[2]) + ' ' + MONTHS_UK[parseInt(parts[1])-1].toLowerCase() + ':';
   wrap.style.display = 'block';
   var g = document.getElementById('slotsGrid'); g.innerHTML = '<span class="spin"></span>';
-  var snap = await db.collection('bookings').where('date','==',ds).where('status','==','new').get();
-  var taken = new Set(snap.docs.map(function(d) { return d.data().time; }));
+  // Check both bookings AND manual time blocks
+  var bkSnap = await db.collection('bookings').where('date','==',ds).where('status','==','new').get();
+  var taken = new Set(bkSnap.docs.map(function(d) { return d.data().time; }));
+  try {
+    var tbSnap = await db.collection('time_blocks').where('date','==',ds).get();
+    tbSnap.forEach(function(d) { taken.add(d.data().time); });
+  } catch(e) {}
   g.innerHTML = '';
   WORK_HOURS.forEach(function(t) {
     var b = document.createElement('button'); b.className='slt'; b.textContent=t; b.disabled=taken.has(t);
@@ -947,7 +1160,7 @@ function renderBookArea() {
   var area = document.getElementById('bookArea');
   var cancelSec = document.getElementById('cancelSection');
   // Show cancel section only when logged in
-  if (cancelSec) cancelSec.style.display = CU ? 'block' : 'none';
+  if (cancelSec) cancelSec.style.display = 'block';
 
   if (!CU) {
     area.innerHTML = '<div class="login-prompt"><p>Щоб записатись, увійдіть або зареєструйтесь — це займає 1 хвилину</p><button class="btn btn-d" onclick="openMod()">Увійти / Зареєструватись</button></div>';
@@ -1001,16 +1214,20 @@ async function findCancel() {
   var ph = v('cancelPh');
   var res = document.getElementById('cancelResult');
   if (!ph) { res.innerHTML='<p style="font-size:14px;color:var(--rose)">Введіть номер телефону</p>'; return; }
-  var snap = await db.collection('bookings').where('clientPhone','==',ph).where('status','==','new').get();
-  if (snap.empty) { res.innerHTML='<p style="font-size:14px;color:var(--tx3)">Активних записів не знайдено</p>'; return; }
+  var snap = await db.collection('bookings').where('clientPhone','==',ph).get();
+  if (snap.empty) { res.innerHTML='<p style="font-size:14px;color:var(--tx3)">Записів не знайдено</p>'; return; }
   var html = snap.docs.map(function(d) {
     var b = d.data();
-    return '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 14px;background:var(--bg2);border:1px solid var(--line);margin-bottom:7px">' +
+    var isCancelled = b.status === 'cancelled';
+    var bg = isCancelled ? 'background:var(--bg);border:1px dashed var(--line);' : 'background:var(--bg2);border:1px solid var(--line);';
+    var action = isCancelled
+      ? '<span style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--rose)">' + (b.cancelledBy === 'master' ? '⚠ Скасовано майстром' : 'Скасовано') + '</span>'
+      : '<button class="btn btn-l" style="font-size:10px;padding:10px 16px" onclick="cancelOwnBk(\'' + d.id + '\')">Скасувати</button>';
+    return '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 14px;' + bg + 'margin-bottom:7px">' +
       '<span style="flex:1;font-size:14px;color:var(--tx2)"><strong>' + b.date + '</strong> о ' + b.time + ' — ' + b.service + '</span>' +
-      '<button class="btn btn-l" style="font-size:10px;padding:10px 16px" onclick="cancelOwnBk(\'' + d.id + '\')">Скасувати</button>' +
-    '</div>';
+      action + '</div>';
   }).join('');
-  res.innerHTML = html;
+  res.innerHTML = html || '<p style="font-size:14px;color:var(--tx3)">Записів не знайдено</p>';
 }
 
 async function cancelOwnBk(id) {
@@ -1069,14 +1286,16 @@ async function loadAdmBk() {
       '<td>' + b.time + '</td>' +
       '<td style="font-size:13px;color:var(--tx3)">' + (b.comment||'—') + '</td>' +
       '<td class="s-' + b.status + '">' + (b.status==='new'?'активний':'скасовано') + '</td>' +
-      '<td style="white-space:nowrap">' + actions + '</td>' +
+      '<td style="white-space:nowrap">' + actions +
+        '<button class="abtn sm" style="background:none;color:var(--tx3);border:1px solid var(--line);margin-left:2px" onclick="deleteBk(\'' + b.id + '\')" title="Видалити запис повністю">🗑</button>' +
+      '</td>' +
     '</tr>';
   }).join('');
   wrap.innerHTML = '<div class="atable-wrap"><table><thead><tr>' +
     "<th>Ім'я</th><th>Телефон</th><th>Послуга</th><th>Дата</th><th>Час</th><th>Коментар</th><th>Статус</th><th></th>" +
     '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+  renderBkCards(all);
 }
-
 function showConfirmLinks(id) {
   // Remove existing if open
   var existing = document.getElementById('conf-' + id);
@@ -1111,8 +1330,20 @@ function showConfirmLinks(id) {
 
 async function cancelBk(id) {
   if (!confirm("Скасувати запис?")) return;
-  await db.collection('bookings').doc(id).update({status:'cancelled'});
+  await db.collection('bookings').doc(id).update({status:'cancelled', cancelledBy:'master', cancelledAt: new Date().toISOString()});
   toast('Запис скасовано'); loadAdmBk();
+}
+async function deleteBk(id) {
+  if (!confirm("Видалити запис назавжди? Цю дію не можна скасувати.")) return;
+  try {
+    var row = document.getElementById('bkrow-' + id);
+    var conf = document.getElementById('conf-' + id);
+    if (row) row.remove();
+    if (conf) conf.remove();
+    await db.collection('bookings').doc(id).delete();
+    toast('Запис видалено','ok');
+    loadAdmBk();
+  } catch(e) { toast('Помилка: ' + e.message, 'err'); }
 }
 
 // BLOCKED DAYS
@@ -1166,7 +1397,13 @@ function editSvc(id, name, price, dur, ord, cat, desc) {
   var btn = document.getElementById('svSaveBtn');
   btn.textContent = 'Зберегти зміни';
   btn.onclick = function() { updateSvc(id, ord, btn); };
+  document.getElementById('svCancelBtn').style.display = 'inline-flex';
   btn.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function cancelEditSvc() {
+  var btn = document.getElementById('svSaveBtn');
+  clearSvcForm(btn);
+  document.getElementById('svCancelBtn').style.display = 'none';
 }
 async function updateSvc(id, ord, btn) {
   var name=v('svName'), price=parseInt(v('svPrice'))||0, dur=parseInt(v('svDur'))||0, cat=document.getElementById('svCat').value, desc=v('svDesc');
@@ -1184,7 +1421,12 @@ async function saveService() {
 }
 function clearSvcForm(btn) {
   ['svName','svPrice','svDur','svEditId','svDesc'].forEach(function(id) { document.getElementById(id).value=''; });
-  btn.textContent = 'Додати послугу'; btn.onclick = saveService;
+  if (!btn) btn = document.getElementById('svSaveBtn');
+  btn.textContent = 'Додати послугу';
+  btn.onclick = null;
+  btn.setAttribute('onclick','saveService()');
+  var cb = document.getElementById('svCancelBtn');
+  if (cb) cb.style.display = 'none';
 }
 async function delSvc(id) {
   if (!confirm('Видалити послугу?')) return;
@@ -1290,12 +1532,143 @@ function toggleMenu() { document.getElementById('mobMenu').classList.toggle('ope
 function closeMob()   { document.getElementById('mobMenu').classList.remove('open'); }
 
 // ══════════════════════════════════════
+// SCROLL REVEAL
+// ══════════════════════════════════════
+function initReveal() {
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, {threshold: 0.07, rootMargin:'0px 0px -20px 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+}
+
+// ══════════════════════════════════════
 // INIT
 // ══════════════════════════════════════
-renderCal();
-renderBookArea();
 loadSvcs();
 loadGal();
+loadReviews();
+initReveal();
+initScrollAnimations();
+
+// REVIEWS
+var SEL_STARS = 0;
+function pickStar(n) {
+  SEL_STARS = n;
+  document.querySelectorAll('.star-btn').forEach(function(b, i) { b.classList.toggle('lit', i < n); });
+}
+async function loadReviews() {
+  var grid = document.getElementById('reviewsGrid');
+  if (!grid) return;
+  try {
+    var snap = await db.collection('reviews').orderBy('createdAt','desc').get();
+    if (snap.empty) {
+      grid.innerHTML = '<p style="font-size:15px;color:var(--tx3);font-family:var(--ff);font-style:italic;padding:20px 0">Відгуків поки немає. Будьте першою ✦</p>';
+    } else {
+      grid.innerHTML = snap.docs.map(function(d) {
+        var r = d.data();
+        var stars = ''; for (var i=0;i<5;i++) stars += i < r.rating ? '★' : '☆';
+        var dateStr = r.createdAt ? new Date(r.createdAt).toLocaleDateString('uk-UA',{month:'long',year:'numeric'}) : '';
+        return '<div class="review-card reveal"><div class="review-stars">' + stars + '</div><div class="review-text">' + r.text + '</div><div><div class="review-name">' + r.authorName + '</div><div class="review-date">' + dateStr + '</div></div></div>';
+      }).join('');
+      setTimeout(initReveal, 50);
+    }
+  } catch(e) {
+    grid.innerHTML = '<p style="font-size:14px;color:var(--tx3);padding:10px 0">Не вдалося завантажити відгуки</p>';
+  }
+  updateReviewUI();
+}
+function updateReviewUI() {
+  var fw = document.getElementById('reviewFormWrap'), hl = document.getElementById('reviewLoginHint');
+  if (!fw || !hl) return;
+  if (CU) { fw.style.display='block'; hl.style.display='none'; }
+  else { fw.style.display='none'; hl.style.display='block'; }
+}
+async function submitReview() {
+  if (!CU) { openMod(); return; }
+  var text = v('revText'), msg = document.getElementById('revMsg');
+  if (!text) { showMsg(msg,'err','Напишіть відгук'); return; }
+  if (SEL_STARS < 1) { showMsg(msg,'err','Оберіть оцінку зірочками'); return; }
+  var name = CU.displayName || CU.email.split('@')[0];
+  try {
+    var existing = await db.collection('reviews').where('authorUid','==',CU.uid).limit(1).get();
+    if (!existing.empty) { showMsg(msg,'err','Ви вже залишали відгук'); return; }
+    await db.collection('reviews').add({authorUid:CU.uid, authorName:name, text:text, rating:SEL_STARS, createdAt:new Date().toISOString()});
+    document.getElementById('revText').value=''; SEL_STARS=0; pickStar(0);
+    showMsg(msg,'ok','Дякуємо за відгук! ✓'); loadReviews();
+  } catch(e) { showMsg(msg,'err','Помилка: '+e.message); }
+}
+
+// MOBILE BOOKING CARDS
+function renderBkCards(all) {
+  var container = document.getElementById('bkCards');
+  if (!container) return;
+  if (!all.length) { container.innerHTML='<p style="color:var(--tx3);font-size:14px;padding:10px 0">Записів поки немає ☕</p>'; return; }
+  container.innerHTML = all.map(function(b) {
+    var isCan = b.status === 'cancelled';
+    var statusColor = isCan ? 'var(--rose)' : 'var(--sage)';
+    var statusTxt = isCan ? 'Скасовано'+(b.cancelledBy==='master'?' майстром':'') : 'Активний';
+    var actions = '';
+    if (!isCan) actions += '<button class="abtn sm red" onclick="cancelBk(\'' + b.id + '\')">Скасувати</button> <button class="abtn sm grn" onclick="showConfirmLinks(\'' + b.id + '\')">✉️ Підтвердити</button> ';
+    actions += '<button class="abtn sm" style="background:none;border:1px solid var(--line);color:var(--tx3)" onclick="deleteBk(\'' + b.id + '\')">🗑 Видалити</button>';
+    return '<div class="bk-card" id="bkcard-'+b.id+'"><div class="bk-card-head"><div class="bk-card-name">'+b.clientName+'</div><span class="bk-card-status" style="color:'+statusColor+'">'+statusTxt+'</span></div><div class="bk-card-body">📅 '+b.date+' о '+b.time+'<br>💅 '+b.service+'<br>📞 <a href="tel:'+b.clientPhone+'" style="color:var(--gold2)">'+b.clientPhone+'</a>'+(b.comment ? '<br>💬 '+b.comment : '')+'</div><div class="bk-card-actions">'+actions+'</div><div id="conf-card-'+b.id+'"></div></div>';
+  }).join('');
+}
+
+// BLOCK TIME SLOTS
+var SEL_TIME_SLOTS = {};
+async function loadBlockedTimes() {
+  var dt = document.getElementById('btDate').value; if (!dt) return;
+  SEL_TIME_SLOTS = {};
+  var grid = document.getElementById('timeBlockGrid'); grid.innerHTML = '<span class="spin"></span>';
+  var bkSnap = await db.collection('bookings').where('date','==',dt).where('status','==','new').get();
+  var bookedTimes = {}; bkSnap.forEach(function(d){bookedTimes[d.data().time]=d.data().clientName;});
+  var blSnap = await db.collection('time_blocks').where('date','==',dt).get();
+  var manBlocked = {}; blSnap.forEach(function(d){manBlocked[d.data().time]=true;SEL_TIME_SLOTS[d.data().time]=true;});
+  var HRS = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00'];
+  grid.innerHTML = HRS.map(function(h) {
+    if (bookedTimes[h]) return '<div class="tslot tbk" title="'+bookedTimes[h]+'">'+h+'<br><span style="font-size:10px">зайнято</span></div>';
+    return '<div class="tslot'+(manBlocked[h]?' sel':'')+'" onclick="toggleTimeSlot(this,''+h+'')">'+h+'</div>';
+  }).join('');
+}
+function toggleTimeSlot(el, time) { el.classList.toggle('sel'); SEL_TIME_SLOTS[time]=el.classList.contains('sel'); }
+function clearAllTimeSel() { document.querySelectorAll('.tslot.sel').forEach(function(el){el.classList.remove('sel');}); SEL_TIME_SLOTS={}; }
+async function saveBlockedTimes() {
+  var dt=document.getElementById('btDate').value, reason=document.getElementById('btReason').value.trim()||'Зайнято', msg=document.getElementById('btSaveMsg');
+  if (!dt) { msg.textContent='Оберіть дату'; msg.style.color='var(--rose)'; return; }
+  var existing = await db.collection('time_blocks').where('date','==',dt).get();
+  var batch = db.batch();
+  existing.docs.forEach(function(d){batch.delete(d.ref);});
+  var toBlock = Object.keys(SEL_TIME_SLOTS).filter(function(t){return SEL_TIME_SLOTS[t];});
+  toBlock.forEach(function(t){batch.set(db.collection('time_blocks').doc(dt+'_'+t.replace(':','')),{date:dt,time:t,reason:reason});});
+  await batch.commit();
+  msg.textContent='✓ Збережено '+toBlock.length+' слотів'; msg.style.color='var(--sage)';
+  setTimeout(function(){msg.textContent='';},3000); renderCal();
+}
+
+
+// updateNav also refreshes review UI
+var _rawUpdateNav = updateNav;
+updateNav = function() { _rawUpdateNav(); updateReviewUI(); };
+
+// SCROLL ANIMATIONS
+function initScrollAnimations() {
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (!e.isIntersecting) return;
+      var el = e.target;
+      el.style.transition = 'transform .6s cubic-bezier(.4,0,.2,1), opacity .6s ease';
+      el.style.opacity = '1'; el.style.transform = 'none';
+      obs.unobserve(el);
+    });
+  }, {threshold: 0.3});
+  document.querySelectorAll('.stat-n').forEach(function(el) {
+    el.style.opacity = '0'; el.style.transform = 'translateY(16px)';
+    obs.observe(el);
+  });
+}
+
 </script>
 
 
