@@ -78,7 +78,9 @@ body{background:var(--bg);color:var(--tx);font-family:var(--fs);font-size:16px;l
 .svc-tab.on{color:var(--tx);border-bottom-color:var(--gold2)}
 .svc-pane{display:none}
 .svc-pane.on{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line2);border:1px solid var(--line2)}
-@media(min-width:600px){.svc-pane.on{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}}
+@media(min-width:600px){.svc-pane.on{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}}
+/* no orphan empty cells */
+.svc-pane.on .svc-card:last-child:nth-child(odd){grid-column:1/-1}
 .svc-card{background:var(--bg);padding:26px 22px;display:flex;flex-direction:column;gap:8px;transition:background .2s;position:relative}
 .svc-card:hover{background:var(--bg2)}
 .svc-card-name{font-family:var(--ff);font-size:21px;font-weight:500;color:var(--tx);line-height:1.2}
@@ -280,7 +282,8 @@ tr:hover td{background:var(--bg2)}
 /* ── WHY SECTION ── */
 .why-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line2);border:1px solid var(--line2)}
 @media(min-width:768px){.why-grid{grid-template-columns:repeat(4,1fr)}}
-.why-card{background:var(--bg);padding:32px 24px;display:flex;flex-direction:column;gap:12px}
+.why-card{background:var(--bg);padding:32px 24px;display:flex;flex-direction:column;gap:12px;transition:transform .3s cubic-bezier(.4,0,.2,1),box-shadow .3s,background .2s}
+.why-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(42,28,14,.08)}
 .why-icon{font-size:28px;line-height:1}
 .why-title{font-family:var(--ff);font-size:19px;font-weight:500;color:var(--tx);line-height:1.2}
 .why-text{font-size:14px;color:var(--tx2);line-height:1.65;flex:1}
@@ -319,9 +322,6 @@ tr:hover td{background:var(--bg2)}
 /* ── SECTION TRANSITIONS ── */
 .sec-border,.sec-bg{transition:background .3s}
 
-/* ── WHY CARDS HOVER ── */
-.why-card{transition:transform .3s cubic-bezier(.4,0,.2,1),box-shadow .3s,background .2s}
-.why-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(42,28,14,.08)}
 
 /* ── GALLERY ANIMATE ── */
 @keyframes galIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
@@ -346,12 +346,7 @@ tr:hover td{background:var(--bg2)}
 
 /* ── STAR PICKER ── */
 .star-btn{background:none;border:none;font-size:30px;cursor:pointer;color:var(--line2);transition:color .15s;padding:0 3px;line-height:1}
-.star-btn.lit{color:var(--gold2)}
-.star-btn:hover{color:var(--gold2)}
-
-/* ── STAR PICKER ── */
-.star-btn{background:none;border:none;font-size:30px;cursor:pointer;color:var(--line2);transition:color .15s;padding:0 3px;line-height:1}
-.star-btn.lit{color:var(--gold2)}
+.star-btn.lit,.star-btn:hover{color:var(--gold2)}
 
 /* ── REVIEWS ── */
 .reviews-grid{display:grid;grid-template-columns:1fr;gap:16px}
@@ -491,13 +486,13 @@ footer{border-top:1px solid var(--line);background:var(--tx);padding:44px 20px 3
           <div class="slots-grid" id="slotsGrid"></div>
         </div>
         <div id="bookArea"></div>
-        <!-- Cancel section - always visible -->
-        <div id="cancelSection" style="display:none;margin-top:32px;padding-top:28px;border-top:1px solid var(--line)">
-          <p style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:12px">Скасувати запис</p>
-          <p style="font-size:14px;color:var(--tx2);margin-bottom:14px">Введіть ваш телефон щоб знайти активний запис:</p>
-          <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <input type="tel" id="cancelPh" placeholder="+380XXXXXXXXX" style="flex:1;min-width:180px;background:var(--bg);border:1px solid var(--line);padding:12px 14px;font-family:var(--fs);font-size:14px;color:var(--tx);outline:none">
-            <button class="btn btn-l" onclick="findCancel()" style="min-width:100px">Знайти</button>
+        <!-- Cancel section -->
+        <div class="cancel-block" id="cancelSection">
+          <h4>Скасувати свій запис</h4>
+          <p>Введіть телефон щоб знайти ваш запис:</p>
+          <div class="cancel-row">
+            <input type="tel" id="cancelPh" placeholder="+380XXXXXXXXX">
+            <button class="btn btn-l" onclick="findCancel()">Знайти</button>
           </div>
           <div id="cancelResult" style="margin-top:12px"></div>
         </div>
@@ -532,6 +527,8 @@ footer{border-top:1px solid var(--line);background:var(--tx);padding:44px 20px 3
       </div>
       <div style="display:flex;flex-direction:column;gap:12px;max-width:560px">
         <div class="field"><label>Ваш відгук *</label><textarea id="revText" placeholder="Поділіться враженнями..." style="height:90px;resize:none"></textarea></div>
+        <div class="field"><label>Фото роботи (необов'язково)</label><input type="url" id="revPhoto" placeholder="Посилання на фото (Google Drive, Imgur...)"></div>
+        <p style="font-size:12px;color:var(--tx3);margin-top:-6px">Щоб поділитись фото: завантажте в Google Фото або Imgur → скопіюйте посилання</p>
         <div class="msg" id="revMsg"></div>
         <button class="btn btn-d" onclick="submitReview()" style="align-self:start">Опублікувати відгук</button>
       </div>
@@ -549,7 +546,7 @@ footer{border-top:1px solid var(--line);background:var(--tx);padding:44px 20px 3
     <h2 class="stitle reveal">Де я<br><em>знаходжусь</em></h2>
     <div class="loc-wrap">
       <div class="reveal reveal-d1">
-        <p>Приймаю клієнток за адресою: вулиця Перемоги, 8, Миронівка. Зручне розташування в центрі міста.</p>
+        <p>Приймаю клієнток за адресою: вулиця Перемоги, 8, Миронівка.</p>
         <div class="loc-detail">
           📍 вул. Перемоги, 8, Миронівка<br>
           🏙 Київська область, 08800<br>
@@ -561,10 +558,13 @@ footer{border-top:1px solid var(--line);background:var(--tx);padding:44px 20px 3
       <div class="reveal reveal-d2">
         <iframe
           class="map-frame"
-          src="https://maps.google.com/maps?q=49.6631,30.9816&z=17&output=embed&hl=uk"
-          allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.openstreetmap.org/export/embed.html?bbox=30.9625%2C49.6442%2C30.9925%2C49.6542&layer=mapnik&marker=49.64921%2C30.97753"
+          allowfullscreen="" loading="lazy"
           title="Миронівка на карті">
         </iframe>
+        <p style="margin-top:8px;font-size:12px">
+          <a href="https://maps.google.com/?q=вулиця+Перемоги+8+Миронівка" target="_blank" style="color:var(--gold);text-decoration:none;letter-spacing:1px;font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--line);padding-bottom:2px">📍 Відкрити в Google Maps →</a>
+        </p>
       </div>
     </div>
   </div>
@@ -607,11 +607,13 @@ footer{border-top:1px solid var(--line);background:var(--tx);padding:44px 20px 3
   </div>
   <div class="atabs">
     <button class="atab on"  onclick="switchTab('bookings',this)">📋 Записи</button>
+    <button class="atab"     onclick="switchTab('reminders',this)">🔔 Нагадування</button>
     <button class="atab"     onclick="switchTab('schedule',this)">📅 Вихідні</button>
     <button class="atab"     onclick="switchTab('services',this)">💅 Послуги</button>
     <button class="atab"     onclick="switchTab('gallery',this)">🖼 Галерея</button>
     <button class="atab"     onclick="switchTab('about',this)">👤 Про мене</button>
     <button class="atab"     onclick="switchTab('settings',this)">⚙️ Налаш.</button>
+    <button class="atab"     onclick="switchTab('help',this)">❓ Інструкція</button>
   </div>
   <div class="abody">
 
@@ -626,6 +628,21 @@ footer{border-top:1px solid var(--line);background:var(--tx);padding:44px 20px 3
       <h2 class="ah2">Всі записи</h2>
       <div id="bkTable"><div class="loading"><span class="spin"></span></div></div>
       <div class="bk-cards" id="bkCards"></div>
+    </div>
+
+    <!-- REMINDERS -->
+    <div class="asec" id="tab-reminders">
+      <h2 class="ah2">Нагадування</h2>
+      <div class="acard">
+        <h3>Як надіслати нагадування</h3>
+        <p style="font-size:14px;color:var(--tx2);line-height:1.7;margin-bottom:16px">
+          Нижче — всі майбутні записи. Натисніть <strong>🔔 Нагадати</strong> щоб відкрити кнопки відправки через Viber, Telegram, WhatsApp або Email. Повідомлення з датою і часом вже готове — просто натисніть.
+        </p>
+        <p style="font-size:13px;color:var(--tx3);background:var(--bg);border:1px solid var(--line);padding:10px 14px">
+          💡 Рекомендуємо надсилати нагадування за 1 день до запису — клієнтки менше забувають і не потрібно дзвонити.
+        </p>
+      </div>
+      <div id="remindersPane"><div class="loading"><span class="spin"></span>Завантаження...</div></div>
     </div>
 
     <!-- SCHEDULE -->
@@ -741,12 +758,89 @@ footer{border-top:1px solid var(--line);background:var(--tx);padding:44px 20px 3
         </div>
       </div>
       <div class="acard">
+        <h3>⏱ Тривалість сеансу</h3>
+        <p style="font-size:14px;color:var(--tx3);margin-bottom:16px;line-height:1.6">Визначає скільки слотів буде у календарі. При 2 год — клієнтки бачать 5 варіантів часу на день (08, 10, 12, 14, 16). При 1 год — 9 варіантів.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:15px;color:var(--tx2)">
+            <input type="radio" name="slotInt" id="slot2h" value="2h" onchange="saveSlotInterval('2h')" style="accent-color:var(--gold)">
+            <span><strong>Кожні 2 години</strong> (08:00, 10:00, 12:00, 14:00, 16:00)</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:15px;color:var(--tx2)">
+            <input type="radio" name="slotInt" id="slot1h" value="1h" onchange="saveSlotInterval('1h')" style="accent-color:var(--gold)">
+            <span><strong>Кожну годину</strong> (08:00 – 16:00, 9 слотів)</span>
+          </label>
+        </div>
+        <p id="slotIntMsg" style="font-size:13px;margin-top:10px;display:none"></p>
+      </div>
+      <div class="acard">
         <h3>Email адміністратора</h3>
         <p style="font-size:14px;color:var(--tx3);margin-bottom:14px">Поточний: <strong id="curAdmin" style="color:var(--tx)"></strong></p>
         <div class="aform">
           <div class="field"><label>Новий admin email</label><input type="email" id="newAdminEmail" placeholder="tanya@gmail.com"></div>
           <div class="field"><label>Код підтвердження</label><input type="password" id="newAdminCode"></div>
           <button class="abtn" onclick="changeAdmin()" style="align-self:start">Змінити</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- HELP TAB -->
+    <div class="asec" id="tab-help">
+      <h2 class="ah2">Інструкція для майстра</h2>
+
+      <div class="acard">
+        <h3>📋 Як працювати із записами</h3>
+        <div style="font-size:14px;color:var(--tx2);line-height:1.9;display:flex;flex-direction:column;gap:10px">
+          <p>Коли клієнтка записується — вона одразу з'являється у вкладці <strong>«Записи»</strong>.</p>
+          <p><strong>✉️ Підтвердити</strong> — натисніть щоб відкрити кнопки: Viber, Telegram, WhatsApp, Email. Повідомлення з датою, часом і послугою формується автоматично — просто натисніть потрібну кнопку.</p>
+          <p><strong>Скасувати</strong> — запис залишається у списку зі статусом «скасовано». Клієнтка звільняється і цей час знову стає вільним у календарі.</p>
+          <p><strong>🗑 Видалити</strong> — прибирає запис назавжди. Використовуйте коли хочете очистити старі або скасовані записи.</p>
+          <p style="background:var(--bg);border:1px solid var(--line);padding:10px 14px;font-size:13px;color:var(--tx3)">💡 Порада: видаляйте старі записи раз на місяць щоб список не засмічувався.</p>
+        </div>
+      </div>
+
+      <div class="acard">
+        <h3>📅 Як закрити день або конкретний час</h3>
+        <div style="font-size:14px;color:var(--tx2);line-height:1.9;display:flex;flex-direction:column;gap:10px">
+          <p>Вкладка <strong>«Вихідні»</strong> — щоб закрити <em>цілий день</em>. Оберіть дату, вкажіть причину (Відпустка, Хвороба тощо) і натисніть «Закрити день». Цей день стане сірим у календарі — клієнтки не зможуть записатись.</p>
+          <p>Там само є <strong>«Заблокувати конкретний час»</strong> — якщо потрібно залишити тільки частину дня.</p>
+          <p>Щоб відкрити день назад — натисніть <strong>✕</strong> поруч із датою у списку.</p>
+        </div>
+      </div>
+
+      <div class="acard">
+        <h3>💅 Як додати або змінити послугу</h3>
+        <div style="font-size:14px;color:var(--tx2);line-height:1.9;display:flex;flex-direction:column;gap:10px">
+          <p>Вкладка <strong>«Послуги»</strong>. Внизу є форма — заповніть назву, ціну, тривалість і категорію → натисніть <strong>«Додати послугу»</strong>.</p>
+          <p>Щоб змінити існуючу — натисніть <strong>«Редагувати»</strong> поруч із послугою, внесіть зміни і натисніть <strong>«Зберегти зміни»</strong>.</p>
+          <p>Категорія визначає в якій вкладці буде послуга на сайті (Манікюр / Педикюр / Нарощування / Дизайн).</p>
+        </div>
+      </div>
+
+      <div class="acard">
+        <h3>🖼 Як додати фото робіт</h3>
+        <div style="font-size:14px;color:var(--tx2);line-height:1.9;display:flex;flex-direction:column;gap:10px">
+          <p>Вкладка <strong>«Галерея»</strong>. Потрібне пряме посилання на фото.</p>
+          <p><strong>Через Google Фото:</strong> відкрийте фото → натисніть «Поділитись» → «Отримати посилання» → змініть доступ на «Всі, у кого є посилання» → скопіюйте і вставте в поле URL.</p>
+          <p><strong>Через Imgur:</strong> зайдіть на imgur.com → завантажте фото → натисніть правою кнопкою на зображення → «Копіювати адресу зображення» → вставте в поле URL.</p>
+          <p style="background:var(--bg);border:1px solid var(--line);padding:10px 14px;font-size:13px;color:var(--tx3)">💡 Imgur — найпростіший варіант, реєстрація не потрібна.</p>
+        </div>
+      </div>
+
+      <div class="acard">
+        <h3>⚙️ Корисні налаштування</h3>
+        <div style="font-size:14px;color:var(--tx2);line-height:1.9;display:flex;flex-direction:column;gap:10px">
+          <p><strong>Тривалість сеансу</strong> (вкладка «Налаш.»): якщо сеанс займає приблизно 2 години — залиште «Кожні 2 години» (5 записів на день). Якщо робите швидші процедури — перемкніть на «Щогодини» (9 записів на день).</p>
+          <p><strong>Контакти</strong>: додайте свій телефон, Instagram, Viber або Telegram — вони з'являться в підвалі сайту.</p>
+          <p><strong>Про мене</strong>: можна завантажити своє фото і змінити текст про себе.</p>
+        </div>
+      </div>
+
+      <div class="acard" style="border-color:var(--gold2)">
+        <h3>🆘 Якщо щось пішло не так</h3>
+        <div style="font-size:14px;color:var(--tx2);line-height:1.9">
+          <p>Якщо сайт не оновлюється — спробуйте оновити сторінку (Ctrl+F5 або потягніть вниз на телефоні).</p>
+          <p style="margin-top:8px">Якщо не можете увійти — переконайтесь що вводите правильний email і пароль Google-акаунту.</p>
+          <p style="margin-top:8px">Якщо виникла технічна проблема — зверніться до розробника (твого сина 😊).</p>
         </div>
       </div>
     </div>
@@ -819,51 +913,44 @@ footer{border-top:1px solid var(--line);background:var(--tx);padding:44px 20px 3
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
 <script>
-// ══════════════════════════════════════
-// FIREBASE
-// ══════════════════════════════════════
+// ══ FIREBASE ══
 firebase.initializeApp({
-  apiKey: "AIzaSyB5ekvubs_I8RqugwZpF5r626rYP60lE_o",
-  authDomain: "tanya-nails.firebaseapp.com",
-  projectId: "tanya-nails",
-  storageBucket: "tanya-nails.firebasestorage.app",
-  messagingSenderId: "581439101385",
-  appId: "1:581439101385:web:0ac65efbb40c0ee7e9b018"
+  apiKey:"AIzaSyB5ekvubs_I8RqugwZpF5r626rYP60lE_o",
+  authDomain:"tanya-nails.firebaseapp.com",
+  projectId:"tanya-nails",
+  storageBucket:"tanya-nails.firebasestorage.app",
+  messagingSenderId:"581439101385",
+  appId:"1:581439101385:web:0ac65efbb40c0ee7e9b018"
 });
-const auth = firebase.auth();
-const db   = firebase.firestore();
+var auth = firebase.auth();
+var db   = firebase.firestore();
 
-const SETUP_CODE = 'TANYA2024';
-const MONTHS_UK  = ['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];
-// Slots every 2 hours: 08:00 10:00 12:00 14:00 16:00
-const WORK_HOURS = ['08:00','10:00','12:00','14:00','16:00'];
+var SETUP_CODE  = 'TANYA2024';
+var MONTHS_UK   = ['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];
+var WORK_HOURS  = ['08:00','10:00','12:00','14:00','16:00'];
+// Slot interval options - admin can change this
+var ALL_HOURS_1H = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00'];
+var ALL_HOURS_2H = ['08:00','10:00','12:00','14:00','16:00'];
 
-// ══════════════════════════════════════
-// STATE
-// ══════════════════════════════════════
-let CU     = null;
-let ADMIN  = null;
-let IS_ADM = false;
-let SETS   = {};
-let SVCS   = [];
-let CAL_Y  = new Date().getFullYear();
-let CAL_M  = new Date().getMonth() + 1;
-let SEL_D  = null;
-let SEL_T  = null;
-let PEND   = false;
+// ══ STATE ══
+var CU=null, ADMIN=null, IS_ADM=false, SETS={}, SVCS=[];
+var CAL_Y=new Date().getFullYear(), CAL_M=new Date().getMonth()+1;
+var SEL_D=null, SEL_T=null, PEND=false, SEL_STARS=0;
+var SEL_TIME_SLOTS={};
 
-// ══════════════════════════════════════
-// BOOT
-// ══════════════════════════════════════
+// ══ BOOT ══
 auth.onAuthStateChanged(async function(u) {
   CU = u;
   await loadSettings();
   IS_ADM = !!(CU && ADMIN && CU.email === ADMIN);
   updateNav();
-  if (u && PEND) { PEND = false; }
+  updateReviewUI();
+  if (u && PEND) { PEND=false; }
   renderCal();
   renderBookArea();
   loadSvcs();
+  loadGal();
+  loadReviews();
 });
 
 async function loadSettings() {
@@ -876,490 +963,591 @@ async function loadSettings() {
     applySettings();
   } catch(e) { console.error('loadSettings', e); }
 }
-
 function applySettings() {
   var fi = 'Миронівка, Київська область';
-  if (SETS.phone)     fi += '<br><a href="tel:' + SETS.phone + '">' + SETS.phone + '</a>';
-  if (SETS.instagram) fi += '<br><a href="https://instagram.com/' + SETS.instagram.replace('@','') + '" target="_blank">Instagram: ' + SETS.instagram + '</a>';
-  if (SETS.viber)     fi += '<br>Viber: ' + SETS.viber;
-  if (SETS.telegram)  fi += '<br>Telegram: ' + SETS.telegram;
+  if (SETS.phone)     fi += '<br><a href="tel:'+SETS.phone+'">'+SETS.phone+'</a>';
+  if (SETS.instagram) fi += '<br><a href="https://instagram.com/'+SETS.instagram.replace('@','')+'" target="_blank">'+SETS.instagram+'</a>';
+  if (SETS.viber)     fi += '<br>Viber: '+SETS.viber;
+  if (SETS.telegram)  fi += '<br>Telegram: '+SETS.telegram;
   document.getElementById('footerInfo').innerHTML = fi;
-  if (SETS.aboutPhotoUrl) { document.getElementById('aboutImg').innerHTML = '<img src="' + SETS.aboutPhotoUrl + '" alt="Тетяна" onerror="this.parentElement.innerHTML=\'✦\'">'; }
+  if (SETS.aboutPhotoUrl) {
+    document.getElementById('aboutImg').innerHTML = '<img src="'+SETS.aboutPhotoUrl+'" alt="Тетяна" onerror="this.parentElement.innerHTML=\'✦\'">';
+  }
   if (SETS.aboutText1) document.getElementById('aboutP1').textContent = SETS.aboutText1;
   if (SETS.aboutText2) document.getElementById('aboutP2').textContent = SETS.aboutText2;
   if (SETS.statC) document.getElementById('statC').textContent = SETS.statC;
   if (SETS.statY) document.getElementById('statY').textContent = SETS.statY;
   if (SETS.statQ) document.getElementById('statQ').textContent = SETS.statQ;
-
+  // Apply slot interval (1h or 2h)
+  WORK_HOURS = (SETS.slotInterval === '1h') ? ALL_HOURS_1H.slice() : ALL_HOURS_2H.slice();
 }
 
-// ══════════════════════════════════════
-// AUTH
-// ══════════════════════════════════════
+// ══ AUTH ══
 function updateNav() {
   var btn = document.getElementById('navBtn');
-  if (!CU) { btn.textContent = 'Увійти'; btn.className = 'nav-ubtn'; return; }
-  if (IS_ADM) { btn.textContent = 'Панель майстра'; btn.className = 'nav-ubtn adm'; return; }
+  if (!CU) { btn.textContent='Увійти'; btn.className='nav-ubtn'; return; }
+  if (IS_ADM) { btn.textContent='Панель майстра'; btn.className='nav-ubtn adm'; return; }
   var name = CU.displayName ? CU.displayName.split(' ')[0] : CU.email.split('@')[0];
-  btn.textContent = name; btn.className = 'nav-ubtn';
+  btn.textContent=name; btn.className='nav-ubtn';
 }
 function navBtnClick() {
   if (!CU) { openMod(); return; }
   if (IS_ADM) { openAdmin(); return; }
-  if (confirm('Вийти з акаунту ' + CU.email + '?')) doSignOut();
+  if (confirm('Вийти з акаунту '+CU.email+'?')) doSignOut();
 }
 function doSignIn() {
-  var e = v('siE'), p = v('siP'), msg = document.getElementById('siMsg');
+  var e=v('siE'), p=v('siP'), msg=document.getElementById('siMsg');
   if (!e||!p) { showMsg(msg,'err','Заповніть всі поля'); return; }
-  auth.signInWithEmailAndPassword(e, p)
-    .then(function() { closeMod(); toast('Ласкаво просимо! 👋','ok'); })
-    .catch(function(err) { showMsg(msg,'err', fbErr(err)); });
+  auth.signInWithEmailAndPassword(e,p)
+    .then(function() { closeMod(); toast('Ласкаво просимо!','ok'); })
+    .catch(function(err) { showMsg(msg,'err',fbErr(err)); });
 }
 function doSignUp() {
   var name=v('suN'), phone=v('suPh'), email=v('suE'), pass=v('suP');
-  var msg = document.getElementById('suMsg');
+  var msg=document.getElementById('suMsg');
   if (!name||!email||!pass) { showMsg(msg,'err',"Заповніть обов'язкові поля"); return; }
-  if (pass.length < 6) { showMsg(msg,'err','Пароль — мінімум 6 символів'); return; }
-  auth.createUserWithEmailAndPassword(email, pass)
+  if (pass.length<6) { showMsg(msg,'err','Пароль — мінімум 6 символів'); return; }
+  auth.createUserWithEmailAndPassword(email,pass)
     .then(function(c) {
-      c.user.updateProfile({ displayName: name });
-      if (phone) db.collection('users').doc(c.user.uid).set({ name: name, phone: phone, email: email });
-      closeMod(); toast('Реєстрація успішна! 🎉','ok');
+      c.user.updateProfile({displayName:name});
+      if (phone) db.collection('users').doc(c.user.uid).set({name:name,phone:phone,email:email});
+      closeMod(); toast('Реєстрація успішна!','ok');
     })
-    .catch(function(err) { showMsg(msg,'err', fbErr(err)); });
+    .catch(function(err) { showMsg(msg,'err',fbErr(err)); });
 }
 function doGoogle() {
   auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
-    .then(function() { closeMod(); toast('Ласкаво просимо! 👋','ok'); })
-    .catch(function(e) { console.error(e); });
+    .then(function() { closeMod(); toast('Ласкаво просимо!','ok'); })
+    .catch(function(e) {
+      if (e.code==='auth/unauthorized-domain') {
+        showMsg(document.getElementById('siMsg'),'err','Додайте домен сайту у Firebase → Authentication → Authorized domains');
+      } else { console.error(e); }
+    });
 }
 async function doSignOut() {
-  await auth.signOut(); closeAdmin(); toast('Ви вийшли з акаунту');
-  renderBookArea();
+  await auth.signOut(); closeAdmin(); toast('Ви вийшли'); renderBookArea();
 }
 function fbErr(e) {
-  var map = {
-    'auth/user-not-found':'Email не знайдено',
-    'auth/wrong-password':'Невірний пароль',
-    'auth/email-already-in-use':'Email вже зареєстровано',
-    'auth/weak-password':'Пароль занадто короткий',
-    'auth/invalid-email':'Невірний формат email',
-    'auth/too-many-requests':'Забагато спроб. Спробуйте пізніше',
-    'auth/invalid-credential':'Невірний email або пароль'
-  };
-  return map[e.code] || e.message;
+  var m={'auth/user-not-found':'Email не знайдено','auth/wrong-password':'Невірний пароль',
+    'auth/email-already-in-use':'Email вже зареєстровано','auth/weak-password':'Пароль занадто короткий',
+    'auth/invalid-email':'Невірний email','auth/too-many-requests':'Забагато спроб. Спробуйте пізніше',
+    'auth/invalid-credential':'Невірний email або пароль'};
+  return m[e.code]||e.message;
 }
 
-// ══════════════════════════════════════
-// FIRST-RUN SETUP
-// ══════════════════════════════════════
+// ══ FIRST RUN ══
 async function doSetup() {
-  var email = v('setupE'), code = v('setupC');
-  var msg = document.getElementById('setupMsg');
+  var email=v('setupE'), code=v('setupC'), msg=document.getElementById('setupMsg');
   if (!email) { showMsg(msg,'err','Введіть email'); return; }
-  if (code !== SETUP_CODE) { showMsg(msg,'err','Невірний код підтвердження'); return; }
+  if (code!==SETUP_CODE) { showMsg(msg,'err','Невірний код підтвердження'); return; }
   try {
     await db.collection('settings').doc('main').set({
-      adminEmail: email, initialized: true,
-      phone:'', instagram:'', viber:'', telegram:'', siteUrl:'',
-      aboutText1:'Я — Тетяна, майстер нігтьового сервісу з Миронівки. Захоплююсь своєю справою вже кілька років і вкладаю в кожну роботу увагу та турботу.',
+      adminEmail:email, initialized:true, phone:'', instagram:'', viber:'', telegram:'', siteUrl:'',
+      aboutText1:'Я — Тетяна, майстер нігтьового сервісу з Миронівки. Захоплююсь своєю справою вже кілька років.',
       aboutText2:'Працюю лише з перевіреними матеріалами, дотримуюсь стерильності та слідкую за тенденціями. Кожна клієнтка — особлива.',
       statC:'200+', statY:'5+', statQ:'100%', aboutPhotoUrl:''
     });
-    var batch = db.batch();
-    var defaults = [
-      {name:'Класичний манікюр', price:350, duration:60, category:'Манікюр', description:'Обпилювання, обробка кутикули, покриття лаком', ord:1},
-      {name:'Манікюр + Гель-лак', price:600, duration:90, category:'Манікюр', description:'Манікюр із стійким гель-лаковим покриттям', ord:2},
-      {name:'Педикюр', price:500, duration:75, category:'Педикюр', description:'Обробка стоп, нігтів та кутикули', ord:3},
-      {name:'Педикюр + Гель-лак', price:700, duration:90, category:'Педикюр', description:'Педикюр зі стійким покриттям гель-лаком', ord:4},
-      {name:'Манікюр + Педикюр', price:950, duration:150, category:'Комплекс', description:'Комплексний догляд за руками і стопами', ord:5},
-      {name:'Нарощування нігтів', price:900, duration:120, category:'Нарощування', description:'Нарощування на формах або типсах', ord:6},
-      {name:'Корекція нарощених', price:600, duration:90, category:'Нарощування', description:'Корекція відростання та зміна покриття', ord:7},
-      {name:'Дизайн (за нігтик)', price:50, duration:0, category:'Дизайн', description:'Малюнки, градієнт, фольга, камені', ord:8}
+    var batch=db.batch();
+    var defs=[
+      {name:'Класичний манікюр',price:350,duration:60,category:'Манікюр',description:'Обпилювання, обробка кутикули, покриття лаком',ord:1},
+      {name:'Манікюр + Гель-лак',price:600,duration:90,category:'Манікюр',description:'Манікюр із стійким гель-лаковим покриттям',ord:2},
+      {name:'Педикюр',price:500,duration:75,category:'Педикюр',description:'Обробка стоп, нігтів та кутикули',ord:3},
+      {name:'Педикюр + Гель-лак',price:700,duration:90,category:'Педикюр',description:'Педикюр зі стійким покриттям гель-лаком',ord:4},
+      {name:'Манікюр + Педикюр',price:950,duration:150,category:'Комплекс',description:'Комплексний догляд за руками і стопами',ord:5},
+      {name:'Нарощування нігтів',price:900,duration:120,category:'Нарощування',description:'Нарощування на формах або типсах',ord:6},
+      {name:'Корекція нарощених',price:600,duration:90,category:'Нарощування',description:'Корекція відростання та зміна покриття',ord:7},
+      {name:'Дизайн (за нігтик)',price:50,duration:0,category:'Дизайн',description:'Малюнки, градієнт, фольга, камені',ord:8}
     ];
-    defaults.forEach(function(s) { batch.set(db.collection('services').doc(), s); });
+    defs.forEach(function(s){batch.set(db.collection('services').doc(),s);});
     await batch.commit();
     document.getElementById('setupOv').classList.remove('open');
-    toast('Сайт активовано! 🎉','ok');
+    toast('Сайт активовано!','ok');
     await loadSettings(); loadSvcs(); loadGal();
   } catch(e) { showMsg(document.getElementById('setupMsg'),'err','Помилка: '+e.message); }
 }
 
-// ══════════════════════════════════════
-// SERVICES — TABBED CARDS
-// ══════════════════════════════════════
+// ══ SERVICES (public) ══
 async function loadSvcs() {
-  var snap = await db.collection('services').orderBy('ord').get();
-  SVCS = snap.docs.map(function(d) { return Object.assign({id:d.id}, d.data()); });
-  renderSvcTabs();
+  try {
+    var snap=await db.collection('services').orderBy('ord').get();
+    SVCS=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+    renderSvcTabs();
+  } catch(e) { console.error('loadSvcs',e); }
 }
-
 function renderSvcTabs() {
-  // group by category
-  var cats = {};
-  SVCS.forEach(function(s) {
-    var c = s.category || 'Послуги';
-    if (!cats[c]) cats[c] = [];
-    cats[c].push(s);
-  });
-  var catNames = Object.keys(cats);
-  if (!catNames.length) { document.getElementById('svcPanes').innerHTML = '<p style="color:var(--tx3);padding:20px">Послуги ще не додані</p>'; document.getElementById('svcTabs').innerHTML=''; return; }
-  // If only one category, hide tabs
-  if (catNames.length === 1) { document.getElementById('svcTabs').style.display = 'none'; }
-  else { document.getElementById('svcTabs').style.display = 'flex'; }
-
-  var tabsHtml = catNames.map(function(c, i) {
-    return '<button class="svc-tab' + (i===0?' on':'') + '" onclick="showSvcTab(\'' + c + '\',this)">' + c + '</button>';
+  var cats={};
+  SVCS.forEach(function(s){ var c=s.category||'Послуги'; if(!cats[c])cats[c]=[]; cats[c].push(s); });
+  var catNames=Object.keys(cats);
+  var tabsEl=document.getElementById('svcTabs');
+  var panesEl=document.getElementById('svcPanes');
+  if (!catNames.length) {
+    panesEl.innerHTML='<p style="color:var(--tx3);padding:20px">Послуги ще не додані</p>';
+    tabsEl.innerHTML=''; return;
+  }
+  tabsEl.style.display = catNames.length===1 ? 'none' : 'flex';
+  tabsEl.innerHTML=catNames.map(function(c,i){
+    return '<button class="svc-tab'+(i===0?' on':'')+'" onclick="showSvcTab(\''+c+'\',this)">'+c+'</button>';
   }).join('');
-  document.getElementById('svcTabs').innerHTML = tabsHtml;
-
-  var panesHtml = catNames.map(function(c, i) {
-    var cards = cats[c].map(function(s) {
-      var dur = s.duration ? s.duration + ' хв' : 'за нігтик';
-      var desc = s.description ? '<div class="svc-card-desc">' + s.description + '</div>' : '';
-      return '<div class="svc-card">' +
-        '<div class="svc-card-name">' + s.name + '</div>' +
-        '<div class="svc-card-dur">' + dur + '</div>' +
-        desc +
-        '<div class="svc-card-foot">' +
-          '<div class="svc-card-price">' + s.price + '<span style="font-size:15px"> ₴</span></div>' +
-          (s.duration ? '<span class="svc-card-badge">' + s.duration + ' хв</span>' : '') +
-        '</div>' +
+  panesEl.innerHTML=catNames.map(function(c,i){
+    var cards=cats[c].map(function(s){
+      var dur=s.duration?s.duration+' хв':'за нігтик';
+      var desc=s.description?'<div class="svc-card-desc">'+s.description+'</div>':'';
+      return '<div class="svc-card">'+
+        '<div class="svc-card-name">'+s.name+'</div>'+
+        '<div class="svc-card-dur">'+dur+'</div>'+
+        desc+
+        '<div class="svc-card-foot">'+
+          '<div class="svc-card-price">'+s.price+'<span style="font-size:15px"> ₴</span></div>'+
+        '</div>'+
       '</div>';
     }).join('');
-    return '<div class="svc-pane' + (i===0?' on':'') + '" id="svc-pane-' + c + '">' + cards + '</div>';
+    return '<div class="svc-pane'+(i===0?' on':'')+'" id="svc-pane-'+c+'">'+cards+'</div>';
   }).join('');
-  document.getElementById('svcPanes').innerHTML = panesHtml;
-
-  // animate first pane cards
-  setTimeout(function() {
-    var firstPane = document.querySelector('.svc-pane.on');
-    if (firstPane) {
-      firstPane.querySelectorAll('.svc-card').forEach(function(c, i) {
-        setTimeout(function() { c.classList.add('in'); }, i * 70);
-      });
-    }
-  }, 50);
-
+  // animate first pane
+  setTimeout(function(){
+    var pane=document.querySelector('.svc-pane.on');
+    if (pane) pane.querySelectorAll('.svc-card').forEach(function(c,i){
+      setTimeout(function(){c.classList.add('in');},i*60);
+    });
+  },50);
   // update booking select
-  var sel = document.getElementById('bSv');
-  if (sel) {
-    sel.innerHTML = '<option value="">— оберіть —</option>' + SVCS.map(function(s) {
-      return '<option value="' + s.name + '">' + s.name + ' — ' + s.price + ' ₴</option>';
-    }).join('');
-  }
+  var sel=document.getElementById('bSv');
+  if (sel) sel.innerHTML='<option value="">— оберіть —</option>'+SVCS.map(function(s){
+    return '<option value="'+s.name+'">'+s.name+' — '+s.price+' ₴</option>';
+  }).join('');
 }
-
-function showSvcTab(cat, btn) {
-  document.querySelectorAll('.svc-tab').forEach(function(b) { b.classList.remove('on'); });
-  document.querySelectorAll('.svc-pane').forEach(function(p) { p.classList.remove('on'); });
+function showSvcTab(cat,btn) {
+  document.querySelectorAll('.svc-tab').forEach(function(b){b.classList.remove('on');});
+  document.querySelectorAll('.svc-pane').forEach(function(p){p.classList.remove('on');});
   btn.classList.add('on');
-  var pane = document.getElementById('svc-pane-' + cat);
-  if (pane) {
-    pane.classList.add('on');
-    // animate cards in
-    var cards = pane.querySelectorAll('.svc-card');
-    cards.forEach(function(c, i) { c.classList.remove('in'); });
-    setTimeout(function() {
-      cards.forEach(function(c, i) {
-        setTimeout(function() { c.classList.add('in'); }, i * 60);
-      });
-    }, 20);
-  }
+  var pane=document.getElementById('svc-pane-'+cat);
+  if (!pane) return;
+  pane.classList.add('on');
+  var cards=pane.querySelectorAll('.svc-card');
+  cards.forEach(function(c){c.classList.remove('in');});
+  setTimeout(function(){cards.forEach(function(c,i){setTimeout(function(){c.classList.add('in');},i*55);});},20);
 }
 
-// ══════════════════════════════════════
-// GALLERY
-// ══════════════════════════════════════
+// ══ GALLERY (public) ══
 async function loadGal() {
-  var snap = await db.collection('gallery').orderBy('ord','asc').get();
-  var items = snap.docs.map(function(d) { return Object.assign({id:d.id}, d.data()); });
-  var g = document.getElementById('galGrid');
-  g.innerHTML = items.length
-    ? items.map(function(i) { return '<div class="gal-item"><img src="' + i.url + '" alt="' + (i.cap||'') + '" loading="lazy" onerror="this.parentElement.style.display=\'none\'"></div>'; }).join('')
-    : '<div class="gal-empty">Фотографії будуть додані незабаром ✦</div>';
+  try {
+    var snap=await db.collection('gallery').orderBy('ord','asc').get();
+    var g=document.getElementById('galGrid');
+    g.innerHTML=snap.empty
+      ? '<div class="gal-empty">Фотографії будуть додані незабаром ✦</div>'
+      : snap.docs.map(function(d){
+          return '<div class="gal-item"><img src="'+d.data().url+'" alt="'+(d.data().cap||'')+'" loading="lazy" onerror="this.parentElement.style.display=\'none\'"></div>';
+        }).join('');
+  } catch(e) { console.error('loadGal',e); }
 }
 
-// ══════════════════════════════════════
-// CALENDAR
-// ══════════════════════════════════════
+// ══ CALENDAR ══
 async function renderCal() {
-  document.getElementById('calTitle').textContent = MONTHS_UK[CAL_M-1] + ' ' + CAL_Y;
-  var g = document.getElementById('calGrid');
-  g.innerHTML = '<div style="grid-column:1/-1" class="loading"><span class="spin"></span></div>';
-  var bdSnap = await db.collection('blocked_days').get();
-  var bkSnap = await db.collection('bookings').where('status','==','new').get();
-  var blocked = new Set(bdSnap.docs.map(function(d) { return d.id; }));
-  var booked = {};
-  bkSnap.forEach(function(d) { var dt=d.data().date; booked[dt]=(booked[dt]||0)+1; });
-  var today = new Date(); today.setHours(0,0,0,0);
-  var dim = new Date(CAL_Y, CAL_M, 0).getDate();
-  var fw = new Date(CAL_Y, CAL_M-1, 1).getDay();
-  var offset = fw === 0 ? 6 : fw - 1;
-  g.innerHTML = '';
-  for (var i=0; i<offset; i++) { var e=document.createElement('div'); e.className='cday empty'; g.appendChild(e); }
-  for (var day=1; day<=dim; day++) {
-    var d  = new Date(CAL_Y, CAL_M-1, day);
-    var ds = CAL_Y + '-' + String(CAL_M).padStart(2,'0') + '-' + String(day).padStart(2,'0');
-    var isWork = d.getDay() !== 1;
-    var isPast = d < today;
-    var isBlk  = blocked.has(ds);
-    var isFull = (booked[ds]||0) >= WORK_HOURS.length;
-    var isAvail = !isPast && isWork && !isBlk && !isFull;
-    var el = document.createElement('div'); el.className = 'cday';
-    var cls = isPast ? 'past' : !isWork ? 'nowork' : isBlk ? 'blocked' : isFull ? 'full' : 'avail';
+  document.getElementById('calTitle').textContent=MONTHS_UK[CAL_M-1]+' '+CAL_Y;
+  var g=document.getElementById('calGrid');
+  g.innerHTML='<div style="grid-column:1/-1" class="loading"><span class="spin"></span></div>';
+  var bdSnap, bkSnap, tbSnap;
+  try {
+    bdSnap=await db.collection('blocked_days').get();
+    bkSnap=await db.collection('bookings').where('status','==','new').get();
+    tbSnap=await db.collection('time_blocks').get();
+  } catch(e){ bdSnap={docs:[]}; bkSnap={docs:[]}; tbSnap={docs:[]}; }
+  var blocked=new Set(bdSnap.docs.map(function(d){return d.id;}));
+  var booked={};
+  bkSnap.docs.forEach(function(d){var dt=d.data().date; booked[dt]=(booked[dt]||0)+1;});
+  var tbDates=new Set(tbSnap.docs.map(function(d){return d.data().date;}));
+  var today=new Date(); today.setHours(0,0,0,0);
+  var dim=new Date(CAL_Y,CAL_M,0).getDate();
+  var fw=new Date(CAL_Y,CAL_M-1,1).getDay();
+  var offset=fw===0?6:fw-1;
+  g.innerHTML='';
+  for (var i=0;i<offset;i++){var e=document.createElement('div');e.className='cday empty';g.appendChild(e);}
+  for (var day=1;day<=dim;day++){
+    var d=new Date(CAL_Y,CAL_M-1,day);
+    var ds=CAL_Y+'-'+String(CAL_M).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+    var isWork=d.getDay()!==1;
+    var isPast=d<today;
+    var isBlk=blocked.has(ds);
+    var totalSlots=WORK_HOURS.length;
+    // If date has time blocks, reduce available slots (rough estimate)
+    if (tbDates.has(ds)) totalSlots=Math.max(1,totalSlots-1);
+    var isFull=(booked[ds]||0)>=totalSlots;
+    var isAvail=!isPast&&isWork&&!isBlk&&!isFull;
+    var el=document.createElement('div'); el.className='cday';
+    var cls=isPast?'past':!isWork?'nowork':isBlk?'blocked':isFull?'full':'avail';
     el.classList.add(cls);
-    el.innerHTML = '<span class="dn">' + day + '</span>' + (isAvail ? '<span class="dd"></span>' : '');
-    if (ds === SEL_D) el.classList.add('sel');
-    if (isAvail) (function(date, elem) { elem.onclick = function() { pickDate(date, elem); }; })(ds, el);
+    el.innerHTML='<span class="dn">'+day+'</span>'+(isAvail?'<span class="dd"></span>':'');
+    if (ds===SEL_D) el.classList.add('sel');
+    if (isAvail)(function(date,elem){elem.onclick=function(){pickDate(date,elem);};})(ds,el);
     g.appendChild(el);
   }
 }
-function calPrev() { CAL_M--; if(CAL_M<1){CAL_M=12;CAL_Y--;} SEL_D=null; SEL_T=null; renderCal(); hideSlots(); renderBookArea(); }
-function calNext() { CAL_M++; if(CAL_M>12){CAL_M=1;CAL_Y++;} SEL_D=null; SEL_T=null; renderCal(); hideSlots(); renderBookArea(); }
-function hideSlots() { document.getElementById('slotsWrap').style.display='none'; }
+function calPrev(){CAL_M--;if(CAL_M<1){CAL_M=12;CAL_Y--;}SEL_D=null;SEL_T=null;renderCal();document.getElementById('slotsWrap').style.display='none';renderBookArea();}
+function calNext(){CAL_M++;if(CAL_M>12){CAL_M=1;CAL_Y++;}SEL_D=null;SEL_T=null;renderCal();document.getElementById('slotsWrap').style.display='none';renderBookArea();}
 
-async function pickDate(ds, el) {
-  if (!CU) { PEND=true; openMod(); return; }
-  document.querySelectorAll('.cday').forEach(function(e) { e.classList.remove('sel'); });
+async function pickDate(ds,el) {
+  // no login required to pick date and see slots
+  document.querySelectorAll('.cday').forEach(function(e){e.classList.remove('sel');});
   el.classList.add('sel'); SEL_D=ds; SEL_T=null;
   await loadSlots(ds);
   renderBookArea();
 }
-
 async function loadSlots(ds) {
-  var wrap = document.getElementById('slotsWrap');
-  var parts = ds.split('-');
-  document.getElementById('slotsLbl').textContent = 'Час на ' + parseInt(parts[2]) + ' ' + MONTHS_UK[parseInt(parts[1])-1].toLowerCase() + ':';
-  wrap.style.display = 'block';
-  var g = document.getElementById('slotsGrid'); g.innerHTML = '<span class="spin"></span>';
-  // Check both bookings AND manual time blocks
-  var bkSnap = await db.collection('bookings').where('date','==',ds).where('status','==','new').get();
-  var taken = new Set(bkSnap.docs.map(function(d) { return d.data().time; }));
+  var wrap=document.getElementById('slotsWrap');
+  var parts=ds.split('-');
+  document.getElementById('slotsLbl').textContent='Час на '+parseInt(parts[2])+' '+MONTHS_UK[parseInt(parts[1])-1].toLowerCase()+':';
+  wrap.style.display='block';
+  var g=document.getElementById('slotsGrid'); g.innerHTML='<span class="spin"></span>';
+  var taken=new Set();
   try {
-    var tbSnap = await db.collection('time_blocks').where('date','==',ds).get();
-    tbSnap.forEach(function(d) { taken.add(d.data().time); });
-  } catch(e) {}
-  g.innerHTML = '';
-  WORK_HOURS.forEach(function(t) {
-    var b = document.createElement('button'); b.className='slt'; b.textContent=t; b.disabled=taken.has(t);
-    if (t === SEL_T) b.classList.add('sel');
-    b.onclick = function() {
-      document.querySelectorAll('.slt').forEach(function(x) { x.classList.remove('sel'); });
+    var bkSnap=await db.collection('bookings').where('date','==',ds).where('status','==','new').get();
+    bkSnap.docs.forEach(function(d){taken.add(d.data().time);});
+    var tbSnap=await db.collection('time_blocks').where('date','==',ds).get();
+    tbSnap.docs.forEach(function(d){taken.add(d.data().time);});
+  } catch(e){}
+  g.innerHTML='';
+  WORK_HOURS.forEach(function(t){
+    var b=document.createElement('button'); b.className='slt'; b.textContent=t; b.disabled=taken.has(t);
+    if (t===SEL_T) b.classList.add('sel');
+    b.onclick=function(){
+      document.querySelectorAll('.slt').forEach(function(x){x.classList.remove('sel');});
       b.classList.add('sel'); SEL_T=t; renderBookArea();
     };
     g.appendChild(b);
   });
-  if (window.innerWidth < 768) setTimeout(function() { wrap.scrollIntoView({behavior:'smooth',block:'nearest'}); }, 150);
+  if (window.innerWidth<768) setTimeout(function(){wrap.scrollIntoView({behavior:'smooth',block:'nearest'});},150);
 }
 
-// ══════════════════════════════════════
-// BOOKING AREA
-// ══════════════════════════════════════
+// ══ BOOKING AREA ══
 function renderBookArea() {
-  var area = document.getElementById('bookArea');
-  var cancelSec = document.getElementById('cancelSection');
-  // Show cancel section only when logged in
-  if (cancelSec) cancelSec.style.display = 'block';
-
+  var area=document.getElementById('bookArea');
   if (!CU) {
-    area.innerHTML = '<div class="login-prompt"><p>Щоб записатись, увійдіть або зареєструйтесь — це займає 1 хвилину</p><button class="btn btn-d" onclick="openMod()">Увійти / Зареєструватись</button></div>';
+    area.innerHTML='<div class="login-prompt"><p>Щоб записатись, увійдіть або зареєструйтесь — це займає 1 хвилину</p><button class="btn btn-d" onclick="openMod()">Увійти / Зареєструватись</button></div>';
     return;
   }
-  if (!SEL_D || !SEL_T) {
-    area.innerHTML = '<p style="margin-top:20px;font-size:14px;color:var(--tx3)">← Оберіть дату та час щоб записатись</p>';
+  if (!SEL_D||!SEL_T) {
+    area.innerHTML='<p style="margin-top:20px;font-size:14px;color:var(--tx3)">← Оберіть дату та час щоб записатись</p>';
     return;
   }
-  var opts = SVCS.map(function(s) { return '<option value="' + s.name + '">' + s.name + ' — ' + s.price + ' ₴</option>'; }).join('');
-  var name = CU.displayName || '';
-  area.innerHTML =
-    '<div style="margin-top:24px;display:flex;flex-direction:column;gap:12px">' +
-      '<div style="background:var(--bg2);border:1px solid var(--line);padding:12px 16px;font-size:14px;color:var(--tx2)">' +
-        '📅 <strong>' + SEL_D + '</strong> о <strong>' + SEL_T + '</strong>' +
-      '</div>' +
-      '<div class="frow">' +
-        '<div class="field"><label>Ім\'я *</label><input type="text" id="bN" value="' + name + '" placeholder="Ольга"></div>' +
-        '<div class="field"><label>Телефон *</label><input type="tel" id="bPh" placeholder="+38 0XX..."></div>' +
-      '</div>' +
-      '<div class="field"><label>Послуга *</label><select id="bSv"><option value="">— оберіть —</option>' + opts + '</select></div>' +
-      '<div class="field"><label>Коментар</label><textarea id="bCom" placeholder="Побажання: колір, форма нігтів, дизайн..."></textarea></div>' +
-      '<div class="msg" id="bMsg"></div>' +
-      '<button class="btn btn-d" onclick="submitBook()" style="align-self:start">Підтвердити запис</button>' +
-      '<p class="fnote">Після запису Таня зв\'яжеться для підтвердження</p>' +
+  var opts=SVCS.map(function(s){return '<option value="'+s.name+'">'+s.name+' — '+s.price+' ₴</option>';}).join('');
+  var name=CU.displayName||'';
+  area.innerHTML=
+    '<div style="margin-top:24px;display:flex;flex-direction:column;gap:12px">'+
+      '<div style="background:var(--bg2);border:1px solid var(--line);padding:12px 16px;font-size:14px;color:var(--tx2)">'+
+        '📅 <strong>'+SEL_D+'</strong> о <strong>'+SEL_T+'</strong>'+
+      '</div>'+
+      '<div class="frow">'+
+        '<div class="field"><label>Ім\'я *</label><input type="text" id="bN" value="'+name+'" placeholder="Ольга"></div>'+
+        '<div class="field"><label>Телефон *</label><input type="tel" id="bPh" placeholder="+38 0XX..."></div>'+
+      '</div>'+
+      '<div class="field"><label>Послуга *</label><select id="bSv"><option value="">— оберіть —</option>'+opts+'</select></div>'+
+      '<div class="field"><label>Коментар</label><textarea id="bCom" placeholder="Побажання: колір, форма нігтів, дизайн..."></textarea></div>'+
+      '<div class="msg" id="bMsg"></div>'+
+      '<button class="btn btn-d" onclick="submitBook()" style="align-self:start">Підтвердити запис</button>'+
+      '<p class="fnote">Після запису Таня зв\'яжеться для підтвердження</p>'+
     '</div>';
-  if (window.innerWidth < 768) setTimeout(function() { area.scrollIntoView({behavior:'smooth',block:'nearest'}); }, 150);
 }
-
 async function submitBook() {
   var name=v('bN'), phone=v('bPh'), svc=document.getElementById('bSv').value, com=v('bCom');
-  var msg = document.getElementById('bMsg');
+  var msg=document.getElementById('bMsg');
   if (!name||!phone||!svc) { showMsg(msg,'err',"Заповніть всі обов'язкові поля"); return; }
-  var chk = await db.collection('bookings').where('date','==',SEL_D).where('time','==',SEL_T).where('status','==','new').get();
-  if (!chk.empty) { showMsg(msg,'err','Цей час щойно зайняли. Оберіть інший.'); return; }
   try {
+    var chk=await db.collection('bookings').where('date','==',SEL_D).where('time','==',SEL_T).where('status','==','new').get();
+    if (!chk.empty) { showMsg(msg,'err','Цей час щойно зайняли. Оберіть інший.'); return; }
     await db.collection('bookings').add({
       clientName:name, clientPhone:phone, clientEmail:CU.email, clientUid:CU.uid,
-      service:svc, date:SEL_D, time:SEL_T, comment:com,
-      status:'new', createdAt:new Date().toISOString()
+      service:svc, date:SEL_D, time:SEL_T, comment:com, status:'new', createdAt:new Date().toISOString()
     });
     showMsg(msg,'ok',"✓ Запис підтверджено! Таня зв'яжеться для підтвердження.");
     SEL_T=null;
-    document.querySelectorAll('.slt').forEach(function(b) { b.classList.remove('sel'); });
+    document.querySelectorAll('.slt').forEach(function(b){b.classList.remove('sel');});
     renderCal();
   } catch(e) { showMsg(msg,'err','Помилка: '+e.message); }
 }
 
-// CANCEL OWN BOOKING
+// ══ CANCEL OWN BOOKING ══
 async function findCancel() {
-  var ph = v('cancelPh');
-  var res = document.getElementById('cancelResult');
+  var ph=v('cancelPh'), res=document.getElementById('cancelResult');
   if (!ph) { res.innerHTML='<p style="font-size:14px;color:var(--rose)">Введіть номер телефону</p>'; return; }
-  var snap = await db.collection('bookings').where('clientPhone','==',ph).get();
-  if (snap.empty) { res.innerHTML='<p style="font-size:14px;color:var(--tx3)">Записів не знайдено</p>'; return; }
-  var html = snap.docs.map(function(d) {
-    var b = d.data();
-    var isCancelled = b.status === 'cancelled';
-    var bg = isCancelled ? 'background:var(--bg);border:1px dashed var(--line);' : 'background:var(--bg2);border:1px solid var(--line);';
-    var action = isCancelled
-      ? '<span style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--rose)">' + (b.cancelledBy === 'master' ? '⚠ Скасовано майстром' : 'Скасовано') + '</span>'
-      : '<button class="btn btn-l" style="font-size:10px;padding:10px 16px" onclick="cancelOwnBk(\'' + d.id + '\')">Скасувати</button>';
-    return '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 14px;' + bg + 'margin-bottom:7px">' +
-      '<span style="flex:1;font-size:14px;color:var(--tx2)"><strong>' + b.date + '</strong> о ' + b.time + ' — ' + b.service + '</span>' +
-      action + '</div>';
-  }).join('');
-  res.innerHTML = html || '<p style="font-size:14px;color:var(--tx3)">Записів не знайдено</p>';
+  res.innerHTML='<span class="spin"></span>';
+  try {
+    var snap=await db.collection('bookings').where('clientPhone','==',ph).get();
+    if (snap.empty) { res.innerHTML='<p style="font-size:14px;color:var(--tx3)">Записів не знайдено</p>'; return; }
+    var html=snap.docs.map(function(d){
+      var b=d.data();
+      var isCan=b.status==='cancelled';
+      var bg=isCan?'background:var(--bg);border:1px dashed var(--line)':'background:var(--bg2);border:1px solid var(--line)';
+      var action=isCan
+        ? '<span style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--rose)">'+(b.cancelledBy==='master'?'⚠ Скасовано майстром':'Скасовано')+'</span>'
+        : '<button class="btn btn-l" style="font-size:10px;padding:10px 16px" onclick="cancelOwnBk(\''+d.id+'\')">Скасувати</button>';
+      return '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 14px;'+bg+';margin-bottom:7px">'+
+        '<span style="flex:1;font-size:14px;color:var(--tx2)"><strong>'+b.date+'</strong> о '+b.time+' — '+b.service+'</span>'+
+        action+'</div>';
+    }).join('');
+    res.innerHTML=html;
+  } catch(e) { res.innerHTML='<p style="font-size:14px;color:var(--rose)">Помилка: '+e.message+'</p>'; }
 }
-
 async function cancelOwnBk(id) {
   if (!confirm('Скасувати цей запис?')) return;
   await db.collection('bookings').doc(id).update({status:'cancelled'});
-  toast('Запис скасовано ✓','ok');
-  document.getElementById('cancelResult').innerHTML = '<p style="font-size:14px;color:var(--sage)">✓ Запис скасовано</p>';
+  toast('Запис скасовано','ok');
+  document.getElementById('cancelResult').innerHTML='<p style="font-size:14px;color:var(--sage)">✓ Запис скасовано</p>';
   renderCal();
 }
 
-// ══════════════════════════════════════
+// ══ REVIEWS ══
+async function loadReviews() {
+  var grid=document.getElementById('reviewsGrid');
+  if (!grid) return;
+  try {
+    var snap=await db.collection('reviews').orderBy('createdAt','desc').get();
+    if (snap.empty) {
+      grid.innerHTML='<p style="font-size:15px;color:var(--tx3);font-family:var(--ff);font-style:italic;padding:20px 0;grid-column:1/-1">Відгуків поки немає. Будьте першою ✦</p>';
+    } else {
+      grid.innerHTML=snap.docs.map(function(d){
+        var r=d.data();
+        var stars=''; for(var i=0;i<5;i++) stars+=i<r.rating?'★':'☆';
+        var dateStr=r.createdAt?new Date(r.createdAt).toLocaleDateString('uk-UA',{month:'long',year:'numeric'}):'';
+        var photoHtml=r.photoUrl?'<div style="margin-top:10px;border-radius:0;overflow:hidden;border:1px solid var(--line)"><img src="'+r.photoUrl+'" alt="Фото роботи" style="width:100%;max-height:180px;object-fit:cover;display:block" onerror="this.parentElement.style.display=\'none\'"></div>':'';
+        return '<div class="review-card reveal">'+
+          '<div class="review-stars">'+stars+'</div>'+
+          '<div class="review-text">'+r.text+'</div>'+
+          photoHtml+
+          '<div><div class="review-name">'+r.authorName+'</div>'+
+          '<div class="review-date">'+dateStr+'</div></div>'+
+        '</div>';
+      }).join('');
+      setTimeout(initReveal,50);
+    }
+  } catch(e) {
+    grid.innerHTML='<p style="font-size:14px;color:var(--tx3);padding:10px 0;grid-column:1/-1">Не вдалося завантажити відгуки</p>';
+  }
+  updateReviewUI();
+}
+function updateReviewUI() {
+  var fw=document.getElementById('reviewFormWrap');
+  var hl=document.getElementById('reviewLoginHint');
+  if (!fw||!hl) return;
+  if (CU) { fw.style.display='block'; hl.style.display='none'; }
+  else { fw.style.display='none'; hl.style.display='block'; }
+}
+function pickStar(n) {
+  SEL_STARS=n;
+  document.querySelectorAll('.star-btn').forEach(function(b,i){ b.classList.toggle('lit',i<n); });
+}
+async function submitReview() {
+  if (!CU) { openMod(); return; }
+  var text=v('revText'), photoUrl=v('revPhoto'), msg=document.getElementById('revMsg');
+  if (!text) { showMsg(msg,'err','Напишіть відгук'); return; }
+  if (SEL_STARS<1) { showMsg(msg,'err','Оберіть оцінку зірочками'); return; }
+  var name=CU.displayName||CU.email.split('@')[0];
+  try {
+    var existing=await db.collection('reviews').where('authorUid','==',CU.uid).limit(1).get();
+    if (!existing.empty) { showMsg(msg,'err','Ви вже залишали відгук'); return; }
+    var data={authorUid:CU.uid, authorName:name, text:text, rating:SEL_STARS, createdAt:new Date().toISOString()};
+    if (photoUrl) data.photoUrl=photoUrl;
+    await db.collection('reviews').add(data);
+    document.getElementById('revText').value='';
+    document.getElementById('revPhoto').value='';
+    SEL_STARS=0; pickStar(0);
+    showMsg(msg,'ok','Дякуємо за відгук! ✓'); loadReviews();
+  } catch(e) { showMsg(msg,'err','Помилка: '+e.message); }
+}
 
-
-// ══════════════════════════════════════
-// ADMIN PANEL
-// ══════════════════════════════════════
+// ══ ADMIN ══
 function openAdmin() {
   document.getElementById('adminPanel').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  document.body.style.overflow='hidden';
   loadAdmBk(); loadAdmBlk(); loadAdmSvcs(); loadAdmGal(); fillAdmSettings();
 }
 function closeAdmin() {
   document.getElementById('adminPanel').classList.remove('open');
-  document.body.style.overflow = '';
+  document.body.style.overflow='';
 }
-function switchTab(tab, btn) {
-  document.querySelectorAll('.asec').forEach(function(s) { s.classList.remove('on'); });
-  document.querySelectorAll('.atab').forEach(function(b) { b.classList.remove('on'); });
+function switchTab(tab,btn) {
+  document.querySelectorAll('.asec').forEach(function(s){s.classList.remove('on');});
+  document.querySelectorAll('.atab').forEach(function(b){b.classList.remove('on');});
   document.getElementById('tab-'+tab).classList.add('on');
   btn.classList.add('on');
+  if (tab==='reminders') loadReminders();
 }
 
-// BOOKINGS TABLE
+// ── admin bookings ──
 async function loadAdmBk() {
-  var snap = await db.collection('bookings').orderBy('date','desc').get();
-  var all = snap.docs.map(function(d) { return Object.assign({id:d.id}, d.data()); });
-  var today = new Date().toISOString().split('T')[0];
-  var act = all.filter(function(b) { return b.status==='new'; });
-  document.getElementById('bk0').textContent = all.length;
-  document.getElementById('bk1').textContent = act.length;
-  document.getElementById('bk2').textContent = act.filter(function(b) { return b.date===today; }).length;
-  document.getElementById('bk3').textContent = all.filter(function(b) { return b.status==='cancelled'; }).length;
-  var wrap = document.getElementById('bkTable');
-  if (!all.length) { wrap.innerHTML='<p class="loading">Записів ще немає ☕</p>'; return; }
-  var rows = all.map(function(b) {
-    var actions = '';
-    if (b.status==='new') {
-      actions += '<button class="abtn sm red" onclick="cancelBk(\'' + b.id + '\')" style="margin-right:4px">Скасувати</button>';
-      actions += '<button class="abtn sm grn" onclick="showConfirmLinks(\'' + b.id + '\')" title="Надіслати підтвердження">✉️ Підтвердити</button>';
-    }
-    return '<tr id="bkrow-' + b.id + '">' +
-      '<td><strong>' + b.clientName + '</strong></td>' +
-      '<td>' + b.clientPhone + '</td>' +
-      '<td>' + b.service + '</td>' +
-      '<td>' + b.date + '</td>' +
-      '<td>' + b.time + '</td>' +
-      '<td style="font-size:13px;color:var(--tx3)">' + (b.comment||'—') + '</td>' +
-      '<td class="s-' + b.status + '">' + (b.status==='new'?'активний':'скасовано') + '</td>' +
-      '<td style="white-space:nowrap">' + actions +
-        '<button class="abtn sm" style="background:none;color:var(--tx3);border:1px solid var(--line);margin-left:2px" onclick="deleteBk(\'' + b.id + '\')" title="Видалити запис повністю">🗑</button>' +
-      '</td>' +
-    '</tr>';
+  try {
+    var snap=await db.collection('bookings').orderBy('date','desc').get();
+    var all=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+    var today=new Date().toISOString().split('T')[0];
+    var act=all.filter(function(b){return b.status==='new';});
+    document.getElementById('bk0').textContent=all.length;
+    document.getElementById('bk1').textContent=act.length;
+    document.getElementById('bk2').textContent=act.filter(function(b){return b.date===today;}).length;
+    document.getElementById('bk3').textContent=all.filter(function(b){return b.status==='cancelled';}).length;
+    var wrap=document.getElementById('bkTable');
+    if (!all.length){wrap.innerHTML='<p class="loading">Записів ще немає ☕</p>'; renderBkCards([]); return;}
+    var rows=all.map(function(b){
+      var isCan=b.status==='cancelled';
+      var acts='';
+      if (!isCan) acts+='<button class="abtn sm red" onclick="cancelBk(\''+b.id+'\')" style="margin-right:4px">Скасувати</button>'+
+                        '<button class="abtn sm grn" onclick="showConfirmLinks(\''+b.id+'\')">✉️</button>';
+      acts+='<button class="abtn sm" style="background:none;color:var(--tx3);border:1px solid var(--line);margin-left:4px" onclick="deleteBk(\''+b.id+'\')" title="Видалити">🗑</button>';
+      return '<tr id="bkrow-'+b.id+'">'+
+        '<td><strong>'+b.clientName+'</strong></td>'+
+        '<td><a href="tel:'+b.clientPhone+'" style="color:var(--gold2)">'+b.clientPhone+'</a></td>'+
+        '<td>'+b.service+'</td><td>'+b.date+'</td><td>'+b.time+'</td>'+
+        '<td style="font-size:12px;color:var(--tx3)">'+(b.comment||'—')+'</td>'+
+        '<td class="s-'+b.status+'">'+(isCan?'скасовано'+(b.cancelledBy==='master'?' майстром':''):'активний')+'</td>'+
+        '<td style="white-space:nowrap">'+acts+'</td>'+
+      '</tr>';
+    }).join('');
+    wrap.innerHTML='<div class="atable-wrap"><table><thead><tr>'+
+      "<th>Ім'я</th><th>Телефон</th><th>Послуга</th><th>Дата</th><th>Час</th><th>Коментар</th><th>Статус</th><th></th>"+
+      '</tr></thead><tbody>'+rows+'</tbody></table></div>';
+    renderBkCards(all);
+  } catch(e) { document.getElementById('bkTable').innerHTML='<p style="color:var(--rose)">Помилка: '+e.message+'</p>'; }
+}
+function renderBkCards(all) {
+  var c=document.getElementById('bkCards'); if(!c)return;
+  if (!all.length){c.innerHTML='<p style="color:var(--tx3);font-size:14px;padding:10px">Записів поки немає ☕</p>';return;}
+  c.innerHTML=all.map(function(b){
+    var isCan=b.status==='cancelled';
+    var sc=isCan?'var(--rose)':'var(--sage)';
+    var st=isCan?'Скасовано'+(b.cancelledBy==='master'?' майстром':''):'Активний';
+    var acts='';
+    if(!isCan) acts='<button class="abtn sm red" onclick="cancelBk(\''+b.id+'\')">Скасувати</button> <button class="abtn sm grn" onclick="showConfirmLinks(\''+b.id+'\')">✉️</button> ';
+    acts+='<button class="abtn sm" style="background:none;border:1px solid var(--line);color:var(--tx3)" onclick="deleteBk(\''+b.id+'\')">🗑</button>';
+    return '<div class="bk-card" id="bkcard-'+b.id+'">'+
+      '<div class="bk-card-head"><div class="bk-card-name">'+b.clientName+'</div>'+
+      '<span class="bk-card-status" style="color:'+sc+'">'+st+'</span></div>'+
+      '<div class="bk-card-body">📅 '+b.date+' о '+b.time+'<br>💅 '+b.service+
+      '<br>📞 <a href="tel:'+b.clientPhone+'" style="color:var(--gold2)">'+b.clientPhone+'</a>'+
+      (b.comment?'<br>💬 '+b.comment:'')+'</div>'+
+      '<div class="bk-card-actions">'+acts+'</div>'+
+      '<div id="conf-card-'+b.id+'"></div></div>';
   }).join('');
-  wrap.innerHTML = '<div class="atable-wrap"><table><thead><tr>' +
-    "<th>Ім'я</th><th>Телефон</th><th>Послуга</th><th>Дата</th><th>Час</th><th>Коментар</th><th>Статус</th><th></th>" +
-    '</tr></thead><tbody>' + rows + '</tbody></table></div>';
-  renderBkCards(all);
 }
 function showConfirmLinks(id) {
-  // Remove existing if open
-  var existing = document.getElementById('conf-' + id);
-  if (existing) { existing.remove(); return; }
-  var row = document.getElementById('bkrow-' + id);
-  if (!row) return;
-  // Find booking
-  db.collection('bookings').doc(id).get().then(function(d) {
-    if (!d.exists) return;
-    var b = d.data();
-    var phone = b.clientPhone.replace(/\D/g,'');
-    var msg = 'Привіт, ' + b.clientName + '! Підтверджую ваш запис: ' + b.date + ' о ' + b.time + ' (' + b.service + '). Чекаю! — Тетяна';
-    var enc = encodeURIComponent(msg);
-    var emailSub = encodeURIComponent('Підтвердження запису ' + b.date);
-    var emailBody = encodeURIComponent('Привіт, ' + b.clientName + '!\n\nПідтверджую ваш запис:\nДата: ' + b.date + '\nЧас: ' + b.time + '\nПослуга: ' + b.service + '\n\nЧекаю на вас!\n— Тетяна');
-    var html =
-      '<tr id="conf-' + id + '"><td colspan="8">' +
-        '<div class="confirm-box">' +
-          '<strong>Надіслати підтвердження для ' + b.clientName + '</strong>' +
-          '<div class="confirm-links">' +
-            '<a class="clink clink-ph" href="tel:' + b.clientPhone + '">📞 Телефон</a>' +
-            '<a class="clink clink-vi" href="viber://chat?number=%2B' + phone + '&text=' + enc + '" target="_blank">💬 Viber</a>' +
-            '<a class="clink clink-tg" href="https://t.me/+' + phone + '?text=' + enc + '" target="_blank">✈️ Telegram</a>' +
-            '<a class="clink clink-wa" href="https://wa.me/' + phone + '?text=' + enc + '" target="_blank">🟢 WhatsApp</a>' +
-            '<a class="clink clink-em" href="mailto:' + b.clientEmail + '?subject=' + emailSub + '&body=' + emailBody + '">📧 Email</a>' +
-          '</div>' +
-        '</div>' +
-      '</td></tr>';
-    row.insertAdjacentHTML('afterend', html);
+  var existing=document.getElementById('conf-'+id);
+  if (existing){existing.remove();return;}
+  var row=document.getElementById('bkrow-'+id);
+  if (!row) { // mobile card mode
+    var ccard=document.getElementById('conf-card-'+id);
+    if (!ccard) return;
+  }
+  db.collection('bookings').doc(id).get().then(function(d){
+    if(!d.exists)return;
+    var b=d.data();
+    var phone=b.clientPhone.replace(/\D/g,'');
+    var msg='Привіт, '+b.clientName+'! Підтверджую ваш запис: '+b.date+' о '+b.time+' ('+b.service+'). Чекаю! — Тетяна';
+    var enc=encodeURIComponent(msg);
+    var sub=encodeURIComponent('Підтвердження запису '+b.date);
+    var body=encodeURIComponent('Привіт, '+b.clientName+'!\n\nДата: '+b.date+'\nЧас: '+b.time+'\nПослуга: '+b.service+'\n\nЧекаю!\n— Тетяна');
+    var box='<div class="confirm-box"><strong>Підтвердити для '+b.clientName+'</strong><div class="confirm-links">'+
+      '<a class="clink clink-ph" href="tel:'+b.clientPhone+'">📞 Телефон</a>'+
+      '<a class="clink clink-vi" href="viber://chat?number=%2B'+phone+'&text='+enc+'" target="_blank">💬 Viber</a>'+
+      '<a class="clink clink-tg" href="https://t.me/+'+phone+'?text='+enc+'" target="_blank">✈️ Telegram</a>'+
+      '<a class="clink clink-wa" href="https://wa.me/'+phone+'?text='+enc+'" target="_blank">🟢 WhatsApp</a>'+
+      (b.clientEmail?'<a class="clink clink-em" href="mailto:'+b.clientEmail+'?subject='+sub+'&body='+body+'" target="_blank">📧 Email</a>':'')+
+    '</div></div>';
+    if (row) {
+      row.insertAdjacentHTML('afterend','<tr id="conf-'+id+'"><td colspan="8">'+box+'</td></tr>');
+    } else if (ccard) {
+      ccard.innerHTML=box;
+    }
   });
+}
+async function loadReminders() {
+  var pane = document.getElementById('remindersPane');
+  if (!pane) return;
+  pane.innerHTML = '<div class="loading"><span class="spin"></span>Завантаження...</div>';
+  try {
+    var today = new Date(); today.setHours(0,0,0,0);
+    var todayStr = today.toISOString().split('T')[0];
+    var snap = await db.collection('bookings')
+      .where('status','==','new')
+      .orderBy('date','asc')
+      .orderBy('time','asc')
+      .get();
+    var upcoming = snap.docs
+      .map(function(d){return Object.assign({id:d.id},d.data());})
+      .filter(function(b){return b.date >= todayStr;});
+    if (!upcoming.length) {
+      pane.innerHTML='<p style="font-size:15px;color:var(--tx3);padding:20px 0">Майбутніх записів немає ☕</p>';
+      return;
+    }
+    // Group by date
+    var byDate = {};
+    upcoming.forEach(function(b){
+      if(!byDate[b.date]) byDate[b.date]=[];
+      byDate[b.date].push(b);
+    });
+    var html = '';
+    Object.keys(byDate).sort().forEach(function(date){
+      var parts=date.split('-');
+      var d=parseInt(parts[2]), m=parseInt(parts[1]), y=parseInt(parts[0]);
+      var dayNames=['неділя','понеділок','вівторок','середа','четвер','п\'ятниця','субота'];
+      var dt=new Date(y,m-1,d);
+      var dayLabel=dayNames[dt.getDay()]+', '+d+' '+['—','січня','лютого','березня','квітня','травня','червня','липня','серпня','вересня','жовтня','листопада','грудня'][m]+' '+y;
+      html+='<div class="acard" style="margin-bottom:16px"><h3 style="font-family:var(--ff);font-size:18px;font-weight:400;color:var(--gold2);margin-bottom:14px">'+dayLabel+'</h3>';
+      byDate[date].forEach(function(b){
+        var phone=b.clientPhone.replace(/\D/g,'');
+        var msg='Привіт, '+b.clientName+'! Нагадую про ваш запис завтра — '+b.date+' о '+b.time+' ('+b.service+'). Якщо є питання — пишіть. Чекаю! — Тетяна 💅';
+        var enc=encodeURIComponent(msg);
+        var emailSub=encodeURIComponent('Нагадування про запис '+b.date);
+        var emailBody=encodeURIComponent('Привіт, '+b.clientName+'!\n\nНагадую про ваш запис:\nДата: '+b.date+'\nЧас: '+b.time+'\nПослуга: '+b.service+'\n\nЧекаю на вас!\n— Тетяна');
+        html+='<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid var(--line)">' +
+          '<div style="flex:1;min-width:160px">' +
+            '<div style="font-size:15px;font-weight:500;color:var(--tx)">'+b.clientName+'</div>' +
+            '<div style="font-size:13px;color:var(--tx3)">'+b.time+' · '+b.service+'</div>' +
+            '<div style="font-size:13px;color:var(--tx3)"><a href="tel:'+b.clientPhone+'" style="color:var(--gold2)">'+b.clientPhone+'</a></div>' +
+          '</div>' +
+          '<div style="display:flex;gap:6px;flex-wrap:wrap">' +
+            '<a style="display:inline-flex;align-items:center;gap:4px;padding:7px 12px;background:#7360f2;color:white;font-size:12px;letter-spacing:1px;text-decoration:none;font-family:var(--fs)" href="viber://chat?number=%2B'+phone+'&text='+enc+'" target="_blank">💬 Viber</a>' +
+            '<a style="display:inline-flex;align-items:center;gap:4px;padding:7px 12px;background:#29a8ea;color:white;font-size:12px;letter-spacing:1px;text-decoration:none;font-family:var(--fs)" href="https://t.me/+'+phone+'?text='+enc+'" target="_blank">✈️ TG</a>' +
+            '<a style="display:inline-flex;align-items:center;gap:4px;padding:7px 12px;background:#25D366;color:white;font-size:12px;letter-spacing:1px;text-decoration:none;font-family:var(--fs)" href="https://wa.me/'+phone+'?text='+enc+'" target="_blank">🟢 WA</a>' +
+            '<a style="display:inline-flex;align-items:center;gap:4px;padding:7px 12px;background:var(--gold2);color:white;font-size:12px;letter-spacing:1px;text-decoration:none;font-family:var(--fs)" href="mailto:'+b.clientEmail+'?subject='+emailSub+'&body='+emailBody+'" target="_blank">📧 Email</a>' +
+          '</div>' +
+        '</div>';
+      });
+      html+='</div>';
+    });
+    pane.innerHTML=html;
+  } catch(e){
+    pane.innerHTML='<p style="color:var(--rose);font-size:14px">Помилка: '+e.message+'</p>';
+  }
 }
 
 async function cancelBk(id) {
-  if (!confirm("Скасувати запис?")) return;
-  await db.collection('bookings').doc(id).update({status:'cancelled', cancelledBy:'master', cancelledAt: new Date().toISOString()});
+  if(!confirm('Скасувати запис?'))return;
+  await db.collection('bookings').doc(id).update({status:'cancelled',cancelledBy:'master',cancelledAt:new Date().toISOString()});
   toast('Запис скасовано'); loadAdmBk();
 }
 async function deleteBk(id) {
-  if (!confirm("Видалити запис назавжди? Цю дію не можна скасувати.")) return;
+  if(!confirm('Видалити назавжди? Запис зникне і не відновиться.'))return;
   try {
-    var row = document.getElementById('bkrow-' + id);
-    var conf = document.getElementById('conf-' + id);
-    if (row) row.remove();
-    if (conf) conf.remove();
     await db.collection('bookings').doc(id).delete();
-    toast('Запис видалено','ok');
-    loadAdmBk();
-  } catch(e) { toast('Помилка: ' + e.message, 'err'); }
+    toast('Видалено ✓','ok');
+    await loadAdmBk();
+  } catch(e){toast('Помилка: '+e.message,'err');}
 }
 
-// BLOCKED DAYS
+// ── blocked days ──
 async function loadAdmBlk() {
-  var snap = await db.collection('blocked_days').get();
-  var list = document.getElementById('bdList');
-  if (snap.empty) { list.innerHTML='<p style="font-size:14px;color:var(--tx3)">Закритих днів немає</p>'; return; }
-  list.innerHTML = snap.docs.map(function(d) {
-    return '<div class="chip"><span>' + d.id + ' — ' + (d.data().reason||'Вихідний') + '</span><button onclick="delBlock(\'' + d.id + '\')">✕</button></div>';
-  }).join('');
+  try {
+    var snap=await db.collection('blocked_days').get();
+    var list=document.getElementById('bdList');
+    list.innerHTML=snap.empty
+      ? '<p style="font-size:14px;color:var(--tx3)">Закритих днів немає</p>'
+      : snap.docs.map(function(d){
+          return '<div class="chip"><span>'+d.id+' — '+(d.data().reason||'Вихідний')+'</span><button onclick="delBlock(\''+d.id+'\')">✕</button></div>';
+        }).join('');
+  } catch(e){}
 }
 async function addBlock() {
   var date=v('bdDate'), reason=v('bdReason')||'Вихідний';
-  if (!date) { toast('Оберіть дату','err'); return; }
+  if(!date){toast('Оберіть дату','err');return;}
   await db.collection('blocked_days').doc(date).set({reason:reason});
-  toast('День ' + date + ' закрито','ok');
+  toast('День '+date+' закрито','ok');
   document.getElementById('bdDate').value=''; document.getElementById('bdReason').value='';
   loadAdmBlk(); renderCal();
 }
@@ -1368,307 +1556,238 @@ async function delBlock(date) {
   toast('День відкрито'); loadAdmBlk(); renderCal();
 }
 
-// SERVICES ADMIN
-async function loadAdmSvcs() {
-  var snap = await db.collection('services').orderBy('ord').get();
-  var svcs = snap.docs.map(function(d) { return Object.assign({id:d.id}, d.data()); });
-  document.getElementById('svcAdminList').innerHTML = svcs.map(function(s) {
-    return '<div class="svc-item">' +
-      '<div>' +
-        '<div class="svc-item-name">' + s.name + '</div>' +
-        '<div class="svc-item-meta">' + (s.category||'') + (s.duration?' · '+s.duration+' хв':'') + '</div>' +
-      '</div>' +
-      '<div class="svc-item-price">' + s.price + ' ₴</div>' +
-      '<div class="svc-item-btns">' +
-        '<button class="abtn sm out" onclick="editSvc(\'' + s.id + '\',\'' + (s.name||'').replace(/'/g,"\\'") + '\',' + s.price + ',' + (s.duration||0) + ',' + (s.ord||0) + ',\'' + (s.category||'Інше') + '\',\'' + (s.description||'').replace(/'/g,"\\'") + '\')">Редагувати</button>' +
-        '<button class="abtn sm red" onclick="delSvc(\'' + s.id + '\')">✕</button>' +
-      '</div>' +
-    '</div>';
+// ── block time slots ──
+async function loadBlockedTimes() {
+  var dt=document.getElementById('btDate').value; if(!dt)return;
+  SEL_TIME_SLOTS={};
+  var grid=document.getElementById('timeBlockGrid'); grid.innerHTML='<span class="spin"></span>';
+  var bookedTimes={}, manBlocked={};
+  try {
+    var bkSnap=await db.collection('bookings').where('date','==',dt).where('status','==','new').get();
+    bkSnap.forEach(function(d){bookedTimes[d.data().time]=d.data().clientName;});
+    var blSnap=await db.collection('time_blocks').where('date','==',dt).get();
+    blSnap.forEach(function(d){manBlocked[d.data().time]=true; SEL_TIME_SLOTS[d.data().time]=true;});
+  } catch(e){}
+  grid.innerHTML=WORK_HOURS.map(function(h){
+    if(bookedTimes[h]) return '<div class="tslot tbk" title="'+bookedTimes[h]+'">'+h+'<br><span style="font-size:10px">зайнято</span></div>';
+    return '<div class="tslot'+(manBlocked[h]?' sel':'')+'" onclick="toggleTimeSlot(this,\''+h+'\')">'+h+'</div>';
   }).join('');
 }
-function editSvc(id, name, price, dur, ord, cat, desc) {
-  document.getElementById('svName').value  = name;
-  document.getElementById('svPrice').value = price;
-  document.getElementById('svDur').value   = dur;
-  document.getElementById('svEditId').value = id;
-  document.getElementById('svDesc').value  = desc;
-  var sel = document.getElementById('svCat');
-  for (var i=0; i<sel.options.length; i++) { if (sel.options[i].value === cat) { sel.selectedIndex=i; break; } }
-  var btn = document.getElementById('svSaveBtn');
-  btn.textContent = 'Зберегти зміни';
-  btn.onclick = function() { updateSvc(id, ord, btn); };
-  document.getElementById('svCancelBtn').style.display = 'inline-flex';
+function toggleTimeSlot(el,time){el.classList.toggle('sel'); SEL_TIME_SLOTS[time]=el.classList.contains('sel');}
+function clearAllTimeSel(){document.querySelectorAll('.tslot.sel').forEach(function(el){el.classList.remove('sel');}); SEL_TIME_SLOTS={};}
+async function saveBlockedTimes() {
+  var dt=document.getElementById('btDate').value;
+  var reason=document.getElementById('btReason').value.trim()||'Зайнято';
+  var msg=document.getElementById('btSaveMsg');
+  if(!dt){msg.textContent='Оберіть дату';msg.style.color='var(--rose)';return;}
+  try {
+    var existing=await db.collection('time_blocks').where('date','==',dt).get();
+    var batch=db.batch();
+    existing.docs.forEach(function(d){batch.delete(d.ref);});
+    var toBlock=Object.keys(SEL_TIME_SLOTS).filter(function(t){return SEL_TIME_SLOTS[t];});
+    toBlock.forEach(function(t){batch.set(db.collection('time_blocks').doc(dt+'_'+t.replace(':','')),{date:dt,time:t,reason:reason});});
+    await batch.commit();
+    msg.textContent='✓ Збережено '+toBlock.length+' слотів'; msg.style.color='var(--sage)';
+    setTimeout(function(){msg.textContent='';},3000); renderCal();
+  } catch(e){msg.textContent='Помилка: '+e.message; msg.style.color='var(--rose)';}
+}
+
+// ── admin services ──
+async function loadAdmSvcs() {
+  try {
+    var snap=await db.collection('services').orderBy('ord').get();
+    var svcs=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+    document.getElementById('svcAdminList').innerHTML=svcs.map(function(s){
+      var safeName=(s.name||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      var safeDesc=(s.description||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      return '<div class="svc-item">'+
+        '<div><div class="svc-item-name">'+s.name+'</div>'+
+        '<div class="svc-item-meta">'+(s.category||'')+(s.duration?' · '+s.duration+' хв':'')+'</div></div>'+
+        '<div class="svc-item-price">'+s.price+' ₴</div>'+
+        '<div class="svc-item-btns">'+
+          '<button class="abtn sm out" onclick="editSvc(\''+s.id+'\',\''+safeName+'\','+s.price+','+(s.duration||0)+','+(s.ord||0)+',\''+(s.category||'Інше')+'\',\''+safeDesc+'\')">Редагувати</button>'+
+          '<button class="abtn sm red" onclick="delSvc(\''+s.id+'\')">✕</button>'+
+        '</div></div>';
+    }).join('');
+  } catch(e){}
+}
+function editSvc(id,name,price,dur,ord,cat,desc){
+  document.getElementById('svName').value=name;
+  document.getElementById('svPrice').value=price;
+  document.getElementById('svDur').value=dur;
+  document.getElementById('svEditId').value=id;
+  document.getElementById('svDesc').value=desc;
+  var sel=document.getElementById('svCat');
+  for(var i=0;i<sel.options.length;i++){if(sel.options[i].value===cat){sel.selectedIndex=i;break;}}
+  var btn=document.getElementById('svSaveBtn');
+  btn.textContent='Зберегти зміни';
+  btn.onclick=function(){updateSvc(id,ord,btn);};
+  document.getElementById('svCancelBtn').style.display='inline-flex';
   btn.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
-function cancelEditSvc() {
-  var btn = document.getElementById('svSaveBtn');
-  clearSvcForm(btn);
-  document.getElementById('svCancelBtn').style.display = 'none';
-}
-async function updateSvc(id, ord, btn) {
-  var name=v('svName'), price=parseInt(v('svPrice'))||0, dur=parseInt(v('svDur'))||0, cat=document.getElementById('svCat').value, desc=v('svDesc');
-  if (!name||!price) { toast('Введіть назву та ціну','err'); return; }
-  await db.collection('services').doc(id).update({name:name, price:price, duration:dur, category:cat, description:desc, ord:ord});
+function cancelEditSvc(){clearSvcForm(document.getElementById('svSaveBtn'));}
+async function updateSvc(id,ord,btn){
+  var name=v('svName'),price=parseInt(v('svPrice'))||0,dur=parseInt(v('svDur'))||0,cat=document.getElementById('svCat').value,desc=v('svDesc');
+  if(!name||!price){toast('Введіть назву та ціну','err');return;}
+  await db.collection('services').doc(id).update({name:name,price:price,duration:dur,category:cat,description:desc,ord:ord});
   clearSvcForm(btn); toast('Послугу оновлено!','ok'); loadAdmSvcs(); loadSvcs();
 }
-async function saveService() {
-  var name=v('svName'), price=parseInt(v('svPrice'))||0, dur=parseInt(v('svDur'))||0, cat=document.getElementById('svCat').value, desc=v('svDesc');
-  if (!name||!price) { toast('Введіть назву та ціну','err'); return; }
-  var snap = await db.collection('services').orderBy('ord','desc').limit(1).get();
-  var ord = (snap.empty ? 0 : (snap.docs[0].data().ord||0)) + 1;
-  await db.collection('services').add({name:name, price:price, duration:dur, category:cat, description:desc, ord:ord});
+async function saveService(){
+  var name=v('svName'),price=parseInt(v('svPrice'))||0,dur=parseInt(v('svDur'))||0,cat=document.getElementById('svCat').value,desc=v('svDesc');
+  if(!name||!price){toast('Введіть назву та ціну','err');return;}
+  var snap=await db.collection('services').orderBy('ord','desc').limit(1).get();
+  var ord=(snap.empty?0:(snap.docs[0].data().ord||0))+1;
+  await db.collection('services').add({name:name,price:price,duration:dur,category:cat,description:desc,ord:ord});
   clearSvcForm(document.getElementById('svSaveBtn')); toast('Послугу додано!','ok'); loadAdmSvcs(); loadSvcs();
 }
-function clearSvcForm(btn) {
-  ['svName','svPrice','svDur','svEditId','svDesc'].forEach(function(id) { document.getElementById(id).value=''; });
-  if (!btn) btn = document.getElementById('svSaveBtn');
-  btn.textContent = 'Додати послугу';
-  btn.onclick = null;
-  btn.setAttribute('onclick','saveService()');
-  var cb = document.getElementById('svCancelBtn');
-  if (cb) cb.style.display = 'none';
+function clearSvcForm(btn){
+  ['svName','svPrice','svDur','svEditId','svDesc'].forEach(function(id){document.getElementById(id).value='';});
+  if(!btn)btn=document.getElementById('svSaveBtn');
+  btn.textContent='Додати послугу'; btn.onclick=null; btn.setAttribute('onclick','saveService()');
+  document.getElementById('svCancelBtn').style.display='none';
 }
-async function delSvc(id) {
-  if (!confirm('Видалити послугу?')) return;
+async function delSvc(id){
+  if(!confirm('Видалити послугу?'))return;
   await db.collection('services').doc(id).delete();
   toast('Видалено'); loadAdmSvcs(); loadSvcs();
 }
 
-// GALLERY ADMIN
-async function loadAdmGal() {
-  var snap = await db.collection('gallery').orderBy('ord','asc').get();
-  var g = document.getElementById('galAdmin');
-  g.innerHTML = snap.empty
-    ? '<p style="font-size:14px;color:var(--tx3);grid-column:1/-1">Фото ще немає</p>'
-    : snap.docs.map(function(d) {
-        return '<div class="gal-a-item"><img src="' + d.data().url + '" alt="" onerror="this.src=\'\'"><button onclick="delGal(\'' + d.id + '\')">✕</button></div>';
-      }).join('');
+// ── gallery admin ──
+async function loadAdmGal(){
+  try {
+    var snap=await db.collection('gallery').orderBy('ord','asc').get();
+    var g=document.getElementById('galAdmin');
+    g.innerHTML=snap.empty
+      ? '<p style="font-size:14px;color:var(--tx3);grid-column:1/-1">Фото ще немає</p>'
+      : snap.docs.map(function(d){
+          return '<div class="gal-a-item"><img src="'+d.data().url+'" alt="" onerror="this.style.opacity=.3"><button onclick="delGal(\''+d.id+'\')">✕</button></div>';
+        }).join('');
+  } catch(e){}
 }
-async function addGallery() {
-  var url=v('galUrl'), cap=v('galCap');
-  if (!url) { toast('Введіть URL фото','err'); return; }
-  var snap = await db.collection('gallery').orderBy('ord','desc').limit(1).get();
-  var ord = (snap.empty ? 0 : (snap.docs[0].data().ord||0)) + 1;
-  await db.collection('gallery').add({url:url, cap:cap, ord:ord, createdAt:new Date().toISOString()});
+async function addGallery(){
+  var url=v('galUrl'),cap=v('galCap');
+  if(!url){toast('Введіть URL фото','err');return;}
+  var snap=await db.collection('gallery').orderBy('ord','desc').limit(1).get();
+  var ord=(snap.empty?0:(snap.docs[0].data().ord||0))+1;
+  await db.collection('gallery').add({url:url,cap:cap,ord:ord,createdAt:new Date().toISOString()});
   document.getElementById('galUrl').value=''; document.getElementById('galCap').value='';
   toast('Фото додано!','ok'); loadAdmGal(); loadGal();
 }
-async function delGal(id) {
+async function delGal(id){
   await db.collection('gallery').doc(id).delete();
   toast('Фото видалено'); loadAdmGal(); loadGal();
 }
 
-// ABOUT ADMIN
-async function saveAbout() {
-  var u = {
-    aboutPhotoUrl: v('aPhotoUrl'), aboutText1: v('aTxt1'), aboutText2: v('aTxt2'),
-    statC: v('aSC'), statY: v('aSY'), statQ: v('aSQ')
-  };
+// ── about admin ──
+async function saveAbout(){
+  var u={aboutPhotoUrl:v('aPhotoUrl'),aboutText1:v('aTxt1'),aboutText2:v('aTxt2'),statC:v('aSC'),statY:v('aSY'),statQ:v('aSQ')};
   await db.collection('settings').doc('main').update(u);
-  Object.assign(SETS, u); applySettings(); toast('Збережено!','ok');
+  Object.assign(SETS,u); applySettings(); toast('Збережено!','ok');
 }
 
-// SETTINGS ADMIN
-function fillAdmSettings() {
-  document.getElementById('setPhone').value     = SETS.phone||'';
-  document.getElementById('setInsta').value     = SETS.instagram||'';
-  document.getElementById('setViber').value     = SETS.viber||'';
-  document.getElementById('setTg').value        = SETS.telegram||'';
-  document.getElementById('curAdmin').textContent = SETS.adminEmail||'—';
-  document.getElementById('aPhotoUrl').value    = SETS.aboutPhotoUrl||'';
-  document.getElementById('aTxt1').value        = SETS.aboutText1||'';
-  document.getElementById('aTxt2').value        = SETS.aboutText2||'';
-  document.getElementById('aSC').value          = SETS.statC||'';
-  document.getElementById('aSY').value          = SETS.statY||'';
-  document.getElementById('aSQ').value          = SETS.statQ||'';
+// ── settings admin ──
+function fillAdmSettings(){
+  document.getElementById('setPhone').value=SETS.phone||'';
+  document.getElementById('setInsta').value=SETS.instagram||'';
+  document.getElementById('setViber').value=SETS.viber||'';
+  document.getElementById('setTg').value=SETS.telegram||'';
+  document.getElementById('curAdmin').textContent=SETS.adminEmail||'—';
+  document.getElementById('aPhotoUrl').value=SETS.aboutPhotoUrl||'';
+  document.getElementById('aTxt1').value=SETS.aboutText1||'';
+  document.getElementById('aTxt2').value=SETS.aboutText2||'';
+  document.getElementById('aSC').value=SETS.statC||'';
+  document.getElementById('aSY').value=SETS.statY||'';
+  document.getElementById('aSQ').value=SETS.statQ||'';
+  // Set slot interval radio
+  var interval = SETS.slotInterval || '2h';
+  var radio = document.getElementById(interval==='1h'?'slot1h':'slot2h');
+  if (radio) radio.checked = true;
 }
-async function saveSettings() {
-  var u = {phone:v('setPhone'), instagram:v('setInsta'), viber:v('setViber'), telegram:v('setTg')};
+async function saveSlotInterval(val) {
+  try {
+    await db.collection('settings').doc('main').update({slotInterval: val});
+    SETS.slotInterval = val;
+    applySettings();
+    var msg = document.getElementById('slotIntMsg');
+    msg.style.display='block';
+    msg.style.color='var(--sage)';
+    msg.textContent = val==='1h' ? '✓ Тепер 9 слотів на день (щогодини)' : '✓ Тепер 5 слотів на день (кожні 2 години)';
+    setTimeout(function(){msg.style.display='none';},3000);
+    renderCal();
+  } catch(e){toast('Помилка: '+e.message,'err');}
+}
+async function saveSettings(){
+  var u={phone:v('setPhone'),instagram:v('setInsta'),viber:v('setViber'),telegram:v('setTg')};
   await db.collection('settings').doc('main').update(u);
-  Object.assign(SETS, u); applySettings(); toast('Контакти збережено!','ok');
+  Object.assign(SETS,u); applySettings(); toast('Контакти збережено!','ok');
 }
-async function changeAdmin() {
-  var email=v('newAdminEmail'), code=v('newAdminCode');
-  if (!email) { toast('Введіть email','err'); return; }
-  if (code !== SETUP_CODE) { toast('Невірний код','err'); return; }
+async function changeAdmin(){
+  var email=v('newAdminEmail'),code=v('newAdminCode');
+  if(!email){toast('Введіть email','err');return;}
+  if(code!==SETUP_CODE){toast('Невірний код','err');return;}
   await db.collection('settings').doc('main').update({adminEmail:email});
-  SETS.adminEmail = ADMIN = email;
-  document.getElementById('curAdmin').textContent = email;
+  SETS.adminEmail=ADMIN=email;
+  document.getElementById('curAdmin').textContent=email;
   toast('Email адміна оновлено!','ok');
 }
 
-// ══════════════════════════════════════
-// LOGIN MODAL
-// ══════════════════════════════════════
-function openMod()  { document.getElementById('loginModal').classList.add('open'); showSI(); }
-function closeMod() { document.getElementById('loginModal').classList.remove('open'); }
-function showSI()   {
+// ══ MODAL ══
+function openMod(){document.getElementById('loginModal').classList.add('open');showSI();}
+function closeMod(){document.getElementById('loginModal').classList.remove('open');}
+function showSI(){
   document.getElementById('formSI').style.display='block';
   document.getElementById('formSU').style.display='none';
   document.getElementById('mTitle').textContent='Вхід';
   document.getElementById('mSub').textContent='Увійдіть щоб записатись';
 }
-function showSU()   {
+function showSU(){
   document.getElementById('formSI').style.display='none';
   document.getElementById('formSU').style.display='block';
   document.getElementById('mTitle').textContent='Реєстрація';
   document.getElementById('mSub').textContent='Швидка реєстрація — 1 хвилина';
 }
-document.getElementById('loginModal').addEventListener('click', function(e) {
-  if (e.target.id==='loginModal') closeMod();
-});
+document.getElementById('loginModal').addEventListener('click',function(e){if(e.target.id==='loginModal')closeMod();});
 
-// ══════════════════════════════════════
-// HELPERS
-// ══════════════════════════════════════
-function v(id) { var el=document.getElementById(id); return el ? el.value.trim() : ''; }
-function toast(msg, type) {
-  var t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'toast show ' + (type||'');
-  clearTimeout(t._t); t._t = setTimeout(function() { t.classList.remove('show'); }, 3200);
+// ══ HELPERS ══
+function v(id){var el=document.getElementById(id);return el?el.value.trim():'';}
+function toast(msg,type){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast show '+(type||'');
+  clearTimeout(t._t); t._t=setTimeout(function(){t.classList.remove('show');},3200);
 }
-function showMsg(el, type, text) { el.style.display='block'; el.className='msg '+type; el.textContent=text; }
-function toggleMenu() { document.getElementById('mobMenu').classList.toggle('open'); }
-function closeMob()   { document.getElementById('mobMenu').classList.remove('open'); }
+function showMsg(el,type,text){el.style.display='block';el.className='msg '+type;el.textContent=text;}
+function toggleMenu(){document.getElementById('mobMenu').classList.toggle('open');}
+function closeMob(){document.getElementById('mobMenu').classList.remove('open');}
 
-// ══════════════════════════════════════
-// SCROLL REVEAL
-// ══════════════════════════════════════
-function initReveal() {
-  var obs = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+// ══ REVEAL ON SCROLL ══
+function initReveal(){
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}
     });
-  }, {threshold: 0.07, rootMargin:'0px 0px -20px 0px'});
-  document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+  },{threshold:0.07,rootMargin:'0px 0px -20px 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
 }
 
-// ══════════════════════════════════════
-// INIT
-// ══════════════════════════════════════
-loadSvcs();
-loadGal();
-loadReviews();
-initReveal();
-initScrollAnimations();
-
-// REVIEWS
-var SEL_STARS = 0;
-function pickStar(n) {
-  SEL_STARS = n;
-  document.querySelectorAll('.star-btn').forEach(function(b, i) { b.classList.toggle('lit', i < n); });
-}
-async function loadReviews() {
-  var grid = document.getElementById('reviewsGrid');
-  if (!grid) return;
-  try {
-    var snap = await db.collection('reviews').orderBy('createdAt','desc').get();
-    if (snap.empty) {
-      grid.innerHTML = '<p style="font-size:15px;color:var(--tx3);font-family:var(--ff);font-style:italic;padding:20px 0">Відгуків поки немає. Будьте першою ✦</p>';
-    } else {
-      grid.innerHTML = snap.docs.map(function(d) {
-        var r = d.data();
-        var stars = ''; for (var i=0;i<5;i++) stars += i < r.rating ? '★' : '☆';
-        var dateStr = r.createdAt ? new Date(r.createdAt).toLocaleDateString('uk-UA',{month:'long',year:'numeric'}) : '';
-        return '<div class="review-card reveal"><div class="review-stars">' + stars + '</div><div class="review-text">' + r.text + '</div><div><div class="review-name">' + r.authorName + '</div><div class="review-date">' + dateStr + '</div></div></div>';
-      }).join('');
-      setTimeout(initReveal, 50);
-    }
-  } catch(e) {
-    grid.innerHTML = '<p style="font-size:14px;color:var(--tx3);padding:10px 0">Не вдалося завантажити відгуки</p>';
-  }
-  updateReviewUI();
-}
-function updateReviewUI() {
-  var fw = document.getElementById('reviewFormWrap'), hl = document.getElementById('reviewLoginHint');
-  if (!fw || !hl) return;
-  if (CU) { fw.style.display='block'; hl.style.display='none'; }
-  else { fw.style.display='none'; hl.style.display='block'; }
-}
-async function submitReview() {
-  if (!CU) { openMod(); return; }
-  var text = v('revText'), msg = document.getElementById('revMsg');
-  if (!text) { showMsg(msg,'err','Напишіть відгук'); return; }
-  if (SEL_STARS < 1) { showMsg(msg,'err','Оберіть оцінку зірочками'); return; }
-  var name = CU.displayName || CU.email.split('@')[0];
-  try {
-    var existing = await db.collection('reviews').where('authorUid','==',CU.uid).limit(1).get();
-    if (!existing.empty) { showMsg(msg,'err','Ви вже залишали відгук'); return; }
-    await db.collection('reviews').add({authorUid:CU.uid, authorName:name, text:text, rating:SEL_STARS, createdAt:new Date().toISOString()});
-    document.getElementById('revText').value=''; SEL_STARS=0; pickStar(0);
-    showMsg(msg,'ok','Дякуємо за відгук! ✓'); loadReviews();
-  } catch(e) { showMsg(msg,'err','Помилка: '+e.message); }
-}
-
-// MOBILE BOOKING CARDS
-function renderBkCards(all) {
-  var container = document.getElementById('bkCards');
-  if (!container) return;
-  if (!all.length) { container.innerHTML='<p style="color:var(--tx3);font-size:14px;padding:10px 0">Записів поки немає ☕</p>'; return; }
-  container.innerHTML = all.map(function(b) {
-    var isCan = b.status === 'cancelled';
-    var statusColor = isCan ? 'var(--rose)' : 'var(--sage)';
-    var statusTxt = isCan ? 'Скасовано'+(b.cancelledBy==='master'?' майстром':'') : 'Активний';
-    var actions = '';
-    if (!isCan) actions += '<button class="abtn sm red" onclick="cancelBk(\'' + b.id + '\')">Скасувати</button> <button class="abtn sm grn" onclick="showConfirmLinks(\'' + b.id + '\')">✉️ Підтвердити</button> ';
-    actions += '<button class="abtn sm" style="background:none;border:1px solid var(--line);color:var(--tx3)" onclick="deleteBk(\'' + b.id + '\')">🗑 Видалити</button>';
-    return '<div class="bk-card" id="bkcard-'+b.id+'"><div class="bk-card-head"><div class="bk-card-name">'+b.clientName+'</div><span class="bk-card-status" style="color:'+statusColor+'">'+statusTxt+'</span></div><div class="bk-card-body">📅 '+b.date+' о '+b.time+'<br>💅 '+b.service+'<br>📞 <a href="tel:'+b.clientPhone+'" style="color:var(--gold2)">'+b.clientPhone+'</a>'+(b.comment ? '<br>💬 '+b.comment : '')+'</div><div class="bk-card-actions">'+actions+'</div><div id="conf-card-'+b.id+'"></div></div>';
-  }).join('');
-}
-
-// BLOCK TIME SLOTS
-var SEL_TIME_SLOTS = {};
-async function loadBlockedTimes() {
-  var dt = document.getElementById('btDate').value; if (!dt) return;
-  SEL_TIME_SLOTS = {};
-  var grid = document.getElementById('timeBlockGrid'); grid.innerHTML = '<span class="spin"></span>';
-  var bkSnap = await db.collection('bookings').where('date','==',dt).where('status','==','new').get();
-  var bookedTimes = {}; bkSnap.forEach(function(d){bookedTimes[d.data().time]=d.data().clientName;});
-  var blSnap = await db.collection('time_blocks').where('date','==',dt).get();
-  var manBlocked = {}; blSnap.forEach(function(d){manBlocked[d.data().time]=true;SEL_TIME_SLOTS[d.data().time]=true;});
-  var HRS = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00'];
-  grid.innerHTML = HRS.map(function(h) {
-    if (bookedTimes[h]) return '<div class="tslot tbk" title="'+bookedTimes[h]+'">'+h+'<br><span style="font-size:10px">зайнято</span></div>';
-    return '<div class="tslot'+(manBlocked[h]?' sel':'')+'" onclick="toggleTimeSlot(this,''+h+'')">'+h+'</div>';
-  }).join('');
-}
-function toggleTimeSlot(el, time) { el.classList.toggle('sel'); SEL_TIME_SLOTS[time]=el.classList.contains('sel'); }
-function clearAllTimeSel() { document.querySelectorAll('.tslot.sel').forEach(function(el){el.classList.remove('sel');}); SEL_TIME_SLOTS={}; }
-async function saveBlockedTimes() {
-  var dt=document.getElementById('btDate').value, reason=document.getElementById('btReason').value.trim()||'Зайнято', msg=document.getElementById('btSaveMsg');
-  if (!dt) { msg.textContent='Оберіть дату'; msg.style.color='var(--rose)'; return; }
-  var existing = await db.collection('time_blocks').where('date','==',dt).get();
-  var batch = db.batch();
-  existing.docs.forEach(function(d){batch.delete(d.ref);});
-  var toBlock = Object.keys(SEL_TIME_SLOTS).filter(function(t){return SEL_TIME_SLOTS[t];});
-  toBlock.forEach(function(t){batch.set(db.collection('time_blocks').doc(dt+'_'+t.replace(':','')),{date:dt,time:t,reason:reason});});
-  await batch.commit();
-  msg.textContent='✓ Збережено '+toBlock.length+' слотів'; msg.style.color='var(--sage)';
-  setTimeout(function(){msg.textContent='';},3000); renderCal();
-}
-
-
-// updateNav also refreshes review UI
-var _rawUpdateNav = updateNav;
-updateNav = function() { _rawUpdateNav(); updateReviewUI(); };
-
-// SCROLL ANIMATIONS
-function initScrollAnimations() {
-  var obs = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (!e.isIntersecting) return;
-      var el = e.target;
-      el.style.transition = 'transform .6s cubic-bezier(.4,0,.2,1), opacity .6s ease';
-      el.style.opacity = '1'; el.style.transform = 'none';
-      obs.unobserve(el);
+// ══ STAT COUNTER ANIMATION ══
+function initScrollAnimations(){
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting)return;
+      e.target.style.transition='transform .6s cubic-bezier(.4,0,.2,1),opacity .6s ease';
+      e.target.style.opacity='1'; e.target.style.transform='none';
+      obs.unobserve(e.target);
     });
-  }, {threshold: 0.3});
-  document.querySelectorAll('.stat-n').forEach(function(el) {
-    el.style.opacity = '0'; el.style.transform = 'translateY(16px)';
+  },{threshold:0.3});
+  document.querySelectorAll('.stat-n').forEach(function(el){
+    el.style.opacity='0'; el.style.transform='translateY(16px)';
     obs.observe(el);
   });
 }
 
+// ══ INIT ══
+initReveal();
+initScrollAnimations();
 </script>
 
 
