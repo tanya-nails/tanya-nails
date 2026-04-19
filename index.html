@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <title>Тетяна · nail · Миронівка</title>
+<meta name="description" content="Тетяна — майстер манікюру у Миронівці. Манікюр, педикюр, гель-лак, нарощування нігтів. Онлайн-запис.">
+<meta name="keywords" content="манікюр Миронівка, майстер нігтів, гель-лак, педикюр, нарощування, запис на манікюр">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Тетяна · nail · Миронівка">
+<meta property="og:description" content="Майстер манікюру у Миронівці. Гель-лак, нарощування, педикюр. Онлайн-запис.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="uk_UA">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💅</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💅</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -375,9 +384,65 @@ footer{border-top:1px solid var(--line);background:var(--tx);padding:44px 20px 3
 .finfo{font-size:13px;color:var(--tx3);line-height:2}
 .finfo a{color:var(--gold2);text-decoration:none}
 .f-copy{font-size:11px;color:var(--tx3);letter-spacing:1px;opacity:.6}
+
+/* ── PRELOADER ── */
+#preloader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:opacity .4s,visibility .4s}
+#preloader.hide{opacity:0;visibility:hidden}
+.pre-logo{font-family:var(--ff);font-size:32px;font-weight:400;color:var(--tx);letter-spacing:2px}
+.pre-logo em{font-style:italic;color:var(--gold2)}
+.pre-spin{width:28px;height:28px;border:2px solid var(--line);border-top-color:var(--gold);border-radius:50%;animation:sp .8s linear infinite}
+
+/* ── SLOT ANIMATION ── */
+.slt{opacity:0;transform:translateY(6px);animation:slotIn .22s ease forwards}
+@keyframes slotIn{to{opacity:1;transform:none}}
+.slt:nth-child(1){animation-delay:.02s}.slt:nth-child(2){animation-delay:.05s}
+.slt:nth-child(3){animation-delay:.08s}.slt:nth-child(4){animation-delay:.11s}
+.slt:nth-child(5){animation-delay:.14s}
+
+/* ── FOCUS STYLES ── */
+*:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
+
+/* ── CONTRAST FIX ── */
+.tag{color:var(--gold)}
+.svc-card-dur,.book-detail-txt,.fnote,.cal-wk span{color:var(--tx2)}
+.loc-detail{color:var(--tx2)}
+
+/* ── ACCOUNT PANEL ── */
+.account-panel{display:none;position:fixed;inset:0;background:var(--bg);z-index:400;overflow-y:auto}
+.account-panel.open{display:block}
+.acc-top{background:var(--tx);padding:0 20px;height:56px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+@media(min-width:768px){.acc-top{padding:0 36px}}
+.acc-top-logo{font-family:var(--ff);font-size:18px;color:var(--bg);letter-spacing:1.5px}
+.acc-top-logo em{font-style:italic;color:var(--gold2)}
+.acc-top-links{display:flex;gap:16px;align-items:center}
+.acc-top-links button,.acc-top-links a{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);text-decoration:none;cursor:pointer;background:none;border:none;font-family:var(--fs)}
+.acc-top-links button:hover{color:var(--gold2)}
+.acc-body{padding:36px 20px;max-width:760px;margin:0 auto}
+@media(min-width:768px){.acc-body{padding:48px 36px}}
+.acc-greeting{font-family:var(--ff);font-size:28px;font-weight:400;color:var(--tx);margin-bottom:6px}
+.acc-email{font-size:14px;color:var(--tx3);margin-bottom:32px}
+.acc-section-title{font-family:var(--ff);font-size:22px;font-weight:400;color:var(--tx);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.acc-bk-card{background:var(--bg2);border:1px solid var(--line);padding:18px 20px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.acc-bk-info{flex:1;min-width:180px}
+.acc-bk-date{font-family:var(--ff);font-size:19px;color:var(--tx);margin-bottom:3px}
+.acc-bk-detail{font-size:13px;color:var(--tx3);line-height:1.8}
+.acc-bk-status-new{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--sage)}
+.acc-bk-status-can{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--rose)}
+.acc-empty{font-family:var(--ff);font-style:italic;font-size:18px;color:var(--tx3);padding:24px 0}
+
+/* ── PRIVACY NOTE ── */
+.privacy-note{font-size:12px;color:var(--tx3);line-height:1.6;margin-top:8px}
+.privacy-note a{color:var(--gold);text-decoration:underline}
 </style>
 </head>
 <body class="pt-nav">
+
+<!-- PRELOADER -->
+<div id="preloader">
+  <div class="pre-logo">Тетяна <em>·</em> nail</div>
+  <div class="pre-spin"></div>
+</div>
 
 <!-- NAV -->
 <nav class="nav">
@@ -391,6 +456,7 @@ footer{border-top:1px solid var(--line);background:var(--tx);padding:44px 20px 3
     <li><a href="#about">Про мене</a></li>
   </ul>
   <div class="nav-right">
+    <button class="nav-ubtn" id="accBtn" onclick="openAccount()" style="display:none">Мій акаунт</button>
     <button class="nav-ubtn" id="navBtn" onclick="navBtnClick()">Увійти</button>
     <button class="burger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   </div>
@@ -596,6 +662,23 @@ footer{border-top:1px solid var(--line);background:var(--tx);padding:44px 20px 3
   </footer>
 </div><!-- /site -->
 
+<!-- ACCOUNT PANEL -->
+<div class="account-panel" id="accountPanel">
+  <div class="acc-top">
+    <div class="acc-top-logo">Тетяна <em>·</em> nail</div>
+    <div class="acc-top-links">
+      <a href="#" onclick="closeAccount();return false">↗ На сайт</a>
+      <button onclick="doSignOut()">Вийти</button>
+    </div>
+  </div>
+  <div class="acc-body">
+    <div class="acc-greeting" id="accGreeting">Вітаємо!</div>
+    <div class="acc-email" id="accEmail"></div>
+    <div class="acc-section-title">Мої записи</div>
+    <div id="accBookings"><div class="loading"><span class="spin"></span>Завантаження...</div></div>
+  </div>
+</div>
+
 <!-- ADMIN PANEL -->
 <div class="admin-panel" id="adminPanel">
   <div class="atop">
@@ -625,7 +708,10 @@ footer{border-top:1px solid var(--line);background:var(--tx);padding:44px 20px 3
         <div class="sbox"><div class="n" id="bk2">—</div><div class="l">Сьогодні</div></div>
         <div class="sbox"><div class="n" id="bk3">—</div><div class="l">Скасовано</div></div>
       </div>
-      <h2 class="ah2">Всі записи</h2>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+        <h2 class="ah2" style="margin-bottom:0">Всі записи</h2>
+        <button class="abtn out" onclick="exportCSV()" style="font-size:10px;padding:8px 16px">⬇ Експорт CSV</button>
+      </div>
       <div id="bkTable"><div class="loading"><span class="spin"></span></div></div>
       <div class="bk-cards" id="bkCards"></div>
     </div>
@@ -878,6 +964,7 @@ footer{border-top:1px solid var(--line);background:var(--tx);padding:44px 20px 3
         <div class="field"><label>Пароль *</label><input type="password" id="suP" placeholder="Мінімум 6 символів" autocomplete="new-password"></div>
         <div class="msg" id="suMsg"></div>
         <button class="abtn" onclick="doSignUp()">Зареєструватись</button>
+        <p class="privacy-note">Реєструючись, ви погоджуєтесь з тим що ваші контактні дані (email, ім'я, телефон) зберігаються для обробки записів і не передаються третім особам.</p>
       </div>
       <div class="or-div">або</div>
       <button class="google-btn" onclick="doGoogle()">
@@ -951,6 +1038,9 @@ auth.onAuthStateChanged(async function(u) {
   loadSvcs();
   loadGal();
   loadReviews();
+  // Hide preloader
+  var pre = document.getElementById('preloader');
+  if (pre) { pre.classList.add('hide'); setTimeout(function(){pre.style.display='none';},500); }
 });
 
 async function loadSettings() {
@@ -985,10 +1075,20 @@ function applySettings() {
 // ══ AUTH ══
 function updateNav() {
   var btn = document.getElementById('navBtn');
-  if (!CU) { btn.textContent='Увійти'; btn.className='nav-ubtn'; return; }
-  if (IS_ADM) { btn.textContent='Панель майстра'; btn.className='nav-ubtn adm'; return; }
+  var accBtn = document.getElementById('accBtn');
+  if (!CU) {
+    btn.textContent='Увійти'; btn.className='nav-ubtn';
+    if (accBtn) accBtn.style.display='none';
+    return;
+  }
+  if (IS_ADM) {
+    btn.textContent='Панель майстра'; btn.className='nav-ubtn adm';
+    if (accBtn) accBtn.style.display='none';
+    return;
+  }
   var name = CU.displayName ? CU.displayName.split(' ')[0] : CU.email.split('@')[0];
-  btn.textContent=name; btn.className='nav-ubtn';
+  btn.textContent='Вийти'; btn.className='nav-ubtn';
+  if (accBtn) { accBtn.style.display='inline-block'; accBtn.textContent=name+' · акаунт'; }
 }
 function navBtnClick() {
   if (!CU) { openMod(); return; }
@@ -1025,7 +1125,9 @@ function doGoogle() {
     });
 }
 async function doSignOut() {
-  await auth.signOut(); closeAdmin(); toast('Ви вийшли'); renderBookArea();
+  await auth.signOut();
+  closeAdmin(); closeAccount();
+  toast('Ви вийшли'); renderBookArea();
 }
 function fbErr(e) {
   var m={'auth/user-not-found':'Email не знайдено','auth/wrong-password':'Невірний пароль',
@@ -1355,6 +1457,93 @@ async function submitReview() {
 }
 
 // ══ ADMIN ══
+// ══ ACCOUNT PANEL ══
+function openAccount() {
+  if (!CU) { openMod(); return; }
+  document.getElementById('accountPanel').classList.add('open');
+  document.body.style.overflow='hidden';
+  var name = CU.displayName ? CU.displayName.split(' ')[0] : CU.email.split('@')[0];
+  document.getElementById('accGreeting').textContent = 'Вітаємо, '+name+'!';
+  document.getElementById('accEmail').textContent = CU.email;
+  loadAccountBookings();
+}
+function closeAccount() {
+  document.getElementById('accountPanel').classList.remove('open');
+  document.body.style.overflow='';
+}
+async function loadAccountBookings() {
+  var wrap = document.getElementById('accBookings');
+  wrap.innerHTML = '<div class="loading"><span class="spin"></span>Завантаження...</div>';
+  try {
+    var snap = await db.collection('bookings')
+      .where('clientUid','==',CU.uid)
+      .orderBy('date','desc')
+      .get();
+    var all = snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+    if (!all.length) {
+      wrap.innerHTML='<p class="acc-empty">Записів поки немає ✦</p><a href="#booking" onclick="closeAccount()" class="btn btn-d" style="display:inline-flex;margin-top:12px">Записатись</a>';
+      return;
+    }
+    var today = new Date().toISOString().split('T')[0];
+    wrap.innerHTML = all.map(function(b) {
+      var isPast = b.date < today;
+      var isCan = b.status==='cancelled';
+      var statusHtml = isCan
+        ? '<span class="acc-bk-status-can">Скасовано</span>'
+        : isPast
+          ? '<span style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--tx3)">Завершено</span>'
+          : '<span class="acc-bk-status-new">Активний</span>';
+      var cancelBtn = (!isCan && !isPast)
+        ? '<button class="abtn sm red" onclick="cancelOwnBk(\''+b.id+'\')">Скасувати</button>'
+        : '';
+      return '<div class="acc-bk-card">'+
+        '<div class="acc-bk-info">'+
+          '<div class="acc-bk-date">'+b.date+' о '+b.time+'</div>'+
+          '<div class="acc-bk-detail">💅 '+b.service+(b.comment?'<br>💬 '+b.comment:'')+'</div>'+
+          statusHtml+
+        '</div>'+
+        '<div style="display:flex;align-items:center">'+cancelBtn+'</div>'+
+      '</div>';
+    }).join('');
+  } catch(e) {
+    wrap.innerHTML='<p style="color:var(--rose);font-size:14px">Помилка: '+e.message+'</p>';
+  }
+}
+async function cancelOwnBk(id) {
+  if (!confirm('Скасувати цей запис?')) return;
+  try {
+    await db.collection('bookings').doc(id).update({status:'cancelled',cancelledBy:'client',cancelledAt:new Date().toISOString()});
+    toast('Запис скасовано ✓','ok');
+    loadAccountBookings();
+    renderCal();
+  } catch(e) { toast('Помилка: '+e.message,'err'); }
+}
+
+// ══ CSV EXPORT ══
+async function exportCSV() {
+  try {
+    var snap = await db.collection('bookings').orderBy('date','desc').get();
+    var rows = [['Ім\'я','Телефон','Email','Послуга','Дата','Час','Коментар','Статус','Дата запису']];
+    snap.docs.forEach(function(d){
+      var b=d.data();
+      rows.push([
+        b.clientName||'', b.clientPhone||'', b.clientEmail||'',
+        b.service||'', b.date||'', b.time||'',
+        (b.comment||'').replace(/,/g,';'),
+        b.status||'',
+        b.createdAt?b.createdAt.split('T')[0]:''
+      ]);
+    });
+    var csv = rows.map(function(r){return r.map(function(c){return '"'+c+'"';}).join(',');}).join('\n');
+    var blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href=url; a.download='tanya-nails-bookings-'+new Date().toISOString().split('T')[0]+'.csv';
+    a.click(); URL.revokeObjectURL(url);
+    toast('CSV завантажено ✓','ok');
+  } catch(e){toast('Помилка: '+e.message,'err');}
+}
+
 function openAdmin() {
   document.getElementById('adminPanel').classList.add('open');
   document.body.style.overflow='hidden';
