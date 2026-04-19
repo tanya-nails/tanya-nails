@@ -552,16 +552,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
           <div class="slots-grid" id="slotsGrid"></div>
         </div>
         <div id="bookArea"></div>
-        <!-- Cancel section -->
-        <div class="cancel-block" id="cancelSection">
-          <h4>Скасувати свій запис</h4>
-          <p>Введіть телефон щоб знайти ваш запис:</p>
-          <div class="cancel-row">
-            <input type="tel" id="cancelPh" placeholder="+380XXXXXXXXX">
-            <button class="btn btn-l" onclick="findCancel()">Знайти</button>
-          </div>
-          <div id="cancelResult" style="margin-top:12px"></div>
-        </div>
       </div>
     </div>
   </div></div>
@@ -674,6 +664,31 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <div class="acc-body">
     <div class="acc-greeting" id="accGreeting">Вітаємо!</div>
     <div class="acc-email" id="accEmail"></div>
+
+    <!-- Edit profile -->
+    <div class="acc-section-title" style="margin-top:28px">Мої дані</div>
+    <div style="background:var(--bg2);border:1px solid var(--line);padding:20px;margin-bottom:24px">
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:440px">
+        <div class="field"><label>Ім'я</label><input type="text" id="accName" placeholder="Ваше ім'я"></div>
+        <div class="field"><label>Телефон</label><input type="tel" id="accPhone" placeholder="+380XXXXXXXXX"></div>
+        <div class="msg" id="accProfileMsg"></div>
+        <button class="abtn" onclick="saveProfile()" style="align-self:start">Зберегти</button>
+      </div>
+    </div>
+
+    <!-- Add photo to gallery -->
+    <div class="acc-section-title">Додати фото роботи</div>
+    <div style="background:var(--bg2);border:1px solid var(--line);padding:20px;margin-bottom:24px">
+      <p style="font-size:14px;color:var(--tx3);margin-bottom:14px;line-height:1.6">Завантажте фото своїх нігтів — воно з'явиться в галереї на сайті після підтвердження майстром.</p>
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:440px">
+        <div class="field"><label>Посилання на фото</label><input type="url" id="accPhotoUrl" placeholder="https://... (Google Фото, Imgur)"></div>
+        <div class="field"><label>Підпис (необов'язково)</label><input type="text" id="accPhotoCap" placeholder="Французький манікюр, листопад 2024"></div>
+        <div class="msg" id="accPhotoMsg"></div>
+        <button class="abtn" onclick="submitClientPhoto()" style="align-self:start">Надіслати фото</button>
+      </div>
+    </div>
+
+    <!-- My bookings -->
     <div class="acc-section-title">Мої записи</div>
     <div id="accBookings"><div class="loading"><span class="spin"></span>Завантаження...</div></div>
   </div>
@@ -710,7 +725,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px">
         <h2 class="ah2" style="margin-bottom:0">Всі записи</h2>
-        <button class="abtn out" onclick="exportCSV()" style="font-size:10px;padding:8px 16px">⬇ Експорт CSV</button>
       </div>
       <div id="bkTable"><div class="loading"><span class="spin"></span></div></div>
       <div class="bk-cards" id="bkCards"></div>
@@ -805,6 +819,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
           <div class="field"><label>Підпис (необов'язково)</label><input type="text" id="galCap" placeholder="Французький манікюр"></div>
           <button class="abtn" onclick="addGallery()" style="align-self:start">Додати фото</button>
         </div>
+      </div>
+      <div class="acard" style="margin-top:24px">
+        <h3>📥 Фото від клієнток <span id="pendingCount" style="font-size:14px;color:var(--rose)"></span></h3>
+        <p style="font-size:13px;color:var(--tx3);margin-bottom:14px">Клієнтки можуть надсилати фото своїх нігтів через «Мій акаунт». Тут ви вирішуєте — додати в галерею або відхилити.</p>
+        <div id="pendingPhotos"><div class="loading"><span class="spin"></span>Завантаження...</div></div>
       </div>
     </div>
 
@@ -1465,23 +1484,74 @@ function openAccount() {
   var name = CU.displayName ? CU.displayName.split(' ')[0] : CU.email.split('@')[0];
   document.getElementById('accGreeting').textContent = 'Вітаємо, '+name+'!';
   document.getElementById('accEmail').textContent = CU.email;
+  // Fill profile fields
+  document.getElementById('accName').value = CU.displayName || '';
+  // Load phone from Firestore users collection
+  db.collection('users').doc(CU.uid).get().then(function(d) {
+    if (d.exists && d.data().phone) document.getElementById('accPhone').value = d.data().phone;
+  }).catch(function(){});
   loadAccountBookings();
 }
 function closeAccount() {
   document.getElementById('accountPanel').classList.remove('open');
   document.body.style.overflow='';
 }
+
+async function saveProfile() {
+  var name = v('accName'), phone = v('accPhone');
+  var msg = document.getElementById('accProfileMsg');
+  if (!name) { showMsg(msg,'err','Введіть ім\'я'); return; }
+  try {
+    await CU.updateProfile({ displayName: name });
+    await db.collection('users').doc(CU.uid).set({ name:name, phone:phone, email:CU.email }, { merge:true });
+    showMsg(msg,'ok','✓ Збережено!');
+    var btn = document.getElementById('accBtn');
+    if (btn) btn.textContent = name+' · акаунт';
+    document.getElementById('accGreeting').textContent = 'Вітаємо, '+name+'!';
+    setTimeout(function(){ msg.style.display='none'; }, 2500);
+  } catch(e) { showMsg(msg,'err','Помилка: '+e.message); }
+}
+
+async function submitClientPhoto() {
+  var url = v('accPhotoUrl'), cap = v('accPhotoCap');
+  var msg = document.getElementById('accPhotoMsg');
+  if (!url) { showMsg(msg,'err','Введіть посилання на фото'); return; }
+  try {
+    // Save as pending — admin will approve from gallery tab
+    var snap = await db.collection('gallery_pending').orderBy('ord','desc').limit(1).get();
+    var ord = (snap.empty ? 0 : (snap.docs[0].data().ord||0)) + 1;
+    await db.collection('gallery_pending').add({
+      url: url, cap: cap,
+      authorName: CU.displayName || CU.email.split('@')[0],
+      authorEmail: CU.email, authorUid: CU.uid,
+      ord: ord, createdAt: new Date().toISOString()
+    });
+    showMsg(msg,'ok','✓ Фото надіслано! Майстер розгляне і додасть до галереї.');
+    document.getElementById('accPhotoUrl').value='';
+    document.getElementById('accPhotoCap').value='';
+    setTimeout(function(){ msg.style.display='none'; }, 4000);
+  } catch(e) { showMsg(msg,'err','Помилка: '+e.message); }
+}
+
 async function loadAccountBookings() {
   var wrap = document.getElementById('accBookings');
   wrap.innerHTML = '<div class="loading"><span class="spin"></span>Завантаження...</div>';
   try {
+    // Try by UID first, fall back to email
     var snap = await db.collection('bookings')
       .where('clientUid','==',CU.uid)
-      .orderBy('date','desc')
-      .get();
+      .orderBy('date','desc').get();
     var all = snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+    // Also search by email for older bookings
+    if (all.length === 0) {
+      var snap2 = await db.collection('bookings')
+        .where('clientEmail','==',CU.email)
+        .orderBy('date','desc').get();
+      all = snap2.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+    }
     if (!all.length) {
-      wrap.innerHTML='<p class="acc-empty">Записів поки немає ✦</p><a href="#booking" onclick="closeAccount()" class="btn btn-d" style="display:inline-flex;margin-top:12px">Записатись</a>';
+      wrap.innerHTML='<p class="acc-empty">Записів поки немає ✦</p>'+
+        '<a href="#booking" onclick="closeAccount()" class="btn btn-d" style="display:inline-flex;margin-top:12px">Записатись</a>';
       return;
     }
     var today = new Date().toISOString().split('T')[0];
@@ -1492,7 +1562,7 @@ async function loadAccountBookings() {
         ? '<span class="acc-bk-status-can">Скасовано</span>'
         : isPast
           ? '<span style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--tx3)">Завершено</span>'
-          : '<span class="acc-bk-status-new">Активний</span>';
+          : '<span class="acc-bk-status-new">✅ Активний</span>';
       var cancelBtn = (!isCan && !isPast)
         ? '<button class="abtn sm red" onclick="cancelOwnBk(\''+b.id+'\')">Скасувати</button>'
         : '';
@@ -1500,48 +1570,26 @@ async function loadAccountBookings() {
         '<div class="acc-bk-info">'+
           '<div class="acc-bk-date">'+b.date+' о '+b.time+'</div>'+
           '<div class="acc-bk-detail">💅 '+b.service+(b.comment?'<br>💬 '+b.comment:'')+'</div>'+
-          statusHtml+
+          '<div style="margin-top:6px">'+statusHtml+'</div>'+
         '</div>'+
-        '<div style="display:flex;align-items:center">'+cancelBtn+'</div>'+
+        '<div style="display:flex;align-items:center;padding-left:8px">'+cancelBtn+'</div>'+
       '</div>';
     }).join('');
   } catch(e) {
     wrap.innerHTML='<p style="color:var(--rose);font-size:14px">Помилка: '+e.message+'</p>';
   }
 }
+
 async function cancelOwnBk(id) {
   if (!confirm('Скасувати цей запис?')) return;
   try {
-    await db.collection('bookings').doc(id).update({status:'cancelled',cancelledBy:'client',cancelledAt:new Date().toISOString()});
+    await db.collection('bookings').doc(id).update({
+      status:'cancelled', cancelledBy:'client', cancelledAt:new Date().toISOString()
+    });
     toast('Запис скасовано ✓','ok');
     loadAccountBookings();
     renderCal();
   } catch(e) { toast('Помилка: '+e.message,'err'); }
-}
-
-// ══ CSV EXPORT ══
-async function exportCSV() {
-  try {
-    var snap = await db.collection('bookings').orderBy('date','desc').get();
-    var rows = [['Ім\'я','Телефон','Email','Послуга','Дата','Час','Коментар','Статус','Дата запису']];
-    snap.docs.forEach(function(d){
-      var b=d.data();
-      rows.push([
-        b.clientName||'', b.clientPhone||'', b.clientEmail||'',
-        b.service||'', b.date||'', b.time||'',
-        (b.comment||'').replace(/,/g,';'),
-        b.status||'',
-        b.createdAt?b.createdAt.split('T')[0]:''
-      ]);
-    });
-    var csv = rows.map(function(r){return r.map(function(c){return '"'+c+'"';}).join(',');}).join('\n');
-    var blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href=url; a.download='tanya-nails-bookings-'+new Date().toISOString().split('T')[0]+'.csv';
-    a.click(); URL.revokeObjectURL(url);
-    toast('CSV завантажено ✓','ok');
-  } catch(e){toast('Помилка: '+e.message,'err');}
 }
 
 function openAdmin() {
@@ -1852,6 +1900,49 @@ async function loadAdmGal(){
           return '<div class="gal-a-item"><img src="'+d.data().url+'" alt="" onerror="this.style.opacity=.3"><button onclick="delGal(\''+d.id+'\')">✕</button></div>';
         }).join('');
   } catch(e){}
+  // Load pending photos from clients
+  try {
+    var psnap = await db.collection('gallery_pending').orderBy('createdAt','desc').get();
+    var pw = document.getElementById('pendingPhotos');
+    var pc = document.getElementById('pendingCount');
+    if (!pw) return;
+    if (psnap.empty) {
+      pw.innerHTML='<p style="font-size:14px;color:var(--tx3)">Немає нових фото від клієнток</p>';
+      if(pc) pc.textContent='';
+      return;
+    }
+    if(pc) pc.textContent='('+psnap.size+' нових)';
+    pw.innerHTML = psnap.docs.map(function(d){
+      var p=d.data();
+      return '<div style="display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line);flex-wrap:wrap">'+
+        '<img src="'+p.url+'" style="width:90px;height:90px;object-fit:cover;border:1px solid var(--line);flex-shrink:0" onerror="this.style.opacity=.3">'+
+        '<div style="flex:1;min-width:160px">'+
+          '<div style="font-size:14px;font-weight:500;color:var(--tx)">'+p.authorName+'</div>'+
+          '<div style="font-size:13px;color:var(--tx3);margin-bottom:4px">'+p.authorEmail+'</div>'+
+          (p.cap?'<div style="font-size:13px;color:var(--tx2);margin-bottom:10px">'+p.cap+'</div>':'')+
+          '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
+            '<button class="abtn sm grn" onclick="approvePending(\''+d.id+'\',\''+p.url.replace(/'/g,"\\'")+'\',' +
+              '\''+( (p.cap||'').replace(/'/g,"\\'") )+'\')">✓ Додати в галерею</button>'+
+            '<button class="abtn sm red" onclick="rejectPending(\''+d.id+'\')">✕ Відхилити</button>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+  } catch(e){ console.error('pending', e); }
+}
+async function approvePending(pendingId, url, cap) {
+  try {
+    var snap = await db.collection('gallery').orderBy('ord','desc').limit(1).get();
+    var ord = (snap.empty?0:(snap.docs[0].data().ord||0))+1;
+    await db.collection('gallery').add({url:url, cap:cap, ord:ord, createdAt:new Date().toISOString()});
+    await db.collection('gallery_pending').doc(pendingId).delete();
+    toast('Фото додано в галерею ✓','ok'); loadAdmGal(); loadGal();
+  } catch(e){ toast('Помилка: '+e.message,'err'); }
+}
+async function rejectPending(pendingId) {
+  if (!confirm('Відхилити це фото?')) return;
+  await db.collection('gallery_pending').doc(pendingId).delete();
+  toast('Фото відхилено'); loadAdmGal();
 }
 async function addGallery(){
   var url=v('galUrl'),cap=v('galCap');
