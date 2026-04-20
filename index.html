@@ -664,6 +664,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <div class="acc-body">
     <div class="acc-greeting" id="accGreeting">Вітаємо!</div>
     <div class="acc-email" id="accEmail"></div>
+    <button class="abtn" onclick="doSignOut()" style="margin-bottom:28px;background:none;color:var(--rose);border:1px solid var(--rose);padding:8px 18px;font-size:11px">Вийти з акаунту</button>
 
     <!-- Edit profile -->
     <div class="acc-section-title" style="margin-top:28px">Мої дані</div>
@@ -673,18 +674,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="field"><label>Телефон</label><input type="tel" id="accPhone" placeholder="+380XXXXXXXXX"></div>
         <div class="msg" id="accProfileMsg"></div>
         <button class="abtn" onclick="saveProfile()" style="align-self:start">Зберегти</button>
-      </div>
-    </div>
-
-    <!-- Add photo to gallery -->
-    <div class="acc-section-title">Додати фото роботи</div>
-    <div style="background:var(--bg2);border:1px solid var(--line);padding:20px;margin-bottom:24px">
-      <p style="font-size:14px;color:var(--tx3);margin-bottom:14px;line-height:1.6">Завантажте фото своїх нігтів — воно з'явиться в галереї на сайті після підтвердження майстром.</p>
-      <div style="display:flex;flex-direction:column;gap:10px;max-width:440px">
-        <div class="field"><label>Посилання на фото</label><input type="url" id="accPhotoUrl" placeholder="https://... (Google Фото, Imgur)"></div>
-        <div class="field"><label>Підпис (необов'язково)</label><input type="text" id="accPhotoCap" placeholder="Французький манікюр, листопад 2024"></div>
-        <div class="msg" id="accPhotoMsg"></div>
-        <button class="abtn" onclick="submitClientPhoto()" style="align-self:start">Надіслати фото</button>
       </div>
     </div>
 
@@ -1367,6 +1356,11 @@ function renderBookArea() {
       '<button class="btn btn-d" onclick="submitBook()" style="align-self:start">Підтвердити запис</button>'+
       '<p class="fnote">Після запису Таня зв\'яжеться для підтвердження</p>'+
     '</div>';
+  // Prefill phone from saved profile
+  db.collection('users').doc(CU.uid).get().then(function(d) {
+    var ph = document.getElementById('bPh');
+    if (ph && d.exists && d.data().phone) ph.value = d.data().phone;
+  }).catch(function(){});
 }
 async function submitBook() {
   var name=v('bN'), phone=v('bPh'), svc=document.getElementById('bSv').value, com=v('bCom');
@@ -1509,27 +1503,6 @@ async function saveProfile() {
     if (btn) btn.textContent = name+' · акаунт';
     document.getElementById('accGreeting').textContent = 'Вітаємо, '+name+'!';
     setTimeout(function(){ msg.style.display='none'; }, 2500);
-  } catch(e) { showMsg(msg,'err','Помилка: '+e.message); }
-}
-
-async function submitClientPhoto() {
-  var url = v('accPhotoUrl'), cap = v('accPhotoCap');
-  var msg = document.getElementById('accPhotoMsg');
-  if (!url) { showMsg(msg,'err','Введіть посилання на фото'); return; }
-  try {
-    // Save as pending — admin will approve from gallery tab
-    var snap = await db.collection('gallery_pending').orderBy('ord','desc').limit(1).get();
-    var ord = (snap.empty ? 0 : (snap.docs[0].data().ord||0)) + 1;
-    await db.collection('gallery_pending').add({
-      url: url, cap: cap,
-      authorName: CU.displayName || CU.email.split('@')[0],
-      authorEmail: CU.email, authorUid: CU.uid,
-      ord: ord, createdAt: new Date().toISOString()
-    });
-    showMsg(msg,'ok','✓ Фото надіслано! Майстер розгляне і додасть до галереї.');
-    document.getElementById('accPhotoUrl').value='';
-    document.getElementById('accPhotoCap').value='';
-    setTimeout(function(){ msg.style.display='none'; }, 4000);
   } catch(e) { showMsg(msg,'err','Помилка: '+e.message); }
 }
 
