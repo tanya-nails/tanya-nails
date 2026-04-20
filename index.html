@@ -802,7 +802,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       <div class="gal-a-grid" id="galAdmin"></div>
       <div class="acard">
         <h3>Додати фото</h3>
-        <p style="font-size:13px;color:var(--tx3);margin-bottom:14px">Вставте пряме посилання на фото (Google Drive, Imgur або будь-який прямий URL)</p>
+        <p style="font-size:13px;color:var(--tx3);margin-bottom:6px">Вставте пряме посилання на фото (Imgur або Google Drive)</p>
+        <div style="background:var(--bg);border:1px solid var(--line);border-left:3px solid var(--gold2);padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--tx2);line-height:1.7">
+          <strong>Google Drive:</strong> відкрий фото → «Поділитись» → «Всі з посиланням» → скопіюй ID з посилання (між /d/ і /view) → вставляй у такому форматі:<br>
+          <code style="font-size:12px;color:var(--gold);background:var(--bg2);padding:2px 6px">https://drive.google.com/uc?export=view&id=ВАШ_ID</code><br>
+          <strong>Imgur:</strong> завантаж на imgur.com → правою кнопкою на фото → «Копіювати адресу зображення»
+        </div>
         <div class="aform">
           <div class="field"><label>URL фото</label><input type="url" id="galUrl" placeholder="https://..."></div>
           <div class="field"><label>Підпис (необов'язково)</label><input type="text" id="galCap" placeholder="Французький манікюр"></div>
@@ -821,7 +826,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       <h2 class="ah2">Про мене</h2>
       <div class="acard">
         <div class="aform">
-          <div class="field"><label>URL фото (вертикальне 3:4)</label><input type="url" id="aPhotoUrl" placeholder="https://..."></div>
+          <div class="field"><label>URL фото (вертикальне 3:4)</label><input type="url" id="aPhotoUrl" placeholder="https://drive.google.com/uc?export=view&id=..."></div>
+          <p style="font-size:12px;color:var(--tx3);margin-top:-6px">Google Drive: скопіюй ID з посилання і вставляй як <code>https://drive.google.com/uc?export=view&id=ВАШ_ID</code></p>
           <div class="field"><label>Перший абзац</label><textarea id="aTxt1" style="height:90px"></textarea></div>
           <div class="field"><label>Другий абзац</label><textarea id="aTxt2" style="height:90px"></textarea></div>
           <div class="arow">
@@ -1531,21 +1537,25 @@ async function loadAccountBookings() {
     wrap.innerHTML = all.map(function(b) {
       var isPast = b.date < today;
       var isCan = b.status==='cancelled';
+      var isDim = isPast || isCan;
       var statusHtml = isCan
-        ? '<span class="acc-bk-status-can">Скасовано</span>'
+        ? '<span class="acc-bk-status-can">❌ Скасовано</span>'
         : isPast
-          ? '<span style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--tx3)">Завершено</span>'
+          ? '<span style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--tx3)">✓ Завершено</span>'
           : '<span class="acc-bk-status-new">✅ Активний</span>';
       var cancelBtn = (!isCan && !isPast)
-        ? '<button class="abtn sm red" onclick="cancelOwnBk(\''+b.id+'\')">Скасувати</button>'
+        ? '<button class="abtn sm red" onclick="cancelOwnBk(\''+b.id+'\')" style="margin-bottom:6px">Скасувати</button>'
         : '';
-      return '<div class="acc-bk-card">'+
+      var deleteBtn = (isCan || isPast)
+        ? '<button class="abtn sm" onclick="deleteOwnBk(\''+b.id+'\')" style="background:none;border:1px solid var(--line);color:var(--tx3);font-size:10px">🗑 Видалити</button>'
+        : '';
+      return '<div class="acc-bk-card" style="'+(isDim?'opacity:.5;':'')+'">'+
         '<div class="acc-bk-info">'+
-          '<div class="acc-bk-date">'+b.date+' о '+b.time+'</div>'+
+          '<div class="acc-bk-date" style="'+(isDim?'color:var(--tx3);':'')+'">'+b.date+' о '+b.time+'</div>'+
           '<div class="acc-bk-detail">💅 '+b.service+(b.comment?'<br>💬 '+b.comment:'')+'</div>'+
           '<div style="margin-top:6px">'+statusHtml+'</div>'+
         '</div>'+
-        '<div style="display:flex;align-items:center;padding-left:8px">'+cancelBtn+'</div>'+
+        '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;padding-left:8px">'+cancelBtn+deleteBtn+'</div>'+
       '</div>';
     }).join('');
   } catch(e) {
@@ -1562,6 +1572,15 @@ async function cancelOwnBk(id) {
     toast('Запис скасовано ✓','ok');
     loadAccountBookings();
     renderCal();
+  } catch(e) { toast('Помилка: '+e.message,'err'); }
+}
+
+async function deleteOwnBk(id) {
+  if (!confirm('Видалити цей запис зі списку?')) return;
+  try {
+    await db.collection('bookings').doc(id).delete();
+    toast('Видалено ✓','ok');
+    loadAccountBookings();
   } catch(e) { toast('Помилка: '+e.message,'err'); }
 }
 
