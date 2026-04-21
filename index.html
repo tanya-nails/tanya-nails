@@ -695,6 +695,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   </div>
   <div class="atabs">
     <button class="atab on"  onclick="switchTab('bookings',this)">📋 Записи</button>
+    <button class="atab"     onclick="switchTab('history',this)">📂 Історія</button>
     <button class="atab"     onclick="switchTab('reminders',this)">🔔 Нагадування</button>
     <button class="atab"     onclick="switchTab('schedule',this)">📅 Вихідні</button>
     <button class="atab"     onclick="switchTab('services',this)">💅 Послуги</button>
@@ -708,16 +709,28 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <!-- BOOKINGS -->
     <div class="asec on" id="tab-bookings">
       <div class="stats-row">
-        <div class="sbox"><div class="n" id="bk0">—</div><div class="l">Всього</div></div>
-        <div class="sbox"><div class="n" id="bk1">—</div><div class="l">Активних</div></div>
+        <div class="sbox"><div class="n" id="bk0">—</div><div class="l">Майбутніх</div></div>
+        <div class="sbox"><div class="n" id="bk1">—</div><div class="l">Підтверджено</div></div>
         <div class="sbox"><div class="n" id="bk2">—</div><div class="l">Сьогодні</div></div>
-        <div class="sbox"><div class="n" id="bk3">—</div><div class="l">Скасовано</div></div>
+        <div class="sbox"><div class="n" id="bk3">—</div><div class="l">Нових</div></div>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px">
-        <h2 class="ah2" style="margin-bottom:0">Всі записи</h2>
+        <h2 class="ah2" style="margin-bottom:0">Майбутні записи</h2>
       </div>
       <div id="bkTable"><div class="loading"><span class="spin"></span></div></div>
       <div class="bk-cards" id="bkCards"></div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="asec" id="tab-history">
+      <div class="stats-row">
+        <div class="sbox"><div class="n" id="hist0">—</div><div class="l">Всього</div></div>
+        <div class="sbox"><div class="n" id="hist1">—</div><div class="l">Підтверджених</div></div>
+        <div class="sbox"><div class="n" id="hist2">—</div><div class="l">Скасованих</div></div>
+      </div>
+      <h2 class="ah2">Історія записів</h2>
+      <div id="histTable"><div class="loading"><span class="spin"></span></div></div>
+      <div class="bk-cards" id="histCards"></div>
     </div>
 
     <!-- REMINDERS -->
@@ -1600,31 +1613,41 @@ function switchTab(tab,btn) {
   document.getElementById('tab-'+tab).classList.add('on');
   btn.classList.add('on');
   if (tab==='reminders') loadReminders();
+  if (tab==='history') loadHistory();
 }
 
 // ── admin bookings ──
 async function loadAdmBk() {
   try {
-    var snap=await db.collection('bookings').orderBy('date','desc').get();
+    var snap=await db.collection('bookings').orderBy('date','asc').get();
     var all=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
     var today=new Date().toISOString().split('T')[0];
-    var act=all.filter(function(b){return b.status==='new';});
-    document.getElementById('bk0').textContent=all.length;
-    document.getElementById('bk1').textContent=act.length;
-    document.getElementById('bk2').textContent=act.filter(function(b){return b.date===today;}).length;
-    document.getElementById('bk3').textContent=all.filter(function(b){return b.status==='cancelled';}).length;
+
+    // Майбутні = дата >= сьогодні І не скасовані
+    var future=all.filter(function(b){
+      return b.date >= today && b.status !== 'cancelled';
+    });
+
+    document.getElementById('bk0').textContent=future.length;
+    document.getElementById('bk1').textContent=future.filter(function(b){return b.status==='confirmed';}).length;
+    document.getElementById('bk2').textContent=future.filter(function(b){return b.date===today;}).length;
+    document.getElementById('bk3').textContent=future.filter(function(b){return b.status==='new';}).length;
+
     var wrap=document.getElementById('bkTable');
-    if (!all.length){wrap.innerHTML='<p class="loading">Записів ще немає ☕</p>'; renderBkCards([]); return;}
-    var rows=all.map(function(b){
-      var isCan=b.status==='cancelled';
+    if (!future.length){
+      wrap.innerHTML='<p class="loading">Майбутніх записів немає ☕</p>';
+      renderBkCards([]);
+      return;
+    }
+    var rows=future.map(function(b){
       var isConf=b.status==='confirmed';
       var acts='';
-      if (!isCan && !isConf) acts+=
+      if (!isConf) acts+=
         '<button class="abtn sm grn" onclick="confirmBk(\''+b.id+'\')" style="margin-right:4px">✓</button>'+
         '<button class="abtn sm red" onclick="cancelBk(\''+b.id+'\')" style="margin-right:4px">Скасувати</button>'+
         '<button class="abtn sm" onclick="showConfirmLinks(\''+b.id+'\')" style="background:none;color:var(--tx3);border:1px solid var(--line);margin-right:4px">✉️</button>';
-      if(!isCan) acts+='<button class="abtn sm" style="background:none;color:var(--tx3);border:1px solid var(--line)" onclick="deleteBk(\''+b.id+'\')" title="Видалити">🗑</button>';
-      var stLabel=isCan?('скасовано'+(b.cancelledBy==='master'?' майстром':'')):isConf?'✓ підтверджено':'новий';
+      acts+='<button class="abtn sm" style="background:none;color:var(--tx3);border:1px solid var(--line)" onclick="deleteBk(\''+b.id+'\')" title="Видалити">🗑</button>';
+      var stLabel=isConf?'✓ підтверджено':'новий';
       return '<tr id="bkrow-'+b.id+'">'+
         '<td><strong>'+b.clientName+'</strong></td>'+
         '<td><a href="tel:'+b.clientPhone+'" style="color:var(--gold2)">'+b.clientPhone+'</a></td>'+
@@ -1637,20 +1660,18 @@ async function loadAdmBk() {
     wrap.innerHTML='<div class="atable-wrap"><table><thead><tr>'+
       "<th>Ім'я</th><th>Телефон</th><th>Послуга</th><th>Дата</th><th>Час</th><th>Коментар</th><th>Статус</th><th></th>"+
       '</tr></thead><tbody>'+rows+'</tbody></table></div>';
-    renderBkCards(all);
+    renderBkCards(future);
   } catch(e) { document.getElementById('bkTable').innerHTML='<p style="color:var(--rose)">Помилка: '+e.message+'</p>'; }
 }
 function renderBkCards(all) {
   var c=document.getElementById('bkCards'); if(!c)return;
-  if (!all.length){c.innerHTML='<p style="color:var(--tx3);font-size:14px;padding:10px">Записів поки немає ☕</p>';return;}
+  if (!all.length){c.innerHTML='<p style="color:var(--tx3);font-size:14px;padding:10px">Майбутніх записів немає ☕</p>';return;}
   c.innerHTML=all.map(function(b){
-    var isCan=b.status==='cancelled';
     var isConf=b.status==='confirmed';
-    var sc=isCan?'var(--rose)':isConf?'var(--gold2)':'var(--sage)';
-    var st=isCan?('Скасовано'+(b.cancelledBy==='master'?' майстром':'')):isConf?'✓ Підтверджено':'Новий запис';
+    var sc=isConf?'var(--gold2)':'var(--sage)';
+    var st=isConf?'✓ Підтверджено':'Новий запис';
     var phone=(b.clientPhone||'').replace(/\D/g,'');
 
-    // Warm, detailed confirmation message
     var msg=
       'Вітаю, '+b.clientName+'! 💅\n\n'+
       'Ваш запис підтверджено:\n'+
@@ -1672,7 +1693,7 @@ function renderBkCards(all) {
     );
 
     var confirmLinks='';
-    if(!isCan && !isConf){
+    if(!isConf){
       confirmLinks=
         '<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line)">'+
         '<div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);margin-bottom:8px">Надіслати підтвердження:</div>'+
@@ -1686,14 +1707,11 @@ function renderBkCards(all) {
     }
 
     var acts='';
-    if(!isCan && !isConf){
-      acts+=
-        '<button class="abtn sm grn" onclick="confirmBk(\''+b.id+'\')" style="margin-right:4px">✓ Підтверджено</button>'+
-        '<button class="abtn sm red" onclick="cancelBk(\''+b.id+'\')" style="margin-right:4px">Скасувати</button>';
+    if(!isConf){
+      acts+='<button class="abtn sm grn" onclick="confirmBk(\''+b.id+'\')" style="margin-right:4px">✓ Підтверджено</button>'+
+            '<button class="abtn sm red" onclick="cancelBk(\''+b.id+'\')" style="margin-right:4px">Скасувати</button>';
     }
-    if(!isCan){
-      acts+='<button class="abtn sm" style="background:none;border:1px solid var(--line);color:var(--tx3)" onclick="deleteBk(\''+b.id+'\')">🗑</button>';
-    }
+    acts+='<button class="abtn sm" style="background:none;border:1px solid var(--line);color:var(--tx3)" onclick="deleteBk(\''+b.id+'\')" title="Видалити">🗑</button>';
 
     return '<div class="bk-card" id="bkcard-'+b.id+'">'+
       '<div class="bk-card-head"><div class="bk-card-name">'+b.clientName+'</div>'+
@@ -1702,12 +1720,78 @@ function renderBkCards(all) {
       '<br>📞 <a href="tel:'+b.clientPhone+'" style="color:var(--gold2)">'+b.clientPhone+'</a>'+
       (b.comment?'<br>💬 '+b.comment:'')+'</div>'+
       confirmLinks+
-      (acts?'<div class="bk-card-actions" style="margin-top:10px">'+acts+'</div>':'')+
+      '<div class="bk-card-actions" style="margin-top:10px">'+acts+'</div>'+
     '</div>';
   }).join('');
 }
 
-function showConfirmLinks(id) {
+// ── history ──
+async function loadHistory() {
+  var wrap=document.getElementById('histTable');
+  var cards=document.getElementById('histCards');
+  if(!wrap) return;
+  wrap.innerHTML='<div class="loading"><span class="spin"></span>Завантаження...</div>';
+  cards.innerHTML='';
+  try {
+    var snap=await db.collection('bookings').orderBy('date','desc').get();
+    var all=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+    var today=new Date().toISOString().split('T')[0];
+
+    // Підтверджені що вже минули + всі скасовані
+    var hist=all.filter(function(b){
+      var isPast=b.date < today;
+      return (b.status==='confirmed' && isPast) || b.status==='cancelled';
+    });
+
+    document.getElementById('hist0').textContent=hist.length;
+    document.getElementById('hist1').textContent=hist.filter(function(b){return b.status==='confirmed';}).length;
+    document.getElementById('hist2').textContent=hist.filter(function(b){return b.status==='cancelled';}).length;
+
+    if(!hist.length){
+      wrap.innerHTML='<p class="loading">Історія поки порожня ☕</p>';
+      cards.innerHTML='';
+      return;
+    }
+    var rows=hist.map(function(b){
+      var isCan=b.status==='cancelled';
+      var stLabel=isCan?('скасовано'+(b.cancelledBy==='master'?' майстром':'')):'✓ відвідала';
+      return '<tr>'+
+        '<td><strong>'+b.clientName+'</strong></td>'+
+        '<td><a href="tel:'+b.clientPhone+'" style="color:var(--gold2)">'+b.clientPhone+'</a></td>'+
+        '<td>'+b.service+'</td><td>'+b.date+'</td><td>'+b.time+'</td>'+
+        '<td style="font-size:12px;color:var(--tx3)">'+(b.comment||'—')+'</td>'+
+        '<td class="s-'+b.status+'">'+stLabel+'</td>'+
+        '<td><button class="abtn sm" style="background:none;color:var(--tx3);border:1px solid var(--line)" onclick="deleteBk(\''+b.id+'\')" title="Видалити">🗑</button></td>'+
+      '</tr>';
+    }).join('');
+    wrap.innerHTML='<div class="atable-wrap"><table><thead><tr>'+
+      "<th>Ім'я</th><th>Телефон</th><th>Послуга</th><th>Дата</th><th>Час</th><th>Коментар</th><th>Статус</th><th></th>"+
+      '</tr></thead><tbody>'+rows+'</tbody></table></div>';
+    renderHistCards(hist);
+  } catch(e){
+    wrap.innerHTML='<p style="color:var(--rose)">Помилка: '+e.message+'</p>';
+  }
+}
+function renderHistCards(hist) {
+  var c=document.getElementById('histCards'); if(!c)return;
+  c.innerHTML=hist.map(function(b){
+    var isCan=b.status==='cancelled';
+    var sc=isCan?'var(--rose)':'var(--gold2)';
+    var st=isCan?('Скасовано'+(b.cancelledBy==='master'?' майстром':'')):'✓ Відвідала';
+    return '<div class="bk-card">'+
+      '<div class="bk-card-head"><div class="bk-card-name">'+b.clientName+'</div>'+
+      '<span class="bk-card-status" style="color:'+sc+'">'+st+'</span></div>'+
+      '<div class="bk-card-body">📅 '+b.date+' о '+b.time+'<br>💅 '+b.service+
+      '<br>📞 <a href="tel:'+b.clientPhone+'" style="color:var(--gold2)">'+b.clientPhone+'</a>'+
+      (b.comment?'<br>💬 '+b.comment:'')+'</div>'+
+      '<div class="bk-card-actions" style="margin-top:10px">'+
+        '<button class="abtn sm" style="background:none;border:1px solid var(--line);color:var(--tx3)" onclick="deleteBk(\''+b.id+'\')" title="Видалити">🗑 Видалити</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+
   var existing=document.getElementById('conf-'+id);
   if (existing){existing.remove();return;}
   var row=document.getElementById('bkrow-'+id);
