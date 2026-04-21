@@ -1295,7 +1295,7 @@ async function renderCal() {
   var booked={};
   bkSnap.docs.forEach(function(d){var dt=d.data().date; booked[dt]=(booked[dt]||0)+1;});
   var tbDates=new Set(tbSnap.docs.map(function(d){return d.data().date;}));
-  var today=new Date(); today.setHours(0,0,0,0);
+  var today=new Date(); today.setHours(0,0,0,0); today.setDate(today.getDate()+1);
   var dim=new Date(CAL_Y,CAL_M,0).getDate();
   var fw=new Date(CAL_Y,CAL_M-1,1).getDay();
   var offset=fw===0?6:fw-1;
