@@ -1054,9 +1054,20 @@ var SEL_D=null, SEL_T=null, PEND=false, SEL_STARS=0;
 var SEL_TIME_SLOTS={};
 
 // ══ BOOT ══
+function hidePreloader() {
+  var pre = document.getElementById('preloader');
+  if (pre && !pre.classList.contains('hide')) {
+    pre.classList.add('hide');
+    setTimeout(function(){ pre.style.display='none'; }, 500);
+  }
+}
+
+// Підстраховка: сховати прелоадер через 5 секунд у будь-якому разі
+setTimeout(hidePreloader, 5000);
+
 auth.onAuthStateChanged(async function(u) {
   CU = u;
-  await loadSettings();
+  try { await loadSettings(); } catch(e) { console.error('loadSettings failed', e); }
   IS_ADM = !!(CU && ADMIN && CU.email === ADMIN);
   updateNav();
   updateReviewUI();
@@ -1066,9 +1077,7 @@ auth.onAuthStateChanged(async function(u) {
   loadSvcs();
   loadGal();
   loadReviews();
-  // Hide preloader
-  var pre = document.getElementById('preloader');
-  if (pre) { pre.classList.add('hide'); setTimeout(function(){pre.style.display='none';},500); }
+  hidePreloader();
 });
 
 async function loadSettings() {
