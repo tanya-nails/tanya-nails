@@ -251,6 +251,7 @@ th{background:var(--tx);color:var(--bg);font-size:9px;letter-spacing:2px;text-tr
 td{padding:10px 10px;border-bottom:1px solid var(--bg2);color:var(--tx);vertical-align:middle}
 tr:hover td{background:var(--bg2)}
 .s-new{color:var(--sage);font-size:12px}
+.s-confirmed{color:var(--gold2);font-size:12px}
 .s-cancelled{color:var(--rose);font-size:12px}
 /* Admin mobile card view */
 .bk-card{background:var(--bg2);border:1px solid var(--line);padding:14px;margin-bottom:10px;font-size:14px}
@@ -1616,16 +1617,20 @@ async function loadAdmBk() {
     if (!all.length){wrap.innerHTML='<p class="loading">Записів ще немає ☕</p>'; renderBkCards([]); return;}
     var rows=all.map(function(b){
       var isCan=b.status==='cancelled';
+      var isConf=b.status==='confirmed';
       var acts='';
-      if (!isCan) acts+='<button class="abtn sm red" onclick="cancelBk(\''+b.id+'\')" style="margin-right:4px">Скасувати</button>'+
-                        '<button class="abtn sm grn" onclick="showConfirmLinks(\''+b.id+'\')">✉️</button>';
-      acts+='<button class="abtn sm" style="background:none;color:var(--tx3);border:1px solid var(--line);margin-left:4px" onclick="deleteBk(\''+b.id+'\')" title="Видалити">🗑</button>';
+      if (!isCan && !isConf) acts+=
+        '<button class="abtn sm grn" onclick="confirmBk(\''+b.id+'\')" style="margin-right:4px">✓</button>'+
+        '<button class="abtn sm red" onclick="cancelBk(\''+b.id+'\')" style="margin-right:4px">Скасувати</button>'+
+        '<button class="abtn sm" onclick="showConfirmLinks(\''+b.id+'\')" style="background:none;color:var(--tx3);border:1px solid var(--line);margin-right:4px">✉️</button>';
+      if(!isCan) acts+='<button class="abtn sm" style="background:none;color:var(--tx3);border:1px solid var(--line)" onclick="deleteBk(\''+b.id+'\')" title="Видалити">🗑</button>';
+      var stLabel=isCan?('скасовано'+(b.cancelledBy==='master'?' майстром':'')):isConf?'✓ підтверджено':'новий';
       return '<tr id="bkrow-'+b.id+'">'+
         '<td><strong>'+b.clientName+'</strong></td>'+
         '<td><a href="tel:'+b.clientPhone+'" style="color:var(--gold2)">'+b.clientPhone+'</a></td>'+
         '<td>'+b.service+'</td><td>'+b.date+'</td><td>'+b.time+'</td>'+
         '<td style="font-size:12px;color:var(--tx3)">'+(b.comment||'—')+'</td>'+
-        '<td class="s-'+b.status+'">'+(isCan?'скасовано'+(b.cancelledBy==='master'?' майстром':''):'активний')+'</td>'+
+        '<td class="s-'+b.status+'">'+stLabel+'</td>'+
         '<td style="white-space:nowrap">'+acts+'</td>'+
       '</tr>';
     }).join('');
@@ -1640,18 +1645,37 @@ function renderBkCards(all) {
   if (!all.length){c.innerHTML='<p style="color:var(--tx3);font-size:14px;padding:10px">Записів поки немає ☕</p>';return;}
   c.innerHTML=all.map(function(b){
     var isCan=b.status==='cancelled';
-    var sc=isCan?'var(--rose)':'var(--sage)';
-    var st=isCan?'Скасовано'+(b.cancelledBy==='master'?' майстром':''):'Активний';
+    var isConf=b.status==='confirmed';
+    var sc=isCan?'var(--rose)':isConf?'var(--gold2)':'var(--sage)';
+    var st=isCan?('Скасовано'+(b.cancelledBy==='master'?' майстром':'')):isConf?'✓ Підтверджено':'Новий запис';
     var phone=(b.clientPhone||'').replace(/\D/g,'');
-    var msg='Привіт, '+b.clientName+'! Підтверджую ваш запис: '+b.date+' о '+b.time+' ('+b.service+'). Чекаю! — Тетяна';
+
+    // Warm, detailed confirmation message
+    var msg=
+      'Вітаю, '+b.clientName+'! 💅\n\n'+
+      'Ваш запис підтверджено:\n'+
+      '📅 Дата: '+b.date+'\n'+
+      '🕐 Час: '+b.time+'\n'+
+      '✨ Послуга: '+b.service+'\n\n'+
+      'Буду чекати на вас! Якщо раптом щось зміниться — дайте знати заздалегідь, будь ласка 🙏\n\n'+
+      '— Тетяна 🤍';
     var enc=encodeURIComponent(msg);
-    var sub=encodeURIComponent('Підтвердження запису '+b.date);
-    var body=encodeURIComponent('Привіт, '+b.clientName+'!\n\nДата: '+b.date+'\nЧас: '+b.time+'\nПослуга: '+b.service+'\n\nЧекаю!\n— Тетяна');
+    var sub=encodeURIComponent('Підтвердження запису — '+b.date);
+    var body=encodeURIComponent(
+      'Вітаю, '+b.clientName+'!\n\n'+
+      'Ваш запис підтверджено:\n'+
+      '📅 Дата: '+b.date+'\n'+
+      '🕐 Час: '+b.time+'\n'+
+      '✨ Послуга: '+b.service+'\n\n'+
+      'Буду чекати на вас! Якщо щось зміниться — напишіть заздалегідь, будь ласка.\n\n'+
+      'З теплом,\nТетяна 🤍'
+    );
+
     var confirmLinks='';
-    if(!isCan){
+    if(!isCan && !isConf){
       confirmLinks=
         '<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line)">'+
-        '<div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);margin-bottom:8px">Підтвердити:</div>'+
+        '<div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);margin-bottom:8px">Надіслати підтвердження:</div>'+
         '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
           '<a style="display:inline-flex;align-items:center;padding:10px 14px;background:#7360f2;color:white;font-size:13px;text-decoration:none;border-radius:2px" href="viber://chat?number=%2B'+phone+'&text='+enc+'">💬 Viber</a>'+
           '<a style="display:inline-flex;align-items:center;padding:10px 14px;background:#29a8ea;color:white;font-size:13px;text-decoration:none;border-radius:2px" href="https://t.me/+'+phone+'?text='+enc+'" target="_blank">✈️ TG</a>'+
@@ -1660,9 +1684,17 @@ function renderBkCards(all) {
           (b.clientEmail?'<a style="display:inline-flex;align-items:center;padding:10px 14px;background:var(--tx2);color:white;font-size:13px;text-decoration:none;border-radius:2px" href="mailto:'+b.clientEmail+'?subject='+sub+'&body='+body+'" target="_blank">📧 Email</a>':'')+
         '</div></div>';
     }
+
     var acts='';
-    if(!isCan) acts='<button class="abtn sm red" onclick="cancelBk(\''+b.id+'\')">Скасувати</button> ';
-    acts+='<button class="abtn sm" style="background:none;border:1px solid var(--line);color:var(--tx3)" onclick="deleteBk(\''+b.id+'\')">🗑 Видалити</button>';
+    if(!isCan && !isConf){
+      acts+=
+        '<button class="abtn sm grn" onclick="confirmBk(\''+b.id+'\')" style="margin-right:4px">✓ Підтверджено</button>'+
+        '<button class="abtn sm red" onclick="cancelBk(\''+b.id+'\')" style="margin-right:4px">Скасувати</button>';
+    }
+    if(!isCan){
+      acts+='<button class="abtn sm" style="background:none;border:1px solid var(--line);color:var(--tx3)" onclick="deleteBk(\''+b.id+'\')">🗑</button>';
+    }
+
     return '<div class="bk-card" id="bkcard-'+b.id+'">'+
       '<div class="bk-card-head"><div class="bk-card-name">'+b.clientName+'</div>'+
       '<span class="bk-card-status" style="color:'+sc+'">'+st+'</span></div>'+
@@ -1670,7 +1702,7 @@ function renderBkCards(all) {
       '<br>📞 <a href="tel:'+b.clientPhone+'" style="color:var(--gold2)">'+b.clientPhone+'</a>'+
       (b.comment?'<br>💬 '+b.comment:'')+'</div>'+
       confirmLinks+
-      '<div class="bk-card-actions" style="margin-top:10px">'+acts+'</div>'+
+      (acts?'<div class="bk-card-actions" style="margin-top:10px">'+acts+'</div>':'')+
     '</div>';
   }).join('');
 }
@@ -1764,6 +1796,11 @@ async function loadReminders() {
   } catch(e){
     pane.innerHTML='<p style="color:var(--rose);font-size:14px">Помилка: '+e.message+'</p>';
   }
+}
+
+async function confirmBk(id) {
+  await db.collection('bookings').doc(id).update({status:'confirmed',confirmedAt:new Date().toISOString()});
+  toast('✓ Запис підтверджено','ok'); loadAdmBk();
 }
 
 async function cancelBk(id) {
