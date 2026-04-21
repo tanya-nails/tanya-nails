@@ -1642,28 +1642,47 @@ function renderBkCards(all) {
     var isCan=b.status==='cancelled';
     var sc=isCan?'var(--rose)':'var(--sage)';
     var st=isCan?'Скасовано'+(b.cancelledBy==='master'?' майстром':''):'Активний';
+    var phone=(b.clientPhone||'').replace(/\D/g,'');
+    var msg='Привіт, '+b.clientName+'! Підтверджую ваш запис: '+b.date+' о '+b.time+' ('+b.service+'). Чекаю! — Тетяна';
+    var enc=encodeURIComponent(msg);
+    var sub=encodeURIComponent('Підтвердження запису '+b.date);
+    var body=encodeURIComponent('Привіт, '+b.clientName+'!\n\nДата: '+b.date+'\nЧас: '+b.time+'\nПослуга: '+b.service+'\n\nЧекаю!\n— Тетяна');
+    var confirmLinks='';
+    if(!isCan){
+      confirmLinks=
+        '<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line)">'+
+        '<div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);margin-bottom:8px">Підтвердити:</div>'+
+        '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
+          '<a style="display:inline-flex;align-items:center;padding:10px 14px;background:#7360f2;color:white;font-size:13px;text-decoration:none;border-radius:2px" href="viber://chat?number=%2B'+phone+'&text='+enc+'">💬 Viber</a>'+
+          '<a style="display:inline-flex;align-items:center;padding:10px 14px;background:#29a8ea;color:white;font-size:13px;text-decoration:none;border-radius:2px" href="https://t.me/+'+phone+'?text='+enc+'" target="_blank">✈️ TG</a>'+
+          '<a style="display:inline-flex;align-items:center;padding:10px 14px;background:#25D366;color:white;font-size:13px;text-decoration:none;border-radius:2px" href="https://wa.me/'+phone+'?text='+enc+'" target="_blank">🟢 WA</a>'+
+          '<a style="display:inline-flex;align-items:center;padding:10px 14px;background:var(--gold2);color:white;font-size:13px;text-decoration:none;border-radius:2px" href="tel:'+b.clientPhone+'">📞 Дзвінок</a>'+
+          (b.clientEmail?'<a style="display:inline-flex;align-items:center;padding:10px 14px;background:var(--tx2);color:white;font-size:13px;text-decoration:none;border-radius:2px" href="mailto:'+b.clientEmail+'?subject='+sub+'&body='+body+'" target="_blank">📧 Email</a>':'')+
+        '</div></div>';
+    }
     var acts='';
-    if(!isCan) acts='<button class="abtn sm red" onclick="cancelBk(\''+b.id+'\')">Скасувати</button> <button class="abtn sm grn" onclick="showConfirmLinks(\''+b.id+'\')">✉️</button> ';
-    acts+='<button class="abtn sm" style="background:none;border:1px solid var(--line);color:var(--tx3)" onclick="deleteBk(\''+b.id+'\')">🗑</button>';
+    if(!isCan) acts='<button class="abtn sm red" onclick="cancelBk(''+b.id+'')">Скасувати</button> ';
+    acts+='<button class="abtn sm" style="background:none;border:1px solid var(--line);color:var(--tx3)" onclick="deleteBk(''+b.id+'')">🗑 Видалити</button>';
     return '<div class="bk-card" id="bkcard-'+b.id+'">'+
       '<div class="bk-card-head"><div class="bk-card-name">'+b.clientName+'</div>'+
       '<span class="bk-card-status" style="color:'+sc+'">'+st+'</span></div>'+
       '<div class="bk-card-body">📅 '+b.date+' о '+b.time+'<br>💅 '+b.service+
       '<br>📞 <a href="tel:'+b.clientPhone+'" style="color:var(--gold2)">'+b.clientPhone+'</a>'+
       (b.comment?'<br>💬 '+b.comment:'')+'</div>'+
-      '<div class="bk-card-actions">'+acts+'</div>'+
-      '<div id="conf-card-'+b.id+'"></div></div>';
+      confirmLinks+
+      '<div class="bk-card-actions" style="margin-top:10px">'+acts+'</div>'+
+    '</div>';
   }).join('');
 }
+
 function showConfirmLinks(id) {
-  // Toggle: if already open — close
-  var ccard = document.getElementById('conf-card-'+id);
-  if (ccard && ccard.innerHTML !== '') { ccard.innerHTML = ''; return; }
-  var existing = document.getElementById('conf-'+id);
-  if (existing) { existing.remove(); return; }
-
-  var row = document.getElementById('bkrow-'+id);
-
+  var existing=document.getElementById('conf-'+id);
+  if (existing){existing.remove();return;}
+  var row=document.getElementById('bkrow-'+id);
+  if (!row) { // mobile card mode
+    var ccard=document.getElementById('conf-card-'+id);
+    if (!ccard) return;
+  }
   db.collection('bookings').doc(id).get().then(function(d){
     if(!d.exists)return;
     var b=d.data();
@@ -1680,12 +1699,9 @@ function showConfirmLinks(id) {
       (b.clientEmail?'<a class="clink clink-em" href="mailto:'+b.clientEmail+'?subject='+sub+'&body='+body+'" target="_blank">📧 Email</a>':'')+
     '</div></div>';
     if (row) {
-      // Desktop: insert after table row
       row.insertAdjacentHTML('afterend','<tr id="conf-'+id+'"><td colspan="8">'+box+'</td></tr>');
     } else if (ccard) {
-      // Mobile: insert into card placeholder and scroll to it
-      ccard.innerHTML = box;
-      setTimeout(function(){ ccard.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 100);
+      ccard.innerHTML=box;
     }
   });
 }
