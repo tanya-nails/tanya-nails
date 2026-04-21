@@ -1359,7 +1359,7 @@ function renderBookArea() {
       '<div class="field"><label>Послуга *</label><select id="bSv"><option value="">— оберіть —</option>'+opts+'</select></div>'+
       '<div class="field"><label>Коментар</label><textarea id="bCom" placeholder="Побажання: колір, форма нігтів, дизайн..."></textarea></div>'+
       '<div class="msg" id="bMsg"></div>'+
-      '<button class="btn btn-d" onclick="submitBook()" style="align-self:start">Підтвердити запис</button>'+
+      '<button class="btn btn-d" id="submitBookBtn" onclick="submitBook()" style="align-self:start;width:100%">Підтвердити запис ✓</button>'+
       '<p class="fnote">Після запису Таня зв\'яжеться для підтвердження</p>'+
     '</div>';
   // Prefill phone from saved profile
@@ -1367,6 +1367,13 @@ function renderBookArea() {
     var ph = document.getElementById('bPh');
     if (ph && d.exists && d.data().phone) ph.value = d.data().phone;
   }).catch(function(){});
+  // Scroll to booking form on mobile
+  if (window.innerWidth < 768) {
+    setTimeout(function(){
+      var area = document.getElementById('bookArea');
+      if (area) area.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 250);
+  }
 }
 async function submitBook() {
   var name=v('bN'), phone=v('bPh'), svc=document.getElementById('bSv').value, com=v('bCom');
