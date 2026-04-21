@@ -1359,7 +1359,7 @@ function renderBookArea() {
       '<div class="field"><label>Послуга *</label><select id="bSv"><option value="">— оберіть —</option>'+opts+'</select></div>'+
       '<div class="field"><label>Коментар</label><textarea id="bCom" placeholder="Побажання: колір, форма нігтів, дизайн..."></textarea></div>'+
       '<div class="msg" id="bMsg"></div>'+
-      '<button class="btn btn-d" id="submitBookBtn" onclick="submitBook()" style="align-self:start;width:100%">Підтвердити запис ✓</button>'+
+      '<button class="btn btn-d" onclick="submitBook()" style="align-self:start">Підтвердити запис</button>'+
       '<p class="fnote">Після запису Таня зв\'яжеться для підтвердження</p>'+
     '</div>';
   // Prefill phone from saved profile
@@ -1367,13 +1367,6 @@ function renderBookArea() {
     var ph = document.getElementById('bPh');
     if (ph && d.exists && d.data().phone) ph.value = d.data().phone;
   }).catch(function(){});
-  // Scroll to booking form on mobile
-  if (window.innerWidth < 768) {
-    setTimeout(function(){
-      var area = document.getElementById('bookArea');
-      if (area) area.scrollIntoView({behavior:'smooth', block:'nearest'});
-    }, 250);
-  }
 }
 async function submitBook() {
   var name=v('bN'), phone=v('bPh'), svc=document.getElementById('bSv').value, com=v('bCom');
@@ -1663,13 +1656,14 @@ function renderBkCards(all) {
   }).join('');
 }
 function showConfirmLinks(id) {
-  var existing=document.getElementById('conf-'+id);
-  if (existing){existing.remove();return;}
-  var row=document.getElementById('bkrow-'+id);
-  if (!row) { // mobile card mode
-    var ccard=document.getElementById('conf-card-'+id);
-    if (!ccard) return;
-  }
+  // Toggle: if already open — close
+  var ccard = document.getElementById('conf-card-'+id);
+  if (ccard && ccard.innerHTML !== '') { ccard.innerHTML = ''; return; }
+  var existing = document.getElementById('conf-'+id);
+  if (existing) { existing.remove(); return; }
+
+  var row = document.getElementById('bkrow-'+id);
+
   db.collection('bookings').doc(id).get().then(function(d){
     if(!d.exists)return;
     var b=d.data();
@@ -1686,9 +1680,12 @@ function showConfirmLinks(id) {
       (b.clientEmail?'<a class="clink clink-em" href="mailto:'+b.clientEmail+'?subject='+sub+'&body='+body+'" target="_blank">📧 Email</a>':'')+
     '</div></div>';
     if (row) {
+      // Desktop: insert after table row
       row.insertAdjacentHTML('afterend','<tr id="conf-'+id+'"><td colspan="8">'+box+'</td></tr>');
     } else if (ccard) {
-      ccard.innerHTML=box;
+      // Mobile: insert into card placeholder and scroll to it
+      ccard.innerHTML = box;
+      setTimeout(function(){ ccard.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 100);
     }
   });
 }
