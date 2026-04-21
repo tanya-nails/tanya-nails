@@ -700,6 +700,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <button class="atab"     onclick="switchTab('schedule',this)">📅 Вихідні</button>
     <button class="atab"     onclick="switchTab('services',this)">💅 Послуги</button>
     <button class="atab"     onclick="switchTab('gallery',this)">🖼 Галерея</button>
+    <button class="atab"     onclick="switchTab('reviews',this)">⭐ Відгуки</button>
     <button class="atab"     onclick="switchTab('about',this)">👤 Про мене</button>
     <button class="atab"     onclick="switchTab('settings',this)">⚙️ Налаш.</button>
     <button class="atab"     onclick="switchTab('help',this)">❓ Інструкція</button>
@@ -833,6 +834,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <p style="font-size:13px;color:var(--tx3);margin-bottom:14px">Клієнтки можуть надсилати фото своїх нігтів через «Мій акаунт». Тут ви вирішуєте — додати в галерею або відхилити.</p>
         <div id="pendingPhotos"><div class="loading"><span class="spin"></span>Завантаження...</div></div>
       </div>
+    </div>
+
+    <!-- REVIEWS -->
+    <div class="asec" id="tab-reviews">
+      <h2 class="ah2">Відгуки клієнток</h2>
+      <div id="admReviewsList"><div class="loading"><span class="spin"></span>Завантаження...</div></div>
     </div>
 
     <!-- ABOUT -->
@@ -1615,6 +1622,7 @@ function switchTab(tab,btn) {
   btn.classList.add('on');
   if (tab==='reminders') loadReminders();
   if (tab==='history') loadHistory();
+  if (tab==='reviews') loadAdmReviews();
 }
 
 // ── admin bookings ──
@@ -2091,6 +2099,51 @@ async function addGallery(){
 async function delGal(id){
   await db.collection('gallery').doc(id).delete();
   toast('Фото видалено'); loadAdmGal(); loadGal();
+}
+
+// ── reviews admin ──
+async function loadAdmReviews() {
+  var wrap = document.getElementById('admReviewsList');
+  wrap.innerHTML = '<div class="loading"><span class="spin"></span>Завантаження...</div>';
+  try {
+    var snap = await db.collection('reviews').orderBy('createdAt','desc').get();
+    if (snap.empty) {
+      wrap.innerHTML = '<p style="font-size:15px;color:var(--tx3);padding:20px 0">Відгуків поки немає ✦</p>';
+      return;
+    }
+    wrap.innerHTML = snap.docs.map(function(d) {
+      var r = d.data();
+      var stars = '';
+      for (var i = 0; i < 5; i++) stars += i < r.rating ? '★' : '☆';
+      var dateStr = r.createdAt ? new Date(r.createdAt).toLocaleDateString('uk-UA',{day:'numeric',month:'long',year:'numeric'}) : '';
+      var photoHtml = r.photoUrl
+        ? '<img src="'+r.photoUrl+'" alt="фото" style="width:64px;height:64px;object-fit:cover;border:1px solid var(--line);flex-shrink:0" onerror="this.style.display=\'none\'">'
+        : '';
+      return '<div class="acard" style="display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap">'+
+        photoHtml+
+        '<div style="flex:1;min-width:180px">'+
+          '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px">'+
+            '<strong style="font-size:15px;color:var(--tx)">'+r.authorName+'</strong>'+
+            '<span style="color:var(--gold2);letter-spacing:1px">'+stars+'</span>'+
+            '<span style="font-size:12px;color:var(--tx3)">'+dateStr+'</span>'+
+          '</div>'+
+          '<p style="font-size:14px;color:var(--tx2);line-height:1.65">'+r.text+'</p>'+
+        '</div>'+
+        '<button class="abtn sm red" onclick="deleteReview(\''+d.id+'\')" style="flex-shrink:0">🗑 Видалити</button>'+
+      '</div>';
+    }).join('');
+  } catch(e) {
+    wrap.innerHTML = '<p style="color:var(--rose);font-size:14px">Помилка: '+e.message+'</p>';
+  }
+}
+async function deleteReview(id) {
+  if (!confirm('Видалити цей відгук?')) return;
+  try {
+    await db.collection('reviews').doc(id).delete();
+    toast('Відгук видалено','ok');
+    loadAdmReviews();
+    loadReviews();
+  } catch(e) { toast('Помилка: '+e.message,'err'); }
 }
 
 // ── about admin ──
