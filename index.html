@@ -1661,8 +1661,8 @@ function renderBkCards(all) {
         '</div></div>';
     }
     var acts='';
-    if(!isCan) acts='<button class="abtn sm red" onclick="cancelBk(''+b.id+'')">Скасувати</button> ';
-    acts+='<button class="abtn sm" style="background:none;border:1px solid var(--line);color:var(--tx3)" onclick="deleteBk(''+b.id+'')">🗑 Видалити</button>';
+    if(!isCan) acts='<button class="abtn sm red" onclick="cancelBk(\''+b.id+'\')">Скасувати</button> ';
+    acts+='<button class="abtn sm" style="background:none;border:1px solid var(--line);color:var(--tx3)" onclick="deleteBk(\''+b.id+'\')">🗑 Видалити</button>';
     return '<div class="bk-card" id="bkcard-'+b.id+'">'+
       '<div class="bk-card-head"><div class="bk-card-name">'+b.clientName+'</div>'+
       '<span class="bk-card-status" style="color:'+sc+'">'+st+'</span></div>'+
