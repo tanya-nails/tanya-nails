@@ -1431,14 +1431,6 @@ async function findCancel() {
     res.innerHTML=html;
   } catch(e) { res.innerHTML='<p style="font-size:14px;color:var(--rose)">Помилка: '+e.message+'</p>'; }
 }
-async function cancelOwnBk(id) {
-  if (!confirm('Скасувати цей запис?')) return;
-  await db.collection('bookings').doc(id).update({status:'cancelled'});
-  toast('Запис скасовано','ok');
-  document.getElementById('cancelResult').innerHTML='<p style="font-size:14px;color:var(--sage)">✓ Запис скасовано</p>';
-  renderCal();
-}
-
 // ══ REVIEWS ══
 async function loadReviews() {
   var grid=document.getElementById('reviewsGrid');
@@ -1801,6 +1793,7 @@ function renderHistCards(hist) {
 }
 
 
+function showConfirmLinks(id) {
   var existing=document.getElementById('conf-'+id);
   if (existing){existing.remove();return;}
   var row=document.getElementById('bkrow-'+id);
