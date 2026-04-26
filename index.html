@@ -1065,26 +1065,41 @@ function hidePreloader() {
   var pre = document.getElementById('preloader');
   if (pre && !pre.classList.contains('hide')) {
     pre.classList.add('hide');
-    setTimeout(function(){ pre.style.display='none'; }, 500);
+    setTimeout(function(){ pre.style.display='none'; }, 400);
   }
 }
 
-// Підстраховка: сховати прелоадер через 5 секунд у будь-якому разі
-setTimeout(hidePreloader, 5000);
+// Показуємо сайт одразу — не чекаємо Firebase
+// Завантажуємо базові дані (послуги, галерея) без авторизації
+window.addEventListener('DOMContentLoaded', function() {
+  // Показати сайт через 1.2 сек навіть якщо Firebase не відповів
+  var earlyHide = setTimeout(function() {
+    hidePreloader();
+    renderCal();
+    loadSvcs();
+    loadGal();
+    loadReviews();
+    renderBookArea();
+  }, 1200);
 
-auth.onAuthStateChanged(async function(u) {
-  CU = u;
-  try { await loadSettings(); } catch(e) { console.error('loadSettings failed', e); }
-  IS_ADM = !!(CU && ADMIN && CU.email === ADMIN);
-  updateNav();
-  updateReviewUI();
-  if (u && PEND) { PEND=false; }
-  renderCal();
-  renderBookArea();
-  loadSvcs();
-  loadGal();
-  loadReviews();
-  hidePreloader();
+  auth.onAuthStateChanged(async function(u) {
+    clearTimeout(earlyHide); // скасовуємо ранній показ — Firebase відповів
+    CU = u;
+    try { await loadSettings(); } catch(e) {
+      console.error('loadSettings failed:', e);
+      // Навіть якщо settings не завантажились — показуємо сайт
+    }
+    IS_ADM = !!(CU && ADMIN && CU.email === ADMIN);
+    updateNav();
+    updateReviewUI();
+    if (u && PEND) { PEND=false; }
+    renderCal();
+    renderBookArea();
+    loadSvcs();
+    loadGal();
+    loadReviews();
+    hidePreloader();
+  });
 });
 
 async function loadSettings() {
@@ -1418,17 +1433,11 @@ async function submitBook() {
 
 // ══ CANCEL OWN BOOKING ══
 async function findCancel() {
-  var res=document.getElementById('cancelResult');
-  if (!CU) {
-    res.innerHTML='<p style="font-size:14px;color:var(--rose)">Увійдіть в акаунт щоб переглянути свої записи</p>';
-    return;
-  }
+  var ph=v('cancelPh'), res=document.getElementById('cancelResult');
+  if (!ph) { res.innerHTML='<p style="font-size:14px;color:var(--rose)">Введіть номер телефону</p>'; return; }
   res.innerHTML='<span class="spin"></span>';
   try {
-    var snap=await db.collection('bookings')
-      .where('clientUid','==',CU.uid)
-      .orderBy('date','desc')
-      .get();
+    var snap=await db.collection('bookings').where('clientPhone','==',ph).get();
     if (snap.empty) { res.innerHTML='<p style="font-size:14px;color:var(--tx3)">Записів не знайдено</p>'; return; }
     var html=snap.docs.map(function(d){
       var b=d.data();
@@ -1604,14 +1613,10 @@ async function cancelOwnBk(id) {
 }
 
 async function deleteOwnBk(id) {
-  if (!confirm('Видалити цей запис зі своєї історії?')) return;
+  if (!confirm('Видалити цей запис зі списку?')) return;
   try {
     await db.collection('bookings').doc(id).delete();
-    toast('Запис видалено ✓','ok');
-    loadAccountBookings();
-  } catch(e) { toast('Помилка: '+e.message,'err'); }
-});
-    toast('Запис прибрано зі списку ✓','ok');
+    toast('Видалено ✓','ok');
     loadAccountBookings();
   } catch(e) { toast('Помилка: '+e.message,'err'); }
 }
@@ -1849,7 +1854,7 @@ async function loadReminders() {
     var today = new Date(); today.setHours(0,0,0,0);
     var todayStr = today.toISOString().split('T')[0];
     var snap = await db.collection('bookings')
-      .where('status','in',['new','confirmed'])
+      .where('status','==','new')
       .orderBy('date','asc')
       .orderBy('time','asc')
       .get();
