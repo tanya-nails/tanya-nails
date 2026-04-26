@@ -1418,11 +1418,17 @@ async function submitBook() {
 
 // ══ CANCEL OWN BOOKING ══
 async function findCancel() {
-  var ph=v('cancelPh'), res=document.getElementById('cancelResult');
-  if (!ph) { res.innerHTML='<p style="font-size:14px;color:var(--rose)">Введіть номер телефону</p>'; return; }
+  var res=document.getElementById('cancelResult');
+  if (!CU) {
+    res.innerHTML='<p style="font-size:14px;color:var(--rose)">Увійдіть в акаунт щоб переглянути свої записи</p>';
+    return;
+  }
   res.innerHTML='<span class="spin"></span>';
   try {
-    var snap=await db.collection('bookings').where('clientPhone','==',ph).get();
+    var snap=await db.collection('bookings')
+      .where('clientUid','==',CU.uid)
+      .orderBy('date','desc')
+      .get();
     if (snap.empty) { res.innerHTML='<p style="font-size:14px;color:var(--tx3)">Записів не знайдено</p>'; return; }
     var html=snap.docs.map(function(d){
       var b=d.data();
@@ -1598,10 +1604,12 @@ async function cancelOwnBk(id) {
 }
 
 async function deleteOwnBk(id) {
-  if (!confirm('Видалити цей запис зі списку?')) return;
+  if (!confirm('Приховати цей запис зі списку?')) return;
   try {
-    await db.collection('bookings').doc(id).delete();
-    toast('Видалено ✓','ok');
+    await db.collection('bookings').doc(id).update({
+      status: 'cancelled', cancelledBy: 'client', cancelledAt: new Date().toISOString()
+    });
+    toast('Запис прибрано зі списку ✓','ok');
     loadAccountBookings();
   } catch(e) { toast('Помилка: '+e.message,'err'); }
 }
@@ -1839,7 +1847,7 @@ async function loadReminders() {
     var today = new Date(); today.setHours(0,0,0,0);
     var todayStr = today.toISOString().split('T')[0];
     var snap = await db.collection('bookings')
-      .where('status','==','new')
+      .where('status','in',['new','confirmed'])
       .orderBy('date','asc')
       .orderBy('time','asc')
       .get();
