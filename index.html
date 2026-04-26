@@ -1604,11 +1604,13 @@ async function cancelOwnBk(id) {
 }
 
 async function deleteOwnBk(id) {
-  if (!confirm('Приховати цей запис зі списку?')) return;
+  if (!confirm('Видалити цей запис зі своєї історії?')) return;
   try {
-    await db.collection('bookings').doc(id).update({
-      status: 'cancelled', cancelledBy: 'client', cancelledAt: new Date().toISOString()
-    });
+    await db.collection('bookings').doc(id).delete();
+    toast('Запис видалено ✓','ok');
+    loadAccountBookings();
+  } catch(e) { toast('Помилка: '+e.message,'err'); }
+});
     toast('Запис прибрано зі списку ✓','ok');
     loadAccountBookings();
   } catch(e) { toast('Помилка: '+e.message,'err'); }
