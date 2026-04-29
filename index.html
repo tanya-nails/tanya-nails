@@ -1424,6 +1424,17 @@ async function submitBook() {
       clientName:name, clientPhone:phone, clientEmail:CU.email, clientUid:CU.uid,
       service:svc, date:SEL_D, time:SEL_T, comment:com, status:'new', createdAt:new Date().toISOString()
     });
+    // Notify master via n8n → Telegram
+    try {
+      fetch('https://mykha1l0.app.n8n.cloud/webhook/7e531e7d-480f-4817-a588-a98e931a9595', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          clientName:name, clientPhone:phone, clientEmail:CU.email,
+          service:svc, date:SEL_D, time:SEL_T, comment:com||''
+        })
+      });
+    } catch(we){}
     showMsg(msg,'ok',"✓ Запис підтверджено! Таня зв'яжеться для підтвердження.");
     SEL_T=null;
     document.querySelectorAll('.slt').forEach(function(b){b.classList.remove('sel');});
