@@ -584,8 +584,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       </div>
       <div style="display:flex;flex-direction:column;gap:12px;max-width:560px">
         <div class="field"><label>Ваш відгук *</label><textarea id="revText" placeholder="Поділіться враженнями..." style="height:90px;resize:none"></textarea></div>
-        <div class="field"><label>Фото роботи (необов'язково)</label><input type="url" id="revPhoto" placeholder="Посилання на фото (Google Drive, Imgur...)"></div>
-        <p style="font-size:12px;color:var(--tx3);margin-top:-6px">Щоб поділитись фото: завантажте в Google Фото або Imgur → скопіюйте посилання</p>
         <div class="msg" id="revMsg"></div>
         <button class="btn btn-d" onclick="submitReview()" style="align-self:start">Опублікувати відгук</button>
       </div>
@@ -1506,7 +1504,7 @@ function pickStar(n) {
 }
 async function submitReview() {
   if (!CU) { openMod(); return; }
-  var text=v('revText'), photoUrl=v('revPhoto'), msg=document.getElementById('revMsg');
+  var text=v('revText'), msg=document.getElementById('revMsg');
   if (!text) { showMsg(msg,'err','Напишіть відгук'); return; }
   if (SEL_STARS<1) { showMsg(msg,'err','Оберіть оцінку зірочками'); return; }
   var name=CU.displayName||CU.email.split('@')[0];
@@ -1514,10 +1512,8 @@ async function submitReview() {
     var existing=await db.collection('reviews').where('authorUid','==',CU.uid).limit(1).get();
     if (!existing.empty) { showMsg(msg,'err','Ви вже залишали відгук'); return; }
     var data={authorUid:CU.uid, authorName:name, text:text, rating:SEL_STARS, createdAt:new Date().toISOString()};
-    if (photoUrl) data.photoUrl=photoUrl;
     await db.collection('reviews').add(data);
     document.getElementById('revText').value='';
-    document.getElementById('revPhoto').value='';
     SEL_STARS=0; pickStar(0);
     showMsg(msg,'ok','Дякуємо за відгук! ✓'); loadReviews();
   } catch(e) { showMsg(msg,'err','Помилка: '+e.message); }
