@@ -3,14 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<title>Тетяна · nail · Миронівка</title>
-<meta name="description" content="Тетяна — майстер манікюру у Миронівці. Манікюр, педикюр, гель-лак, нарощування нігтів. Онлайн-запис.">
-<meta name="keywords" content="манікюр Миронівка, майстер нігтів, гель-лак, педикюр, нарощування, запис на манікюр">
+<title>Манікюр Миронівка — Тетяна, майстер нігтів. Онлайн-запис</title>
+<meta name="description" content="Тетяна — майстер манікюру у Миронівці. Манікюр, педикюр, гель-лак, нарощування нігтів. Зручний онлайн-запис. Київська область, Миронівка.">
+<meta name="keywords" content="манікюр Миронівка, педикюр Миронівка, гель-лак Миронівка, нарощування нігтів Миронівка, майстер манікюру Миронівка, запис на манікюр Миронівка, нігті Миронівка, манікюр Київська область">
 <meta name="robots" content="index, follow">
-<meta property="og:title" content="Тетяна · nail · Миронівка">
-<meta property="og:description" content="Майстер манікюру у Миронівці. Гель-лак, нарощування, педикюр. Онлайн-запис.">
+<meta name="geo.region" content="UA-32">
+<meta name="geo.placename" content="Миронівка">
+<meta name="google-site-verification" content="btaFPCPsqIwSjSvTfY6Us-9ELgFB-gX_r5_g6zzB7OA" />
+<meta property="og:title" content="Манікюр Миронівка — Тетяна, майстер нігтів">
+<meta property="og:description" content="Майстер манікюру у Миронівці. Гель-лак, нарощування, педикюр. Зручний онлайн-запис.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="uk_UA">
+<meta property="og:url" content="https://tanya-nails.github.io/tanya-nails/">
+<link rel="canonical" href="https://tanya-nails.github.io/tanya-nails/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💅</text></svg>">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💅</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -584,6 +589,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       </div>
       <div style="display:flex;flex-direction:column;gap:12px;max-width:560px">
         <div class="field"><label>Ваш відгук *</label><textarea id="revText" placeholder="Поділіться враженнями..." style="height:90px;resize:none"></textarea></div>
+        <div class="field"><label>Фото роботи (необов'язково)</label><input type="url" id="revPhoto" placeholder="Посилання на фото (Google Drive, Imgur...)"></div>
+        <p style="font-size:12px;color:var(--tx3);margin-top:-6px">Щоб поділитись фото: завантажте в Google Фото або Imgur → скопіюйте посилання</p>
         <div class="msg" id="revMsg"></div>
         <button class="btn btn-d" onclick="submitReview()" style="align-self:start">Опублікувати відгук</button>
       </div>
@@ -1422,17 +1429,6 @@ async function submitBook() {
       clientName:name, clientPhone:phone, clientEmail:CU.email, clientUid:CU.uid,
       service:svc, date:SEL_D, time:SEL_T, comment:com, status:'new', createdAt:new Date().toISOString()
     });
-    // Notify master via n8n → Telegram
-    try {
-      fetch('https://mykha1l0.app.n8n.cloud/webhook/7e531e7d-480f-4817-a588-a98e931a9595', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({
-          clientName:name, clientPhone:phone, clientEmail:CU.email,
-          service:svc, date:SEL_D, time:SEL_T, comment:com||''
-        })
-      });
-    } catch(we){}
     showMsg(msg,'ok',"✓ Запис підтверджено! Таня зв'яжеться для підтвердження.");
     SEL_T=null;
     document.querySelectorAll('.slt').forEach(function(b){b.classList.remove('sel');});
@@ -1504,7 +1500,7 @@ function pickStar(n) {
 }
 async function submitReview() {
   if (!CU) { openMod(); return; }
-  var text=v('revText'), msg=document.getElementById('revMsg');
+  var text=v('revText'), photoUrl=v('revPhoto'), msg=document.getElementById('revMsg');
   if (!text) { showMsg(msg,'err','Напишіть відгук'); return; }
   if (SEL_STARS<1) { showMsg(msg,'err','Оберіть оцінку зірочками'); return; }
   var name=CU.displayName||CU.email.split('@')[0];
@@ -1512,8 +1508,10 @@ async function submitReview() {
     var existing=await db.collection('reviews').where('authorUid','==',CU.uid).limit(1).get();
     if (!existing.empty) { showMsg(msg,'err','Ви вже залишали відгук'); return; }
     var data={authorUid:CU.uid, authorName:name, text:text, rating:SEL_STARS, createdAt:new Date().toISOString()};
+    if (photoUrl) data.photoUrl=photoUrl;
     await db.collection('reviews').add(data);
     document.getElementById('revText').value='';
+    document.getElementById('revPhoto').value='';
     SEL_STARS=0; pickStar(0);
     showMsg(msg,'ok','Дякуємо за відгук! ✓'); loadReviews();
   } catch(e) { showMsg(msg,'err','Помилка: '+e.message); }
