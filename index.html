@@ -1430,14 +1430,8 @@ async function submitBook() {
       service:svc, date:SEL_D, time:SEL_T, comment:com, status:'new', createdAt:new Date().toISOString()
     });
     try {
-      var tgText = '💅 *Новий запис!*
-
-👤 '+name+'
-📞 '+phone+'
-💆 '+svc+'
-📅 '+SEL_D+' о '+SEL_T+(com?'
-💬 '+com:'');
-      fetch('https://api.telegram.org/bot8901614770:AAHZA2iKSpCdnBNYc9vq4rqTmTjI-zhKQy0/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:'8901614770',text:tgText,parse_mode:'Markdown'})});
+      var tgText = ['💅 Новий запис!','','👤 '+name,'📞 '+phone,'💆 '+svc,'📅 '+SEL_D+' о '+SEL_T].join('\n')+(com?'\n💬 '+com:'');
+      fetch('https://api.telegram.org/bot8901614770:AAHZA2iKSpCdnBNYc9vq4rqTmTjI-zhKQy0/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:'8901614770',text:tgText})});
     } catch(te){}
     showMsg(msg,'ok',"✓ Запис підтверджено! Таня зв'яжеться для підтвердження.");
     SEL_T=null;
