@@ -1431,7 +1431,7 @@ async function submitBook() {
     });
     try {
       var tgText = ['💅 Новий запис!','','👤 '+name,'📞 '+phone,'💆 '+svc,'📅 '+SEL_D+' о '+SEL_T].join('\n')+(com?'\n💬 '+com:'');
-      fetch('https://api.telegram.org/bot8901614770:AAHZA2iKSpCdnBNYc9vq4rqTmTjI-zhKQy0/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:'7481211638',text:tgText})});
+      ['7481211638','687123378'].forEach(function(cid){fetch('https://api.telegram.org/bot8901614770:AAHZA2iKSpCdnBNYc9vq4rqTmTjI-zhKQy0/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:cid,text:tgText})});});
     } catch(te){}
     showMsg(msg,'ok',"✓ Запис підтверджено! Таня зв'яжеться для підтвердження.");
     SEL_T=null;
